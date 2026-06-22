@@ -1,0 +1,17 @@
+<div class="page-container">
+  <h2 class="page-title">Attendance</h2>
+  <p style="color:#555;margin-bottom:20px">Select a class to take attendance:</p>
+  <div class="class-grid">
+    <mat-card class="class-card" *ngFor="let gs of gradeSections">
+      <mat-icon>class</mat-icon>
+      <div class="class-info">
+        <h3>Grade {{gs.gradeName}}</h3>
+        <p>Section {{gs.sectionName}}</p>
+      </div>
+      <button mat-raised-button color="primary" [routerLink]="['/attendance/conduct', gs.id]">
+        <mat-icon>how_to_reg</mat-icon> Take Attendance
+      </button>
+    </mat-card>
+  </div>
+  <p class="empty" *ngIf="!gradeSections.length">No grade-sections found. Add them in Grades & Sections.</p>
+</div>

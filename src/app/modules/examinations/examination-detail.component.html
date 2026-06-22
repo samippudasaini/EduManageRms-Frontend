@@ -1,0 +1,104 @@
+<!-- <div class="page-container">
+  <button mat-button routerLink="/examinations"><mat-icon>arrow_back</mat-icon> Back</button>
+  <h2 class="page-title">{{exam?.name}} — {{exam?.year}}</h2>
+  <div class="layout-row">
+    <mat-card class="form-card">
+      <h3>Assign Program</h3>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Select Program</mat-label>
+        <mat-select [(ngModel)]="selectedFdId">
+          <mat-option *ngFor="let fd of allPrograms" [value]="fd.id">{{fd.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="assignFd()"><mat-icon>add</mat-icon> Assign</button>
+    </mat-card>
+    <div class="flex-1">
+      <h3 style="margin-bottom:12px">Assigned Programs</h3>
+      <mat-card class="fd-card" *ngFor="let fd of exam?.facultyDetails">
+        <div class="fd-row">
+          <mat-icon color="primary">menu_book</mat-icon>
+          <span class="fd-name">{{fd.name}}</span>
+          <button mat-stroked-button color="primary" [routerLink]="['/results', exam.id, fd.id]" style="margin-right:8px">
+            <mat-icon>bar_chart</mat-icon> Results
+          </button>
+          <button mat-icon-button color="warn" (click)="removeFd(fd.id)" title="Remove"><mat-icon>remove_circle</mat-icon></button>
+        </div>
+      </mat-card>
+      <p class="empty" *ngIf="!exam?.facultyDetails?.length">No programs assigned yet.</p>
+    </div>
+  </div>
+</div> -->
+
+<div class="page-container" *ngIf="!loading; else spinner">
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">{{ exam?.name }} — Results</h2>
+      <p class="page-sub">{{ exam?.year }}</p>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button (click)="downloadTemplate()" matTooltip="Download Excel template to fill marks offline">
+        <mat-icon>download</mat-icon> Excel Template
+      </button>
+      <label class="upload-btn" matTooltip="Upload filled Excel to bulk-update marks">
+        <mat-icon>upload_file</mat-icon>
+        {{ uploadProgress ? 'Uploading...' : 'Upload Excel' }}
+        <input type="file" accept=".xlsx,.xls" (change)="onExcelUpload($event)" hidden [disabled]="uploadProgress">
+      </label>
+      <button mat-raised-button color="primary" (click)="saveAll()" [disabled]="saving">
+        <mat-icon>save</mat-icon> {{ saving ? 'Saving...' : 'Save All Marks' }}
+      </button>
+      <button mat-raised-button color="accent" (click)="printAll()" matTooltip="Print marksheet for all students">
+        <mat-icon>print</mat-icon> Print All
+      </button>
+    </div>
+  </div>
+
+  <div class="table-scroll-wrapper">
+    <table class="marks-table" *ngIf="results.length; else noResults">
+      <thead>
+        <tr>
+          <th class="sticky-col">Student Name</th>
+          <ng-container *ngFor="let sub of subjects">
+            <th *ngIf="hasTheory(sub.subjectName)">{{ sub.subjectName }}<br><small>Theory ({{ sub.theoryMax }})</small></th>
+            <th *ngIf="hasPractical(sub.subjectName)">{{ sub.subjectName }}<br><small>Practical ({{ sub.practicalMax }})</small></th>
+          </ng-container>
+          <th>%</th>
+          <th>Grade</th>
+          <th>Rank</th>
+          <th>Print</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of results">
+          <td class="sticky-col student-name">{{ r.studentName }}</td>
+          <ng-container *ngFor="let sub of subjects">
+            <td *ngIf="hasTheory(sub.subjectName)">
+              <input class="mark-input" type="number" min="0"
+                     [value]="getTheory(r, sub.subjectName)"
+                     (change)="setTheory(r, sub.subjectName, $any($event.target).value)">
+            </td>
+            <td *ngIf="hasPractical(sub.subjectName)">
+              <input class="mark-input" type="number" min="0"
+                     [value]="getPractical(r, sub.subjectName)"
+                     (change)="setPractical(r, sub.subjectName, $any($event.target).value)">
+            </td>
+          </ng-container>
+          <td>{{ r.percentage?.toFixed(1) }}%</td>
+          <td [class.grade-fail]="r.grade === 'NG'">{{ r.grade }}</td>
+          <td>{{ r.rank }}</td>
+          <td>
+            <button mat-icon-button color="primary" (click)="printMarksheet(r)" matTooltip="Print marksheet">
+              <mat-icon>print</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #noResults>
+      <p class="empty">No students found for this program. Make sure students are enrolled in this program.</p>
+    </ng-template>
+  </div>
+</div>
+<ng-template #spinner>
+  <div class="spinner-center"><mat-spinner></mat-spinner></div>
+</ng-template>

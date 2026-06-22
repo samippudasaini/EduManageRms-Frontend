@@ -1,0 +1,65 @@
+<div class="page-container" *ngIf="profile">
+  <div class="back-btn"><button mat-button routerLink="/students"><mat-icon>arrow_back</mat-icon> Back to Students</button></div>
+  <div class="profile-header">
+    <div class="avatar"><mat-icon>account_circle</mat-icon></div>
+    <div class="profile-info">
+      <h2>{{profile.name}}</h2>
+      <p><mat-icon>school</mat-icon> {{profile.facultyName}} | Grade {{profile.gradeName}} {{profile.sectionName}}</p>
+      <p><mat-icon>person</mat-icon> Guardian: {{profile.guardianName}} &nbsp; <mat-icon>phone</mat-icon> {{profile.contact}}</p>
+      <p><mat-icon>location_on</mat-icon> {{profile.address}}</p>
+    </div>
+  </div>
+  <div class="stats-row">
+    <mat-card class="mini-stat blue">
+      <div class="mini-num">{{profile.presentDays||0}}</div>
+      <div class="mini-label">Days Present</div>
+    </mat-card>
+    <mat-card class="mini-stat red">
+      <div class="mini-num">{{profile.absentDays||0}}</div>
+      <div class="mini-label">Days Absent</div>
+    </mat-card>
+    <mat-card class="mini-stat green">
+      <div class="mini-num">{{profile.completedAssignments||0}}</div>
+      <div class="mini-label">Assignments Done</div>
+    </mat-card>
+    <mat-card class="mini-stat orange">
+      <div class="mini-num">{{profile.incompleteAssignments||0}}</div>
+      <div class="mini-label">Assignments Pending</div>
+    </mat-card>
+  </div>
+  <mat-tab-group>
+    <mat-tab label="Results">
+      <div style="padding:16px">
+        <div *ngIf="profile.results?.length; else noResults">
+          <mat-card *ngFor="let r of profile.results" class="result-card">
+            <div class="result-row">
+              <span class="exam-name">{{r.examinationName}}</span>
+              <span class="grade-badge" [class]="'grade-'+r.grade">{{r.grade}}</span>
+              <span>{{r.percentage?.toFixed(2)}}%</span>
+              <span>Rank: <strong>{{r.rank || '-'}}</strong></span>
+            </div>
+          </mat-card>
+        </div>
+        <ng-template #noResults><p class="empty">No exam results yet.</p></ng-template>
+      </div>
+    </mat-tab>
+    <mat-tab label="Remarks">
+      <div style="padding:16px">
+        <mat-card style="padding:16px;margin-bottom:16px">
+          <h4>Add Remark</h4>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Remark</mat-label>
+            <textarea matInput [(ngModel)]="newRemark" rows="3" placeholder="Enter remark..."></textarea>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="addRemark()">Add Remark</button>
+        </mat-card>
+        <div *ngFor="let r of profile.remarks" class="remark-item">
+          <p>{{r.description}}</p>
+          <small>{{r.date}}</small>
+        </div>
+        <p class="empty" *ngIf="!profile.remarks?.length">No remarks yet.</p>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+<div *ngIf="!profile" class="page-container"><p>Loading...</p></div>

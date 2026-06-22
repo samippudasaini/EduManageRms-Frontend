@@ -1,0 +1,9 @@
+.login-container { min-height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,#1a237e 0%,#3f51b5 100%); }
+.login-card { width:400px; padding:32px; border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+.login-header { text-align:center; margin-bottom:32px; }
+.school-icon { font-size:56px; width:56px; height:56px; color:#3f51b5; }
+.login-header h1 { font-size:22px; font-weight:700; color:#1a237e; margin:8px 0 4px; line-height:1.25; }
+.login-header p { color:#666; font-size:14px; }
+.full-width { width:100%; }
+.login-btn { height:48px; font-size:16px; font-weight:600; margin-top:8px; }
+.error-msg { color:#f44336; font-size:13px; margin-bottom:8px; text-align:center; }

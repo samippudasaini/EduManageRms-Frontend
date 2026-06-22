@@ -1,0 +1,100 @@
+<!-- <div class="page-container">
+  <button mat-button [routerLink]="['/examinations', examId]"><mat-icon>arrow_back</mat-icon> Back</button>
+  <h2 class="page-title">Results Entry & View</h2>
+  <mat-tab-group>
+    <mat-tab label="Enter Marks">
+      <div style="padding:16px">
+        <div *ngFor="let result of results" class="result-block">
+          <div class="student-header">
+            <mat-icon>person</mat-icon>
+            <strong>{{result.studentName}}</strong>
+            <span class="grade-chip" [ngClass]="gradeClass(result.grade)">{{result.grade || '-'}}</span>
+            <span>{{result.percentage?.toFixed(2) || 0}}%</span>
+            <span>Rank: {{result.rank || '-'}}</span>
+            <button mat-raised-button color="primary" (click)="saveMarks(result)" style="margin-left:auto">
+              <mat-icon>save</mat-icon> Save
+            </button>
+          </div>
+          <div class="marks-grid">
+            <div class="marks-col header">Subject</div>
+            <div class="marks-col header">Full Marks</div>
+            <div class="marks-col header">Theory</div>
+            <div class="marks-col header">Practical</div>
+            <div class="marks-col header">Grade</div>
+            <ng-container *ngFor="let m of result.marks">
+              <div class="marks-col">{{m.subjectName}}</div>
+              <div class="marks-col">{{m.fullMarks}}</div>
+              <div class="marks-col">
+                <input type="number" [(ngModel)]="m.theory" [max]="m.theoryMax" min="0" class="marks-input" (change)="calcTotal(result)">
+              </div>
+              <div class="marks-col">
+                <input type="number" [(ngModel)]="m.practical" [max]="m.practicalMax" min="0" class="marks-input" (change)="calcTotal(result)">
+              </div>
+              <div class="marks-col">
+                <span class="grade-chip small" [ngClass]="gradeClass(m.grade)">{{m.grade || '-'}}</span>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <p class="empty" *ngIf="!results.length">No student results found.</p>
+      </div>
+    </mat-tab>
+    <mat-tab label="Result Sheet">
+      <div style="padding:16px">
+        <div style="text-align:right;margin-bottom:12px">
+          <button mat-raised-button (click)="print()"><mat-icon>print</mat-icon> Print</button>
+        </div>
+        <div class="result-table" id="printArea">
+          <table mat-table [dataSource]="results" class="full-width">
+            <ng-container matColumnDef="sn"><th mat-header-cell *matHeaderCellDef>SN</th><td mat-cell *matCellDef="let r; let i=index">{{i+1}}</td></ng-container>
+            <ng-container matColumnDef="name"><th mat-header-cell *matHeaderCellDef>Student Name</th><td mat-cell *matCellDef="let r">{{r.studentName}}</td></ng-container>
+            <ng-container matColumnDef="grade"><th mat-header-cell *matHeaderCellDef>Grade</th><td mat-cell *matCellDef="let r"><span class="grade-chip small" [ngClass]="gradeClass(r.grade)">{{r.grade || '-'}}</span></td></ng-container>
+            <ng-container matColumnDef="percentage"><th mat-header-cell *matHeaderCellDef>Percentage</th><td mat-cell *matCellDef="let r">{{r.percentage?.toFixed(2) || '0.00'}}%</td></ng-container>
+            <ng-container matColumnDef="rank"><th mat-header-cell *matHeaderCellDef>Rank</th><td mat-cell *matCellDef="let r">{{r.rank || '-'}}</td></ng-container>
+            <tr mat-header-row *matHeaderRowDef="sheetCols"></tr>
+            <tr mat-row *matRowDef="let row; columns: sheetCols;"></tr>
+          </table>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div> -->
+
+<div class="page-container">
+  <h2 class="page-title">Results</h2>
+  <p class="page-sub">Select an examination and program to enter or view marks.</p>
+
+  <div *ngIf="loading" class="spinner-center">Loading...</div>
+
+  <mat-accordion *ngIf="!loading">
+    <mat-expansion-panel *ngFor="let exam of examinations" class="exam-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon class="panel-icon">assignment</mat-icon>
+          {{ exam.name }}
+        </mat-panel-title>
+        <mat-panel-description>{{ exam.year }}</mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div class="programs-grid" *ngIf="exam.programs?.length; else noPrograms">
+        <mat-card class="program-card" *ngFor="let prog of exam.programs">
+          <div class="program-info">
+            <mat-icon>school</mat-icon>
+            <span>{{ prog.name }}</span>
+          </div>
+          <a mat-raised-button color="primary"
+             [routerLink]="['/results', exam.id, prog.id]">
+            <mat-icon>edit_note</mat-icon> Enter / View Marks
+          </a>
+        </mat-card>
+      </div>
+      <ng-template #noPrograms>
+        <p class="empty">No programs assigned to this examination yet. Go to Examinations to assign programs.</p>
+      </ng-template>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <p class="empty" *ngIf="!loading && !examinations.length">
+    No examinations found. Create one under the Examinations section first.
+  </p>
+</div>

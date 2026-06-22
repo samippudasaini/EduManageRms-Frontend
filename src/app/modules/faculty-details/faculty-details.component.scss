@@ -1,0 +1,49 @@
+.form-row{display:flex;gap:12px;flex-wrap:wrap;} .form-row mat-form-field{flex:1;min-width:200px;} .form-card{padding:20px;} .form-card h3{margin-bottom:16px;} .form-actions{display:flex;gap:8px;margin-top:8px;} .empty{padding:30px;text-align:center;color:#999;}
+
+.subject-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+}
+
+.subject-table th, .subject-table td {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid #e0e6eb;
+  font-size: 14px;
+}
+
+.subject-table th {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #90a4ae;
+}
+
+.type-chip {
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.type-chip.compulsory {
+  background: #e3f2fd !important;
+  color: #1565c0 !important;
+}
+
+.type-chip.optional {
+  background: #fff8e1 !important;
+  color: #f9a825 !important;
+}
+
+.add-subject-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.add-subject-row .subject-select {
+  min-width: 260px;
+}

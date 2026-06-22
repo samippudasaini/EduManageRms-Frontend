@@ -1,0 +1,120 @@
+<div class="page-container">
+  <div class="profile-hero">
+    <div class="hero-overlay"></div>
+
+    <div class="logo-block">
+      <div class="logo-circle">
+        <img [src]="logoSrc" alt="College logo" class="logo-img">
+      </div>
+      <label *ngIf="editMode" class="logo-upload-btn" matTooltip="Upload college logo">
+        <mat-icon>photo_camera</mat-icon>
+        <input type="file" accept="image/*" (change)="onLogoSelected($event)" hidden>
+      </label>
+      <button *ngIf="editMode && form.logoUrl" mat-icon-button class="logo-remove-btn"
+              matTooltip="Remove logo" (click)="removeLogo()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="hero-text">
+      <h1>{{ form.name || 'Your College Name' }}</h1>
+      <p class="hero-slogan">{{ form.slogan || 'Add a slogan that represents your institution' }}</p>
+    </div>
+
+    <button mat-raised-button class="edit-toggle-btn" (click)="toggleEdit()">
+      <mat-icon>{{ editMode ? 'visibility' : 'edit' }}</mat-icon>
+      {{ editMode ? 'Preview' : 'Edit Profile' }}
+    </button>
+  </div>
+
+  <!-- VIEW MODE -->
+  <div class="info-grid" *ngIf="!editMode">
+    <mat-card class="info-card">
+      <mat-icon class="info-icon">location_on</mat-icon>
+      <div class="info-text">
+        <span class="info-label">Address</span>
+        <span class="info-value">{{ form.address || 'Not set' }}</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="info-card">
+      <mat-icon class="info-icon">email</mat-icon>
+      <div class="info-text">
+        <span class="info-label">Email</span>
+        <span class="info-value">{{ form.email || 'Not set' }}</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="info-card">
+      <mat-icon class="info-icon">call</mat-icon>
+      <div class="info-text">
+        <span class="info-label">Phone</span>
+        <span class="info-value">{{ form.phone || 'Not set' }}</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="info-card">
+      <mat-icon class="info-icon">person</mat-icon>
+      <div class="info-text">
+        <span class="info-label">Principal</span>
+        <span class="info-value">{{ form.principalName || 'Not set' }}</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="info-card info-card-wide">
+      <mat-icon class="info-icon">info</mat-icon>
+      <div class="info-text">
+        <span class="info-label">Important Information</span>
+        <span class="info-value info-value-multiline">{{ form.importantInfo || 'No notices added yet.' }}</span>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- EDIT MODE -->
+  <mat-card class="form-card" *ngIf="editMode">
+    <h3>Edit College Details</h3>
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>College Name</mat-label>
+        <input matInput [(ngModel)]="form.name">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Slogan</mat-label>
+        <input matInput [(ngModel)]="form.slogan">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput [(ngModel)]="form.email">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Phone</mat-label>
+        <input matInput [(ngModel)]="form.phone">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Principal Name</mat-label>
+        <input matInput [(ngModel)]="form.principalName">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Address</mat-label>
+        <input matInput [(ngModel)]="form.address">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Important Info / Notice</mat-label>
+        <textarea matInput rows="3" [(ngModel)]="form.importantInfo"></textarea>
+      </mat-form-field>
+    </div>
+
+    <div class="form-actions">
+      <button mat-raised-button color="primary" (click)="save()" [disabled]="saving">
+        <mat-icon>save</mat-icon> {{ saving ? 'Saving...' : 'Save Profile' }}
+      </button>
+      <button mat-button (click)="toggleEdit()" [disabled]="saving">Cancel</button>
+    </div>
+  </mat-card>
+</div>

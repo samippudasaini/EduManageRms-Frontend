@@ -1,0 +1,16 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Roboto', sans-serif; background: #f5f5f5; }
+
+.page-container { padding: 24px; max-width: 1280px; margin: 0 auto; }
+.page-title { font-size: 24px; font-weight: 600; margin-bottom: 20px; color: #333; }
+.table-card { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
+.form-card { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 24px; }
+.full-width { width: 100%; }
+mat-table { width: 100%; }
+.empty { padding: 30px; text-align: center; color: #999; font-size: 15px; }
+.spacer { flex: 1; }
+
+@media print {
+  mat-sidenav, mat-toolbar, .no-print { display: none !important; }
+  .content-area { padding: 0 !important; }
+}

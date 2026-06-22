@@ -1,0 +1,39 @@
+<div class="page-container">
+  <div class="dashboard-banner">
+    <div class="banner-logo">
+      <img [src]="logoSrc" alt="College logo">
+    </div>
+    <div class="banner-text">
+      <h2 class="page-title">{{ profile?.name || 'School Management System' }}</h2>
+      <p class="banner-address" *ngIf="profile?.address">{{ profile.address }}</p>
+      <p class="welcome">Welcome back, <strong>{{authService.getCurrentUser()?.name}}</strong>!</p>
+    </div>
+  </div>
+  <div class="stats-grid">
+    <mat-card class="stat-card blue" routerLink="/students">
+      <mat-icon>people</mat-icon>
+      <div><span class="stat-num">{{stats.students}}</span><span class="stat-label">Students</span></div>
+    </mat-card>
+    <mat-card class="stat-card green" routerLink="/faculty">
+      <mat-icon>category</mat-icon>
+      <div><span class="stat-num">{{stats.faculties}}</span><span class="stat-label">Faculties</span></div>
+    </mat-card>
+    <mat-card class="stat-card orange" routerLink="/subjects">
+      <mat-icon>book</mat-icon>
+      <div><span class="stat-num">{{stats.subjects}}</span><span class="stat-label">Subjects</span></div>
+    </mat-card>
+    <mat-card class="stat-card purple" routerLink="/examinations">
+      <mat-icon>grading</mat-icon>
+      <div><span class="stat-num">{{stats.examinations}}</span><span class="stat-label">Examinations</span></div>
+    </mat-card>
+  </div>
+  <div class="quick-links">
+    <h3>Quick Actions</h3>
+    <div class="links-grid">
+      <button mat-raised-button color="primary" routerLink="/attendance"><mat-icon>how_to_reg</mat-icon> Take Attendance</button>
+      <button mat-raised-button color="accent" routerLink="/students"><mat-icon>person_add</mat-icon> Add Student</button>
+      <button mat-raised-button color="primary" routerLink="/examinations"><mat-icon>add_circle</mat-icon> New Examination</button>
+      <button mat-raised-button routerLink="/assignments"><mat-icon>assignment</mat-icon> Assignments</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<div class="page-container">
+  <h2 class="page-title">Assignment Management</h2>
+  <mat-card class="form-card" style="margin-bottom:20px;padding:20px">
+    <h3>Add Assignment</h3>
+    <div class="form-row">
+      <mat-form-field appearance="outline"><mat-label>Assignment Name</mat-label><input matInput [(ngModel)]="form.name"></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Date</mat-label><input matInput type="date" [(ngModel)]="form.date"></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Grade-Section</mat-label>
+        <mat-select [(ngModel)]="form.gradesId" (selectionChange)="loadAssignments()">
+          <mat-option *ngFor="let g of gradeSections" [value]="g.id">Grade {{g.gradeName}} - {{g.sectionName}}</mat-option>
+        </mat-select></mat-form-field>
+    </div>
+    <button mat-raised-button color="primary" (click)="addAssignment()"><mat-icon>add</mat-icon> Add Assignment</button>
+  </mat-card>
+  <mat-card class="table-card" style="padding:16px">
+    <h3 style="margin-bottom:16px">Assignments</h3>
+    <div *ngIf="assignments.length; else noAss">
+      <mat-card class="ass-card" *ngFor="let a of assignments">
+        <div class="ass-header">
+          <div>
+            <h4>{{a.name}}</h4>
+            <small>Grade {{a.gradeName}} {{a.sectionName}} | Date: {{a.date}}</small>
+          </div>
+          <div>
+            <button mat-stroked-button color="primary" (click)="viewClass(a)" style="margin-right:8px"><mat-icon>list</mat-icon> View Submissions</button>
+            <button mat-icon-button color="warn" (click)="deleteAssignment(a.id)"><mat-icon>delete</mat-icon></button>
+          </div>
+        </div>
+        <div *ngIf="selectedAssignment?.id===a.id" class="student-list">
+          <h4 style="margin-bottom:12px">Student Submissions</h4>
+          <div class="student-row" *ngFor="let s of classStudents">
+            <span class="student-name">{{s.studentName}}</span>
+            <mat-checkbox [(ngModel)]="s.status" color="primary">{{s.status?'Submitted':'Not Submitted'}}</mat-checkbox>
+          </div>
+          <div style="margin-top:12px">
+            <button mat-raised-button color="primary" (click)="saveSubmissions()">Save</button>
+            <button mat-button (click)="selectedAssignment=null">Close</button>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+    <ng-template #noAss><p class="empty">No assignments yet. Select a grade-section to see assignments.</p></ng-template>
+  </mat-card>
+</div>

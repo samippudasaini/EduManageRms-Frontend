@@ -1,0 +1,35 @@
+.page-sub { color: #78909c; margin-bottom: 20px; font-size: 14px; }
+
+.exam-panel { margin-bottom: 12px; border-radius: 8px !important; }
+
+.panel-icon { margin-right: 8px; color: #1e88e5; vertical-align: middle; }
+
+.programs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+  padding: 12px 0;
+}
+
+.program-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-radius: 8px;
+}
+
+.program-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #263238;
+}
+
+.program-info mat-icon { color: #1e88e5; }
+
+.spinner-center { padding: 40px; text-align: center; color: #90a4ae; }
+
+.empty { color: #90a4ae; padding: 20px; text-align: center; }

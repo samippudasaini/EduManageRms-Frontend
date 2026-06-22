@@ -1,0 +1,29 @@
+<div class="page-container">
+  <button mat-button routerLink="/attendance"><mat-icon>arrow_back</mat-icon> Back</button>
+  <h2 class="page-title">Conduct Attendance — {{today}}</h2>
+  <mat-card style="padding:20px">
+    <div class="att-header">
+      <span>{{attendance.length}} students</span>
+      <div>
+        <button mat-stroked-button (click)="markAll(true)" style="margin-right:8px">Mark All Present</button>
+        <button mat-stroked-button color="warn" (click)="markAll(false)">Mark All Absent</button>
+      </div>
+    </div>
+    <div class="att-list">
+      <div class="att-row" *ngFor="let a of attendance; let i=index" [class.absent]="!a.status">
+        <span class="student-num">{{i+1}}</span>
+        <span class="student-name">{{a.studentName}}</span>
+        <div class="toggle-btns">
+          <button mat-mini-fab [color]="a.status?'primary':''" (click)="a.status=true" title="Present"><mat-icon>check</mat-icon></button>
+          <button mat-mini-fab [color]="!a.status?'warn':''" (click)="a.status=false" title="Absent"><mat-icon>close</mat-icon></button>
+        </div>
+        <span class="status-text" [class.present]="a.status" [class.absent-text]="!a.status">{{a.status?'Present':'Absent'}}</span>
+      </div>
+    </div>
+    <div style="margin-top:20px;text-align:right">
+      <button mat-raised-button color="primary" (click)="save()" style="min-width:140px">
+        <mat-icon>save</mat-icon> Save Attendance
+      </button>
+    </div>
+  </mat-card>
+</div>

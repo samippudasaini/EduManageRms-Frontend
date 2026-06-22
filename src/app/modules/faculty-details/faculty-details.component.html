@@ -1,0 +1,82 @@
+<div class="page-container">
+  <h2 class="page-title">Programs (Faculty Details)</h2>
+  <mat-card class="form-card" style="max-width:100%;margin-bottom:20px;">
+    <h3>{{editId?'Edit Program':'Add Program'}}</h3>
+    <div class="form-row">
+      <mat-form-field appearance="outline"><mat-label>Program Name</mat-label><input matInput [(ngModel)]="form.name" placeholder="e.g. Computer Science Grade 11"></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Stream</mat-label>
+        <mat-select [(ngModel)]="form.streamId">
+          <mat-option *ngFor="let s of streams" [value]="s.id">{{s.name}} ({{s.facultyName}})</mat-option>
+        </mat-select></mat-form-field>
+      <mat-form-field appearance="outline" *ngIf="!editId"><mat-label>Initial Subjects (optional)</mat-label>
+        <mat-select [(ngModel)]="form.subjectIds" multiple>
+          <mat-option *ngFor="let s of subjects" [value]="s.id">{{s.name}}</mat-option>
+        </mat-select></mat-form-field>
+    </div>
+    <div class="form-actions">
+      <button mat-raised-button color="primary" (click)="save()">{{editId?'Update':'Add Program'}}</button>
+      <button mat-button (click)="reset()" *ngIf="editId">Cancel</button>
+    </div>
+  </mat-card>
+
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let fd of facultyDetails">
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{fd.name}}</mat-panel-title>
+        <mat-panel-description>{{fd.streamName}} | {{fd.facultyName}}</mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <table class="subject-table" *ngIf="fd.subjects?.length">
+        <thead>
+          <tr>
+            <th>Subject Name</th>
+            <th>Pass Mark</th>
+            <th>Full Mark</th>
+            <th>Type</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of fd.subjects">
+            <td>{{s.name}}</td>
+            <td>{{s.passMarks}}</td>
+            <td>{{s.fullMarks}}</td>
+            <td>
+              <mat-chip class="type-chip" [class.optional]="s.optional" [class.compulsory]="!s.optional"
+                        (click)="toggleType(fd, s)" matTooltip="Click to toggle Optional / Compulsory">
+                {{ s.optional ? 'Optional' : 'Compulsory' }}
+              </mat-chip>
+            </td>
+            <td>
+              <button mat-icon-button color="warn" (click)="removeSubject(fd, s.id)" matTooltip="Remove subject">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p *ngIf="!fd.subjects?.length" class="empty">No subjects added to this program yet.</p>
+
+      <div class="add-subject-row">
+        <mat-form-field appearance="outline" class="subject-select">
+          <mat-label>Add Subject</mat-label>
+          <mat-select [(ngModel)]="getAddState(fd).subjectId">
+            <mat-option *ngFor="let s of availableSubjects(fd)" [value]="s.id">
+              {{s.name}} (Pass {{s.passMarks}} / Full {{s.fullMarks}})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-checkbox [(ngModel)]="getAddState(fd).optional">Mark as Optional Subject</mat-checkbox>
+        <button mat-raised-button color="primary" (click)="addSubject(fd)">
+          <mat-icon>add</mat-icon> Add Subject
+        </button>
+      </div>
+
+      <div style="margin-top:16px;">
+        <button mat-stroked-button color="primary" (click)="edit(fd)" style="margin-right:8px"><mat-icon>edit</mat-icon> Edit Program</button>
+        <button mat-stroked-button color="warn" (click)="delete(fd.id)"><mat-icon>delete</mat-icon> Delete Program</button>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <p class="empty" *ngIf="!facultyDetails.length">No programs found. Add one above.</p>
+</div>

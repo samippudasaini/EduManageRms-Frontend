@@ -1,0 +1,31 @@
+<div class="page-container">
+  <h2 class="page-title">Examination Management</h2>
+  <mat-card style="padding:20px;margin-bottom:20px">
+    <h3>{{editId?'Edit Examination':'Add Examination'}}</h3>
+    <div class="form-row">
+      <mat-form-field appearance="outline"><mat-label>Exam Name</mat-label><input matInput [(ngModel)]="form.name" placeholder="e.g. Mid-Term Exam 2024"></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Year</mat-label><input matInput [(ngModel)]="form.year" placeholder="e.g. 2024"></mat-form-field>
+    </div>
+    <div class="form-actions">
+      <button mat-raised-button color="primary" (click)="save()">{{editId?'Update':'Add Examination'}}</button>
+      <button mat-button (click)="reset()" *ngIf="editId">Cancel</button>
+    </div>
+  </mat-card>
+  <div class="exam-grid">
+    <mat-card class="exam-card" *ngFor="let e of examinations">
+      <div class="exam-header">
+        <mat-icon color="primary">grading</mat-icon>
+        <div class="exam-info">
+          <h3>{{e.name}}</h3>
+          <p>Year: {{e.year}}</p>
+        </div>
+      </div>
+      <div class="exam-actions">
+        <button mat-raised-button color="primary" [routerLink]="['/examinations', e.id]"><mat-icon>visibility</mat-icon> Manage</button>
+        <button mat-icon-button color="primary" (click)="edit(e)"><mat-icon>edit</mat-icon></button>
+        <button mat-icon-button color="warn" (click)="delete(e.id)"><mat-icon>delete</mat-icon></button>
+      </div>
+    </mat-card>
+  </div>
+  <p class="empty" *ngIf="!examinations.length">No examinations found.</p>
+</div>

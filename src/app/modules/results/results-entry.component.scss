@@ -1,0 +1,113 @@
+// .page-header { display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:20px; }
+// .page-sub { color:#78909c; margin:0; font-size:14px; }
+// .header-actions { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+// .upload-btn { display:flex; align-items:center; gap:6px; padding:0 14px; height:36px; border:1px solid #1e88e5; border-radius:4px; color:#1e88e5; font-size:14px; cursor:pointer; background:#fff; }
+// .upload-btn:hover { background:#e3f2fd; }
+// .table-scroll-wrapper { overflow-x:auto; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.08); }
+// .marks-table { width:100%; border-collapse:collapse; background:#fff; min-width:800px; }
+// .marks-table th { background:#1a237e; color:#fff; padding:10px 8px; font-size:12px; text-align:center; white-space:nowrap; position:sticky; top:0; z-index:2; }
+// .marks-table td { padding:6px 8px; border-bottom:1px solid #e8edf2; text-align:center; font-size:13px; }
+// .marks-table tr:hover td { background:#f5f9ff; }
+// .sticky-col { position:sticky; left:0; background:#fff; z-index:1; min-width:150px; text-align:left !important; }
+// .marks-table th.sticky-col { background:#1a237e; z-index:3; }
+// .student-name { font-weight:600; color:#263238; }
+// .mark-input { width:64px; padding:4px 6px; border:1px solid #b0bec5; border-radius:4px; text-align:center; font-size:13px; outline:none; }
+// .mark-input:focus { border-color:#1e88e5; }
+// .grade-fail { color:#c62828; font-weight:bold; }
+// .spinner-center { display:flex; justify-content:center; padding:60px; }
+// .empty { text-align:center; color:#90a4ae; padding:40px; }
+
+
+.page-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px; margin-bottom: 20px;
+}
+.page-sub { color: #78909c; margin: 0; font-size: 14px; }
+.header-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+.upload-btn {
+  display: flex; align-items: center; gap: 6px; padding: 0 14px; height: 36px;
+  border: 1px solid #1e88e5; border-radius: 4px; color: #1e88e5;
+  font-size: 14px; cursor: pointer; background: #fff; transition: background 0.15s;
+}
+.upload-btn:hover { background: #e3f2fd; }
+.upload-btn.disabled { opacity: 0.6; cursor: default; }
+
+.table-scroll-wrapper { overflow-x: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+
+.marks-table {
+  width: 100%; border-collapse: collapse; background: #fff; min-width: 700px;
+}
+.marks-table th {
+  background: #1a237e; color: #fff; padding: 8px 10px; font-size: 12px;
+  text-align: center; white-space: nowrap; position: sticky; top: 0; z-index: 2;
+}
+.subject-group-header {
+  background: #283593 !important;
+  border-left: 1px solid #3949ab;
+  font-size: 12px;
+}
+.marks-range { font-size: 10px; font-weight: normal; color: #90caf9; margin-top: 2px; }
+.sub-header { background: #3949ab !important; font-size: 11px; font-weight: normal; }
+
+.marks-table td {
+  padding: 5px 8px; border-bottom: 1px solid #e8edf2; text-align: center; font-size: 13px;
+}
+.marks-table tr:hover td { background: #f5f9ff; }
+
+.sticky-col {
+  position: sticky; left: 0; background: #fff; z-index: 1;
+  min-width: 140px; text-align: left !important;
+}
+.marks-table th.sticky-col { background: #1a237e; z-index: 3; }
+.student-name { font-weight: 600; color: #263238; }
+
+.mark-input {
+  width: 60px; padding: 3px 6px; border: 1px solid #b0bec5;
+  border-radius: 4px; text-align: center; font-size: 13px; outline: none;
+}
+.mark-input:focus { border-color: #1e88e5; }
+
+.action-btns { display: flex; gap: 2px; justify-content: center; }
+.grade-fail { color: #c62828; font-weight: bold; }
+
+.empty-state {
+  text-align: center; padding: 60px; color: #90a4ae;
+}
+.empty-state mat-icon { font-size: 48px; width: 48px; height: 48px; }
+
+.spinner-center { display: flex; justify-content: center; padding: 60px; }
+
+/* ── Individual edit modal ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+.modal-card {
+  background: #fff; border-radius: 12px; width: 90%; max-width: 750px;
+  max-height: 85vh; display: flex; flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+}
+.modal-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 20px 24px 12px; border-bottom: 1px solid #e0e6eb;
+}
+.modal-header h3 { margin: 0; font-size: 18px; color: #1a237e; }
+.modal-header p { margin: 4px 0 0; font-size: 13px; color: #78909c; }
+.modal-body { overflow-y: auto; padding: 16px 24px; flex: 1; }
+.modal-footer {
+  display: flex; gap: 10px; justify-content: flex-end;
+  padding: 12px 24px; border-top: 1px solid #e0e6eb;
+}
+
+.edit-table { width: 100%; border-collapse: collapse; }
+.edit-table th {
+  background: #e8eaf6; color: #1a237e; padding: 8px 12px;
+  font-size: 12px; text-align: left; border-bottom: 2px solid #c5cae9;
+}
+.edit-table td { padding: 8px 12px; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+.edit-table tr:hover td { background: #f8f9ff; }
+.fail-row td { background: #fff8f8 !important; }
+.pass { color: #2e7d32; font-weight: bold; }
+.fail { color: #c62828; font-weight: bold; }
