@@ -358,7 +358,7 @@ export class ResultsEntryComponent implements OnInit {
     fd.append('file', file);
     fd.append('examId', String(this.examId));
     fd.append('fdId', String(this.fdId));
-    this.api.postForm('results/bulk-upload-excel', fd).subscribe({
+    this.api.postForm('fetch(`${environment.apiUrl}/results/bulk-upload-excel', fd).subscribe({
       next: (r: any) => {
         this.uploadProgress = false;
         this.snack.open(`${r.studentsUpdated} students updated from Excel`, '', { duration: 3000 });
