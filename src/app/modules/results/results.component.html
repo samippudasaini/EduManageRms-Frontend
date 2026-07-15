@@ -1,100 +1,220 @@
-<!-- <div class="page-container">
-  <button mat-button [routerLink]="['/examinations', examId]"><mat-icon>arrow_back</mat-icon> Back</button>
-  <h2 class="page-title">Results Entry & View</h2>
-  <mat-tab-group>
-    <mat-tab label="Enter Marks">
-      <div style="padding:16px">
-        <div *ngFor="let result of results" class="result-block">
-          <div class="student-header">
-            <mat-icon>person</mat-icon>
-            <strong>{{result.studentName}}</strong>
-            <span class="grade-chip" [ngClass]="gradeClass(result.grade)">{{result.grade || '-'}}</span>
-            <span>{{result.percentage?.toFixed(2) || 0}}%</span>
-            <span>Rank: {{result.rank || '-'}}</span>
-            <button mat-raised-button color="primary" (click)="saveMarks(result)" style="margin-left:auto">
-              <mat-icon>save</mat-icon> Save
+<div class="page-container" *ngIf="!loading; else spinner">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="header-left">
+      <a mat-button routerLink="/results">
+        <mat-icon>arrow_back</mat-icon> Back to Results
+      </a>
+      <div>
+        <h2 class="page-title">{{ exam?.name || 'Results Entry' }}</h2>
+        <span class="page-sub">{{ exam?.year }}</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button color="primary"
+        (click)="downloadTemplate()"
+        matTooltip="Download Excel template — fill marks offline and upload">
+        <mat-icon>download</mat-icon> Excel Template
+      </button>
+      <label class="upload-btn" [class.uploading]="uploadProgress"
+        matTooltip="Upload filled Excel to bulk-update all student marks">
+        <mat-icon>upload_file</mat-icon>
+        {{ uploadProgress ? 'Uploading...' : 'Upload Excel' }}
+        <input type="file" accept=".xlsx,.xls"
+          (change)="onExcelUpload($event)" hidden [disabled]="uploadProgress">
+      </label>
+      <button mat-raised-button color="primary"
+        (click)="saveAll()" [disabled]="saving">
+        <mat-icon>save</mat-icon>
+        {{ saving ? 'Saving...' : 'Save All Marks' }}
+      </button>
+      <button mat-raised-button color="accent"
+        (click)="printAll()"
+        matTooltip="Print marksheets for all students">
+        <mat-icon>print</mat-icon> Print All
+      </button>
+    </div>
+  </div>
+
+  <!-- INSTRUCTION BAR -->
+  <div class="info-bar">
+    <mat-icon>info</mat-icon>
+    Enter marks directly in the table and click <strong>Save All Marks</strong>.
+    Or click the <strong>edit</strong> icon to enter marks student by student.
+    Use <strong>Excel Template</strong> for bulk import.
+  </div>
+
+  <!-- MARKS TABLE -->
+  <div class="table-wrapper" *ngIf="results.length; else noResults">
+    <table class="marks-table">
+      <thead>
+        <!-- ROW 1: Subject name (grouped) -->
+        <tr>
+          <th class="col-no sticky-col-1" rowspan="2">#</th>
+          <th class="col-name sticky-col-2" rowspan="2">Student Name</th>
+          <ng-container *ngFor="let sub of uniqueSubjects">
+            <th [attr.colspan]="subjectColspan(sub.subjectName)" class="th-subject">
+              {{ sub.subjectName }}
+              <div class="th-marks-info">FM:{{ sub.fullMarks }} PM:{{ sub.passMarks }}</div>
+            </th>
+          </ng-container>
+          <th rowspan="2" class="th-summary">%</th>
+          <th rowspan="2" class="th-summary">Grade</th>
+          <th rowspan="2" class="th-summary">Rank</th>
+          <th rowspan="2" class="th-action">Action</th>
+        </tr>
+        <!-- ROW 2: Theory / Practical sub-columns -->
+        <tr>
+          <ng-container *ngFor="let sub of uniqueSubjects">
+            <th *ngIf="hasTheory(sub.subjectName)" class="th-sub">
+              T<br><small>({{ sub.theoryMax }})</small>
+            </th>
+            <th *ngIf="hasPractical(sub.subjectName)" class="th-sub">
+              P<br><small>({{ sub.practicalMax }})</small>
+            </th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of results; let i = index"
+          [class.row-fail]="r.grade === 'NG' || r.grade === 'F'">
+
+          <td class="col-no sticky-col-1">{{ i + 1 }}</td>
+          <td class="col-name sticky-col-2">{{ r.studentName }}</td>
+
+          <ng-container *ngFor="let sub of uniqueSubjects">
+            <td *ngIf="hasTheory(sub.subjectName)" class="td-mark">
+              <input class="mark-input"
+                type="number" min="0" [max]="sub.theoryMax"
+                [value]="getTheory(r, sub.subjectName)"
+                (change)="setTheory(r, sub.subjectName, $any($event.target).value)"
+                [title]="sub.subjectName + ' Theory (max ' + sub.theoryMax + ')'">
+            </td>
+            <td *ngIf="hasPractical(sub.subjectName)" class="td-mark">
+              <input class="mark-input"
+                type="number" min="0" [max]="sub.practicalMax"
+                [value]="getPractical(r, sub.subjectName)"
+                (change)="setPractical(r, sub.subjectName, $any($event.target).value)"
+                [title]="sub.subjectName + ' Practical (max ' + sub.practicalMax + ')'">
+            </td>
+          </ng-container>
+
+          <td class="td-summary">{{ r.percentage?.toFixed(1) ?? '0.0' }}%</td>
+          <td class="td-summary">
+            <span class="grade-badge" [class]="'grade-' + (r.grade || 'F')">
+              {{ r.grade || '-' }}
+            </span>
+          </td>
+          <td class="td-summary">{{ r.rank || '-' }}</td>
+          <td class="td-action">
+            <button mat-icon-button color="primary"
+              (click)="openEdit(r)"
+              matTooltip="Edit this student's marks individually">
+              <mat-icon>edit</mat-icon>
             </button>
-          </div>
-          <div class="marks-grid">
-            <div class="marks-col header">Subject</div>
-            <div class="marks-col header">Full Marks</div>
-            <div class="marks-col header">Theory</div>
-            <div class="marks-col header">Practical</div>
-            <div class="marks-col header">Grade</div>
-            <ng-container *ngFor="let m of result.marks">
-              <div class="marks-col">{{m.subjectName}}</div>
-              <div class="marks-col">{{m.fullMarks}}</div>
-              <div class="marks-col">
-                <input type="number" [(ngModel)]="m.theory" [max]="m.theoryMax" min="0" class="marks-input" (change)="calcTotal(result)">
-              </div>
-              <div class="marks-col">
-                <input type="number" [(ngModel)]="m.practical" [max]="m.practicalMax" min="0" class="marks-input" (change)="calcTotal(result)">
-              </div>
-              <div class="marks-col">
-                <span class="grade-chip small" [ngClass]="gradeClass(m.grade)">{{m.grade || '-'}}</span>
-              </div>
-            </ng-container>
-          </div>
-        </div>
-        <p class="empty" *ngIf="!results.length">No student results found.</p>
+            <button mat-icon-button color="warn"
+              (click)="printMarksheet(r)"
+              matTooltip="Print marksheet for {{ r.studentName }}">
+              <mat-icon>print</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <ng-template #noResults>
+    <div class="empty-state">
+      <mat-icon>assignment_late</mat-icon>
+      <p>No students found for this program.</p>
+      <small>Make sure students are enrolled in this program under the Students section.</small>
+    </div>
+  </ng-template>
+
+</div>
+
+<!-- LOADING -->
+<ng-template #spinner>
+  <div class="spinner-center">
+    <p>Loading results...</p>
+  </div>
+</ng-template>
+
+<!-- ======================================================== -->
+<!-- INDIVIDUAL STUDENT MARKS ENTRY MODAL                     -->
+<!-- ======================================================== -->
+<div class="modal-overlay" *ngIf="editingResult" (click)="closeEdit()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <div>
+        <h3>{{ editingResult.studentName }}</h3>
+        <p>Enter marks for each subject. Pass/Fail updates live.</p>
       </div>
-    </mat-tab>
-    <mat-tab label="Result Sheet">
-      <div style="padding:16px">
-        <div style="text-align:right;margin-bottom:12px">
-          <button mat-raised-button (click)="print()"><mat-icon>print</mat-icon> Print</button>
-        </div>
-        <div class="result-table" id="printArea">
-          <table mat-table [dataSource]="results" class="full-width">
-            <ng-container matColumnDef="sn"><th mat-header-cell *matHeaderCellDef>SN</th><td mat-cell *matCellDef="let r; let i=index">{{i+1}}</td></ng-container>
-            <ng-container matColumnDef="name"><th mat-header-cell *matHeaderCellDef>Student Name</th><td mat-cell *matCellDef="let r">{{r.studentName}}</td></ng-container>
-            <ng-container matColumnDef="grade"><th mat-header-cell *matHeaderCellDef>Grade</th><td mat-cell *matCellDef="let r"><span class="grade-chip small" [ngClass]="gradeClass(r.grade)">{{r.grade || '-'}}</span></td></ng-container>
-            <ng-container matColumnDef="percentage"><th mat-header-cell *matHeaderCellDef>Percentage</th><td mat-cell *matCellDef="let r">{{r.percentage?.toFixed(2) || '0.00'}}%</td></ng-container>
-            <ng-container matColumnDef="rank"><th mat-header-cell *matHeaderCellDef>Rank</th><td mat-cell *matCellDef="let r">{{r.rank || '-'}}</td></ng-container>
-            <tr mat-header-row *matHeaderRowDef="sheetCols"></tr>
-            <tr mat-row *matRowDef="let row; columns: sheetCols;"></tr>
-          </table>
-        </div>
-      </div>
-    </mat-tab>
-  </mat-tab-group>
-</div> -->
+      <button mat-icon-button (click)="closeEdit()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
 
-<div class="page-container">
-  <h2 class="page-title">Results</h2>
-  <p class="page-sub">Select an examination and program to enter or view marks.</p>
+    <div class="modal-body">
+      <table class="edit-table">
+        <thead>
+          <tr>
+            <th class="th-left">Subject</th>
+            <th>Full</th>
+            <th>Pass</th>
+            <th *ngIf="anyTheory()">Theory</th>
+            <th *ngIf="anyPractical()">Practical</th>
+            <th>Obtained</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let m of editingResult.marks"
+            [class.fail-row]="isSubjectFail(m)">
+            <td class="th-left subject-name">{{ m.subjectName }}</td>
+            <td class="td-center">{{ m.fullMarks }}</td>
+            <td class="td-center">{{ m.passMarks ?? '-' }}</td>
+            <td class="td-center" *ngIf="anyTheory()">
+              <ng-container *ngIf="(m.theoryMax ?? 0) > 0; else noTheory">
+                <input class="edit-input" type="number" min="0" [max]="m.theoryMax"
+                  [(ngModel)]="m.theory" placeholder="0">
+                <span class="max-hint">/{{ m.theoryMax }}</span>
+              </ng-container>
+              <ng-template #noTheory>—</ng-template>
+            </td>
+            <td class="td-center" *ngIf="anyPractical()">
+              <ng-container *ngIf="(m.practicalMax ?? 0) > 0; else noPractical">
+                <input class="edit-input" type="number" min="0" [max]="m.practicalMax"
+                  [(ngModel)]="m.practical" placeholder="0">
+                <span class="max-hint">/{{ m.practicalMax }}</span>
+              </ng-container>
+              <ng-template #noPractical>—</ng-template>
+            </td>
+            <td class="td-center obtained">
+              {{ (m.theory ?? 0) + (m.practical ?? 0) }} / {{ m.fullMarks }}
+            </td>
+            <td class="td-center">
+              <span [class.pass-text]="!isSubjectFail(m)"
+                    [class.fail-text]="isSubjectFail(m)">
+                {{ isSubjectFail(m) ? 'FAIL' : 'PASS' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-  <div *ngIf="loading" class="spinner-center">Loading...</div>
+    <div class="modal-footer">
+      <button mat-button (click)="closeEdit()">Cancel</button>
+      <button mat-raised-button color="primary"
+        (click)="saveIndividual()" [disabled]="savingIndividual">
+        <mat-icon>save</mat-icon>
+        {{ savingIndividual ? 'Saving...' : 'Save Marks' }}
+      </button>
+    </div>
 
-  <mat-accordion *ngIf="!loading">
-    <mat-expansion-panel *ngFor="let exam of examinations" class="exam-panel">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon class="panel-icon">assignment</mat-icon>
-          {{ exam.name }}
-        </mat-panel-title>
-        <mat-panel-description>{{ exam.year }}</mat-panel-description>
-      </mat-expansion-panel-header>
-
-      <div class="programs-grid" *ngIf="exam.programs?.length; else noPrograms">
-        <mat-card class="program-card" *ngFor="let prog of exam.programs">
-          <div class="program-info">
-            <mat-icon>school</mat-icon>
-            <span>{{ prog.name }}</span>
-          </div>
-          <a mat-raised-button color="primary"
-             [routerLink]="['/results', exam.id, prog.id]">
-            <mat-icon>edit_note</mat-icon> Enter / View Marks
-          </a>
-        </mat-card>
-      </div>
-      <ng-template #noPrograms>
-        <p class="empty">No programs assigned to this examination yet. Go to Examinations to assign programs.</p>
-      </ng-template>
-    </mat-expansion-panel>
-  </mat-accordion>
-
-  <p class="empty" *ngIf="!loading && !examinations.length">
-    No examinations found. Create one under the Examinations section first.
-  </p>
+  </div>
 </div>

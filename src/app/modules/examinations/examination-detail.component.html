@@ -29,76 +29,65 @@
   </div>
 </div> -->
 
-<div class="page-container" *ngIf="!loading; else spinner">
+<div class="page-container" *ngIf="exam; else loading">
   <div class="page-header">
     <div>
-      <h2 class="page-title">{{ exam?.name }} — Results</h2>
-      <p class="page-sub">{{ exam?.year }}</p>
-    </div>
-    <div class="header-actions">
-      <button mat-stroked-button (click)="downloadTemplate()" matTooltip="Download Excel template to fill marks offline">
-        <mat-icon>download</mat-icon> Excel Template
-      </button>
-      <label class="upload-btn" matTooltip="Upload filled Excel to bulk-update marks">
-        <mat-icon>upload_file</mat-icon>
-        {{ uploadProgress ? 'Uploading...' : 'Upload Excel' }}
-        <input type="file" accept=".xlsx,.xls" (change)="onExcelUpload($event)" hidden [disabled]="uploadProgress">
-      </label>
-      <button mat-raised-button color="primary" (click)="saveAll()" [disabled]="saving">
-        <mat-icon>save</mat-icon> {{ saving ? 'Saving...' : 'Save All Marks' }}
-      </button>
-      <button mat-raised-button color="accent" (click)="printAll()" matTooltip="Print marksheet for all students">
-        <mat-icon>print</mat-icon> Print All
-      </button>
+      <a mat-button routerLink="/examinations">
+        <mat-icon>arrow_back</mat-icon> Back to Examinations
+      </a>
+      <h2 class="page-title">{{ exam.name }}</h2>
+      <p class="page-sub">{{ exam.year }}</p>
     </div>
   </div>
 
-  <div class="table-scroll-wrapper">
-    <table class="marks-table" *ngIf="results.length; else noResults">
-      <thead>
-        <tr>
-          <th class="sticky-col">Student Name</th>
-          <ng-container *ngFor="let sub of subjects">
-            <th *ngIf="hasTheory(sub.subjectName)">{{ sub.subjectName }}<br><small>Theory ({{ sub.theoryMax }})</small></th>
-            <th *ngIf="hasPractical(sub.subjectName)">{{ sub.subjectName }}<br><small>Practical ({{ sub.practicalMax }})</small></th>
-          </ng-container>
-          <th>%</th>
-          <th>Grade</th>
-          <th>Rank</th>
-          <th>Print</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let r of results">
-          <td class="sticky-col student-name">{{ r.studentName }}</td>
-          <ng-container *ngFor="let sub of subjects">
-            <td *ngIf="hasTheory(sub.subjectName)">
-              <input class="mark-input" type="number" min="0"
-                     [value]="getTheory(r, sub.subjectName)"
-                     (change)="setTheory(r, sub.subjectName, $any($event.target).value)">
-            </td>
-            <td *ngIf="hasPractical(sub.subjectName)">
-              <input class="mark-input" type="number" min="0"
-                     [value]="getPractical(r, sub.subjectName)"
-                     (change)="setPractical(r, sub.subjectName, $any($event.target).value)">
-            </td>
-          </ng-container>
-          <td>{{ r.percentage?.toFixed(1) }}%</td>
-          <td [class.grade-fail]="r.grade === 'NG'">{{ r.grade }}</td>
-          <td>{{ r.rank }}</td>
-          <td>
-            <button mat-icon-button color="primary" (click)="printMarksheet(r)" matTooltip="Print marksheet">
-              <mat-icon>print</mat-icon>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <ng-template #noResults>
-      <p class="empty">No students found for this program. Make sure students are enrolled in this program.</p>
-    </ng-template>
+  <!-- Assign Program -->
+  <mat-card class="assign-card">
+    <h3>Assign Program to this Examination</h3>
+    <p class="hint">When you assign a program, result rows are automatically created for all students in that program.</p>
+    <div class="assign-row">
+      <mat-form-field appearance="outline" class="program-select">
+        <mat-label>Select Program</mat-label>
+        <mat-select [(ngModel)]="selectedFdId">
+          <mat-option *ngFor="let p of availablePrograms()" [value]="p.id">
+            {{ p.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="assignProgram()">
+        <mat-icon>add</mat-icon> Assign Program
+      </button>
+    </div>
+  </mat-card>
+
+  <!-- Assigned Programs -->
+  <mat-card class="programs-card" *ngIf="exam.facultyDetails?.length">
+    <h3>Assigned Programs</h3>
+    <div class="programs-list">
+      <div class="program-row" *ngFor="let fd of exam.facultyDetails">
+        <div class="program-info">
+          <mat-icon>school</mat-icon>
+          <span>{{ fd.name }}</span>
+        </div>
+        <div class="program-actions">
+          <a mat-stroked-button color="primary"
+            [routerLink]="['/results', exam.id, fd.id]">
+            <mat-icon>edit_note</mat-icon> Manage Marks
+          </a>
+          <button mat-icon-button color="warn" (click)="removeProgram(fd.id)"
+            matTooltip="Remove program from exam">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+
+  <div class="empty-state" *ngIf="!exam.facultyDetails?.length">
+    <mat-icon>assignment_late</mat-icon>
+    <p>No programs assigned yet. Assign a program above to start managing results.</p>
   </div>
 </div>
-<ng-template #spinner>
-  <div class="spinner-center"><mat-spinner></mat-spinner></div>
+
+<ng-template #loading>
+  <div class="spinner-center"><p>Loading...</p></div>
 </ng-template>

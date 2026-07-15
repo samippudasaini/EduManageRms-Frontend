@@ -1,0 +1,38 @@
+<div class="page-container">
+  <h2 class="page-title">Results</h2>
+  <p class="page-sub">Select an examination and program to enter or view marks.</p>
+
+  <div class="loading" *ngIf="loading">Loading examinations...</div>
+
+  <mat-accordion *ngIf="!loading">
+    <mat-expansion-panel *ngFor="let exam of examinations" class="exam-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon class="panel-icon">assignment</mat-icon>
+          {{ exam.name }}
+        </mat-panel-title>
+        <mat-panel-description>{{ exam.year }}</mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div class="programs-grid" *ngIf="exam.programs?.length; else noPrograms">
+        <mat-card class="program-card" *ngFor="let prog of exam.programs">
+          <div class="program-info">
+            <mat-icon>school</mat-icon>
+            <span>{{ prog.name }}</span>
+          </div>
+          <a mat-raised-button color="primary" [routerLink]="['/results', exam.id, prog.id]">
+            <mat-icon>edit_note</mat-icon> Manage Marks
+          </a>
+        </mat-card>
+      </div>
+
+      <ng-template #noPrograms>
+        <p class="empty">No programs assigned to this exam. Go to Examinations to assign programs.</p>
+      </ng-template>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <p class="empty" *ngIf="!loading && !examinations.length">
+    No examinations found. Create one under Examinations first.
+  </p>
+</div>
