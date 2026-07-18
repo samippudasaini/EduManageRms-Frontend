@@ -1,0 +1,107 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <a mat-button routerLink="/assignments">
+        <mat-icon>arrow_back</mat-icon> All Classes
+      </a>
+      <h2 class="page-title">
+        Grade {{ gradeName }}{{ sectionName ? ' — ' + sectionName : '' }}
+      </h2>
+      <p class="page-sub">Assignments for this class</p>
+    </div>
+    <button mat-raised-button color="primary" (click)="showForm = !showForm">
+      <mat-icon>{{ showForm ? 'close' : 'add' }}</mat-icon>
+      {{ showForm ? 'Cancel' : 'New Assignment' }}
+    </button>
+  </div>
+
+  <!-- CREATE FORM -->
+  <mat-card class="form-card" *ngIf="showForm">
+    <h3>Create Assignment</h3>
+    <div class="form-grid">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Assignment Title *</mat-label>
+        <input matInput [(ngModel)]="form.name" placeholder="e.g. Chapter 3 Exercise">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput [(ngModel)]="form.description" rows="3"
+          placeholder="Instructions or details..."></textarea>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Assignment Date *</mat-label>
+        <input matInput type="date" [(ngModel)]="form.date">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Due Date</mat-label>
+        <input matInput type="date" [(ngModel)]="form.dueDate">
+      </mat-form-field>
+    </div>
+
+    <!-- FILE UPLOAD -->
+    <div class="file-upload-area">
+      <label class="file-label">
+        <mat-icon>upload_file</mat-icon>
+        <span>Attach File (PDF, Image, Text — max 10MB)</span>
+        <input type="file" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.txt,.csv"
+          (change)="onFileSelected($event)" hidden>
+      </label>
+      <div class="file-selected" *ngIf="selectedFile">
+        <mat-icon>check_circle</mat-icon>
+        <span>{{ selectedFile.name }} ({{ formatSize(selectedFile.size) }})</span>
+        <button mat-icon-button (click)="selectedFile=null" matTooltip="Remove file">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <p class="file-error" *ngIf="fileError">{{ fileError }}</p>
+    </div>
+
+    <div class="form-actions">
+      <button mat-raised-button color="primary" (click)="save()" [disabled]="saving">
+        <mat-icon>save</mat-icon> {{ saving ? 'Creating...' : 'Create Assignment' }}
+      </button>
+      <button mat-button (click)="showForm=false">Cancel</button>
+    </div>
+  </mat-card>
+
+  <!-- ASSIGNMENT LIST -->
+  <div class="assignment-list" *ngIf="assignments.length; else noAss">
+    <mat-card class="assignment-card" *ngFor="let a of assignments">
+      <div class="assignment-header">
+        <div class="assignment-info">
+          <h3>{{ a.name }}</h3>
+          <p class="assignment-meta">
+            Date: {{ a.date }}
+            <span *ngIf="a.dueDate"> | Due: {{ a.dueDate }}</span>
+          </p>
+          <p class="assignment-desc" *ngIf="a.description">{{ a.description }}</p>
+
+          <!-- File attachment badge -->
+          <div class="file-badge" *ngIf="a.hasFile" (click)="openFile(a)">
+            <mat-icon>{{ fileIcon(a.fileType) }}</mat-icon>
+            <span>{{ a.fileName }}</span>
+            <small>{{ formatSize(a.fileSize) }}</small>
+          </div>
+        </div>
+
+        <div class="assignment-actions">
+          <a mat-raised-button color="primary"
+            [routerLink]="['/assignments', gsId, a.id]">
+            <mat-icon>how_to_reg</mat-icon> Mark Submissions
+          </a>
+          <button mat-icon-button color="warn"
+            (click)="deleteAssignment(a.id)" matTooltip="Delete assignment">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <ng-template #noAss>
+    <div class="empty-state">
+      <mat-icon>assignment</mat-icon>
+      <p>No assignments yet. Create one above.</p>
+    </div>
+  </ng-template>
+</div>

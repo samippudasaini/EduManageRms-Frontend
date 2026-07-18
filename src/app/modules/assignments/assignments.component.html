@@ -1,4 +1,4 @@
-<div class="page-container">
+<!-- <div class="page-container">
   <h2 class="page-title">Assignment Management</h2>
   <mat-card class="form-card" style="margin-bottom:20px;padding:20px">
     <h3>Add Assignment</h3>
@@ -41,4 +41,35 @@
     </div>
     <ng-template #noAss><p class="empty">No assignments yet. Select a grade-section to see assignments.</p></ng-template>
   </mat-card>
+</div> -->
+
+
+<div class="page-container">
+  <h2 class="page-title">Assignments</h2>
+  <p class="page-sub">Select a class to manage its assignments.</p>
+
+  <div class="loading" *ngIf="loading">Loading...</div>
+
+  <div class="cards-grid" *ngIf="!loading">
+    <mat-card class="section-card" *ngFor="let card of cards"
+      [routerLink]="['/assignments', card.gradeSectionId]">
+      <div class="card-header">
+        <mat-icon class="card-icon">class</mat-icon>
+        <div class="card-info">
+          <h3>Grade {{ card.gradeName }}
+            <span *ngIf="card.sectionName"> — {{ card.sectionName }}</span>
+          </h3>
+          <p>{{ card.totalAssignments }} assignment(s)</p>
+        </div>
+        <div class="badge-wrap" *ngIf="card.pendingCount > 0">
+          <span class="pending-badge">{{ card.pendingCount }} pending</span>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && !cards.length">
+    <mat-icon>assignment_late</mat-icon>
+    <p>No assignments yet. Go to a class and create one.</p>
+  </div>
 </div>

@@ -56,7 +56,11 @@ export const routes: Routes = [
       { path: 'student-profile/:id', loadComponent: () => import('./modules/student-profile/student-profile.component').then(m => m.StudentProfileComponent) },
       { path: 'attendance', loadComponent: () => import('./modules/attendance/attendance.component').then(m => m.AttendanceComponent) },
       { path: 'attendance/conduct/:id', loadComponent: () => import('./modules/attendance/conduct-attendance.component').then(m => m.ConductAttendanceComponent) },
+      // { path: 'assignments', loadComponent: () => import('./modules/assignments/assignments.component').then(m => m.AssignmentsComponent) },
+      // Add for new feature 
       { path: 'assignments', loadComponent: () => import('./modules/assignments/assignments.component').then(m => m.AssignmentsComponent) },
+      { path: 'assignments/:gsId', loadComponent: () => import('./modules/assignments/assignment-list.component').then(m => m.AssignmentListComponent) },
+      { path: 'assignments/:gsId/:aId', loadComponent: () => import('./modules/assignments/assignment-classroom.component').then(m => m.AssignmentClassroomComponent) },
       { path: 'examinations', loadComponent: () => import('./modules/examinations/examinations.component').then(m => m.ExaminationsComponent) },
       { path: 'examinations/:id', loadComponent: () => import('./modules/examinations/examination-detail.component').then(m => m.ExaminationDetailComponent) },
       // Results hub — lists all exams and their programs

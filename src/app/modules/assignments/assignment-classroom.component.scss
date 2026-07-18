@@ -1,0 +1,99 @@
+.page-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 12px; margin-bottom: 16px;
+}
+.page-sub { color: #78909c; margin: 0; font-size: 13px; }
+
+/* Stats bar */
+.stats-bar {
+  display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.stat {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 10px 20px; border-radius: 10px; min-width: 70px;
+}
+.stat-num { font-size: 24px; font-weight: 700; line-height: 1; }
+.stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+.stat.done    { background: #e8f5e9; color: #2e7d32; }
+.stat.late    { background: #fff8e1; color: #f57f17; }
+.stat.notdone { background: #ffebee; color: #c62828; }
+.stat.pending { background: #f3f3f3; color: #757575; }
+.stat.total   { background: #e3f2fd; color: #1565c0; }
+
+/* Classroom sheet */
+.classroom-sheet {
+  background: #fff; border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden;
+}
+
+.sheet-header {
+  display: grid;
+  grid-template-columns: 40px 1fr 110px 280px 1fr;
+  gap: 0; padding: 10px 16px;
+  background: #1a237e; color: #fff;
+  font-size: 12px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+.student-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 110px 280px 1fr;
+  gap: 0; padding: 10px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+/* Row color coding by status */
+.student-row.row-done    { background: #f9fffe; }
+.student-row.row-late    { background: #fffde7; }
+.student-row.row-notdone { background: #fff5f5; }
+.student-row.row-pending { background: #fff; }
+.student-row:hover { filter: brightness(0.97); }
+
+.col-num { color: #90a4ae; font-size: 13px; text-align: center; }
+.col-name { font-weight: 600; color: #263238; font-size: 14px; display: flex; align-items: center; gap: 6px; }
+.saving-icon { font-size: 16px; width: 16px; height: 16px; color: #1e88e5; animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* Status chip */
+.status-chip {
+  display: inline-block; padding: 3px 10px;
+  border-radius: 10px; font-size: 11px; font-weight: 700;
+}
+.chip-done     { background: #c8e6c9; color: #1b5e20; }
+.chip-late     { background: #fff9c4; color: #f57f17; }
+.chip-not_done { background: #ffcdd2; color: #b71c1c; }
+.chip-pending  { background: #f0f0f0; color: #757575; }
+
+/* Quick-mark buttons */
+.col-actions { display: flex; gap: 6px; }
+.quick-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 5px 10px; border: 1.5px solid transparent;
+  border-radius: 6px; font-size: 12px; font-weight: 600;
+  cursor: pointer; background: #f5f5f5; color: #666;
+  transition: all 0.15s; font-family: inherit;
+}
+.quick-btn mat-icon { font-size: 15px; width: 15px; height: 15px; }
+.btn-done:hover, .btn-done.active   { background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
+.btn-late:hover, .btn-late.active   { background: #fff9c4; color: #f57f17; border-color: #ffe082; }
+.btn-notdone:hover, .btn-notdone.active { background: #ffebee; color: #c62828; border-color: #ef9a9a; }
+
+/* Remarks input — inline, smooth appearance */
+.col-remarks { display: flex; align-items: center; }
+.remarks-input {
+  width: 100%; padding: 5px 8px;
+  border: 1px solid #b0bec5; border-radius: 6px;
+  font-size: 13px; outline: none; background: #fafafa;
+  animation: slideIn 0.2s ease;
+}
+.remarks-input:focus { border-color: #1e88e5; background: #fff; }
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.empty-state { text-align: center; padding: 60px 20px; color: #90a4ae; }
+.empty-state mat-icon { font-size: 48px; width: 48px; height: 48px; margin-bottom: 12px; }
+.spinner-center { padding: 60px; text-align: center; color: #90a4ae; }

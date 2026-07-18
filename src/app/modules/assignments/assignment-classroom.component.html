@@ -1,0 +1,112 @@
+<div class="page-container" *ngIf="!loading; else spinner">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <a mat-button [routerLink]="['/assignments', gsId]">
+        <mat-icon>arrow_back</mat-icon> Back to Assignments
+      </a>
+      <h2 class="page-title">{{ assignment?.name }}</h2>
+      <p class="page-sub">
+        Date: {{ assignment?.date }}
+        <span *ngIf="assignment?.dueDate"> | Due: {{ assignment?.dueDate }}</span>
+      </p>
+    </div>
+    <button mat-raised-button color="primary" (click)="markAllDone()">
+      <mat-icon>done_all</mat-icon> Mark All as DONE
+    </button>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat done">
+      <span class="stat-num">{{ stats().done }}</span>
+      <span class="stat-label">Done</span>
+    </div>
+    <div class="stat late">
+      <span class="stat-num">{{ stats().late }}</span>
+      <span class="stat-label">Late</span>
+    </div>
+    <div class="stat notdone">
+      <span class="stat-num">{{ stats().notDone }}</span>
+      <span class="stat-label">Not Done</span>
+    </div>
+    <div class="stat pending">
+      <span class="stat-num">{{ stats().pending }}</span>
+      <span class="stat-label">Pending</span>
+    </div>
+    <div class="stat total">
+      <span class="stat-num">{{ stats().total }}</span>
+      <span class="stat-label">Total</span>
+    </div>
+  </div>
+
+  <!-- CLASSROOM SHEET -->
+  <div class="classroom-sheet">
+    <div class="sheet-header">
+      <span class="col-num">#</span>
+      <span class="col-name">Student Name</span>
+      <span class="col-status">Status</span>
+      <span class="col-actions">Quick Mark</span>
+      <span class="col-remarks">Remarks</span>
+    </div>
+
+    <div class="student-row" *ngFor="let s of submissions; let i = index"
+      [class]="rowClass(s.submissionStatus)">
+
+      <span class="col-num">{{ i + 1 }}</span>
+
+      <span class="col-name">
+        {{ s.studentName }}
+        <mat-icon class="saving-icon" *ngIf="savingId === s.id">sync</mat-icon>
+      </span>
+
+      <span class="col-status">
+        <span class="status-chip" [class]="'chip-' + s.submissionStatus.toLowerCase()">
+          {{ s.submissionStatus }}
+        </span>
+      </span>
+
+      <!-- Quick-toggle buttons — auto-save on click, NO global save button -->
+      <span class="col-actions">
+        <button class="quick-btn btn-done"
+          [class.active]="s.submissionStatus === 'DONE'"
+          (click)="setStatus(s, 'DONE')"
+          matTooltip="Mark as Done">
+          <mat-icon>check_circle</mat-icon> Done
+        </button>
+        <button class="quick-btn btn-late"
+          [class.active]="s.submissionStatus === 'LATE'"
+          (click)="setStatus(s, 'LATE')"
+          matTooltip="Mark as Late">
+          <mat-icon>schedule</mat-icon> Late
+        </button>
+        <button class="quick-btn btn-notdone"
+          [class.active]="s.submissionStatus === 'NOT_DONE'"
+          (click)="setStatus(s, 'NOT_DONE')"
+          matTooltip="Mark as Not Done">
+          <mat-icon>cancel</mat-icon> Not Done
+        </button>
+      </span>
+
+      <!-- Remarks — only visible for LATE or NOT_DONE -->
+      <span class="col-remarks">
+        <input *ngIf="remarksVisible.has(s.id)"
+          class="remarks-input"
+          [(ngModel)]="s.remarks"
+          (blur)="saveRemarks(s)"
+          placeholder="Add a note..."
+          type="text">
+      </span>
+    </div>
+
+    <div class="empty-state" *ngIf="!submissions.length">
+      <mat-icon>people_outline</mat-icon>
+      <p>No students found in this class.</p>
+    </div>
+  </div>
+</div>
+
+<ng-template #spinner>
+  <div class="spinner-center"><p>Loading classroom...</p></div>
+</ng-template>
