@@ -1,51 +1,237 @@
 <div class="page-container">
-  <h2 class="page-title">Student Management</h2>
-  <mat-card class="form-card" style="max-width:100%;margin-bottom:20px;">
-    <h3>{{editId?'Edit Student':'Add Student'}}</h3>
-    <div class="form-row">
-      <mat-form-field appearance="outline"><mat-label>Full Name</mat-label><input matInput [(ngModel)]="form.name"></mat-form-field>
-      <mat-form-field appearance="outline"><mat-label>Address</mat-label><input matInput [(ngModel)]="form.address"></mat-form-field>
-      <mat-form-field appearance="outline"><mat-label>Guardian Name</mat-label><input matInput [(ngModel)]="form.guardianName"></mat-form-field>
-      <mat-form-field appearance="outline"><mat-label>Contact</mat-label><input matInput [(ngModel)]="form.contact"></mat-form-field>
-      <mat-form-field appearance="outline"><mat-label>Program</mat-label>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">Student Management</h2>
+      <p class="page-sub">Total: <strong>{{ totalStudents }}</strong> students</p>
+    </div>
+    <div class="header-actions">
+      <div class="search-box">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input [(ngModel)]="searchTerm" (input)="search()"
+          placeholder="Search by name..." class="search-input">
+        <button *ngIf="searchTerm" class="search-clear" (click)="searchTerm=''; search()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="view-toggle">
+        <button class="toggle-btn" [class.active]="viewMode==='grouped' && !searching"
+          (click)="setView('grouped')" matTooltip="Group by program">
+          <mat-icon>view_agenda</mat-icon>
+        </button>
+        <button class="toggle-btn" [class.active]="viewMode==='list' && !searching"
+          (click)="setView('list')" matTooltip="Flat list">
+          <mat-icon>view_list</mat-icon>
+        </button>
+      </div>
+      <button mat-stroked-button color="primary" (click)="downloadTemplate()"
+        matTooltip="Download Excel template — includes Program & Grade reference sheets">
+        <mat-icon>download</mat-icon> Excel Template
+      </button>
+      <label class="upload-btn" [class.uploading]="uploadProgress">
+        <mat-icon>upload_file</mat-icon>
+        {{ uploadProgress ? 'Uploading...' : 'Bulk Upload' }}
+        <input type="file" accept=".xlsx,.xls" (change)="onExcelUpload($event)"
+          hidden [disabled]="uploadProgress">
+      </label>
+      <button mat-raised-button color="primary" (click)="showForm=!showForm; duplicateError=''">
+        <mat-icon>{{ showForm ? 'close' : 'person_add' }}</mat-icon>
+        {{ showForm ? 'Cancel' : 'Add Student' }}
+      </button>
+    </div>
+  </div>
+
+
+<!-- UPLOAD RESULT -->
+<div class="upload-result" *ngIf="uploadResult">
+  <mat-icon class="result-icon success-icon">check_circle</mat-icon>
+  <div class="result-body">
+    <!-- Main result message -->
+    <p class="result-main">{{ uploadResult.message }}</p>
+
+    <div class="result-stats">
+      <span class="stat saved">✓ {{ uploadResult.created }} saved to database</span>
+      <span class="stat dup" *ngIf="uploadResult.skippedDuplicate > 0">
+        ⊘ {{ uploadResult.skippedDuplicate }} duplicates skipped
+      </span>
+      <span class="stat err" *ngIf="uploadResult.skippedError > 0">
+        ✖ {{ uploadResult.skippedError }} errors
+      </span>
+    </div>
+
+    <!-- Duplicate details -->
+    <div *ngIf="uploadResult.duplicates?.length" class="dup-list">
+      <p class="dup-title">Duplicates skipped (HashSet detection):</p>
+      <p *ngFor="let d of uploadResult.duplicates" class="dup-item">⚠ {{ d }}</p>
+    </div>
+
+    <!-- Error details — program/grade not found etc -->
+    <div *ngIf="uploadResult.errors?.length" class="err-list">
+      <p class="err-title">Errors (program or grade name not found):</p>
+      <p *ngFor="let e of uploadResult.errors" class="err-item">✖ {{ e }}</p>
+    </div>
+  </div>
+  <button mat-icon-button (click)="uploadResult=null"><mat-icon>close</mat-icon></button>
+</div>
+
+  <!-- ADD / EDIT FORM -->
+  <mat-card class="form-card" *ngIf="showForm">
+    <h3>{{ editId ? 'Edit Student' : 'Add New Student' }}</h3>
+
+    <!-- Duplicate warning banner -->
+    <div class="duplicate-warning" *ngIf="duplicateError">
+      <mat-icon>warning</mat-icon>
+      <span>{{ duplicateError }}</span>
+    </div>
+
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Full Name *</mat-label>
+        <input matInput [(ngModel)]="form.name">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput [(ngModel)]="form.email" type="email" placeholder="student@example.com">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Address</mat-label>
+        <input matInput [(ngModel)]="form.address">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Guardian Name</mat-label>
+        <input matInput [(ngModel)]="form.guardianName">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Contact</mat-label>
+        <input matInput [(ngModel)]="form.contact">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Program *</mat-label>
         <mat-select [(ngModel)]="form.facultyDetailsId">
-          <mat-option *ngFor="let f of programs" [value]="f.id">{{f.name}}</mat-option>
-        </mat-select></mat-form-field>
-      <mat-form-field appearance="outline"><mat-label>Grade-Section</mat-label>
+          <mat-option *ngFor="let p of programs" [value]="p.id">{{ p.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Grade - Section</mat-label>
         <mat-select [(ngModel)]="form.gradesId">
-          <mat-option *ngFor="let g of gradeSections" [value]="g.id">{{g.gradeName}} - {{g.sectionName}}</mat-option>
-        </mat-select></mat-form-field>
+          <mat-option *ngFor="let g of gradeSections" [value]="g.id">
+            {{ g.gradeName }} - {{ g.sectionName }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
     <div class="form-actions">
-      <button mat-raised-button color="primary" (click)="save()">{{editId?'Update':'Add Student'}}</button>
-      <button mat-button (click)="reset()" *ngIf="editId">Cancel</button>
+      <button mat-raised-button color="primary" (click)="save()">
+        <mat-icon>save</mat-icon> {{ editId ? 'Update Student' : 'Add Student' }}
+      </button>
+      <button mat-button (click)="cancelForm()">Cancel</button>
     </div>
   </mat-card>
-  <mat-card class="table-card">
-    <div class="table-header">
-      <mat-form-field appearance="outline" style="width:300px">
-        <mat-label>Search Students</mat-label>
-        <mat-icon matPrefix>search</mat-icon>
-        <input matInput [(ngModel)]="searchTerm" (input)="search()" placeholder="Search by name...">
-      </mat-form-field>
-      <span class="spacer"></span>
-      <span class="total-count">Total: {{students.length}} students</span>
+
+  <!-- GROUPED VIEW -->
+  <div *ngIf="!searching && viewMode === 'grouped'">
+    <mat-accordion multi>
+      <mat-expansion-panel *ngFor="let group of groups" class="program-panel" expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title class="panel-title">
+            <mat-icon class="panel-icon">school</mat-icon>
+            {{ group.programName }}
+          </mat-panel-title>
+          <mat-panel-description>
+            <span class="count-badge">{{ group.totalCount }} students</span>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div *ngFor="let grade of group.grades" class="grade-group">
+          <div class="grade-header">
+            <mat-icon>class</mat-icon>
+            <span>Grade {{ grade.gradeName }}
+              {{ grade.sectionName ? '— Section ' + grade.sectionName : '' }}
+            </span>
+            <span class="grade-count">{{ grade.students.length }} students</span>
+          </div>
+          <table class="student-table">
+            <thead>
+              <tr>
+                <th>#</th><th>Name</th><th>Email</th>
+                <th>Guardian</th><th>Contact</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let s of grade.students; let i = index">
+                <td class="td-num">{{ i + 1 }}</td>
+                <td class="td-name">{{ s.name }}</td>
+                <td>{{ s.email || '-' }}</td>
+                <td>{{ s.guardianName || '-' }}</td>
+                <td>{{ s.contact || '-' }}</td>
+                <td class="td-actions">
+                  <a mat-icon-button color="accent"
+                    [routerLink]="['/student-profile', s.id]" matTooltip="View profile">
+                    <mat-icon>visibility</mat-icon>
+                  </a>
+                  <button mat-icon-button color="primary" (click)="edit(s)" matTooltip="Edit">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+
+                  <button mat-icon-button color="warn" (click)="delete(s)" matTooltip="Delete">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="empty-group" *ngIf="!group.grades?.length">
+          No students in this program yet.
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <div class="empty-state" *ngIf="!groups.length">
+      <mat-icon>people_outline</mat-icon>
+      <p>No students yet. Add one above or use Bulk Upload.</p>
     </div>
-    <table mat-table [dataSource]="students" class="full-width">
-      <ng-container matColumnDef="id"><th mat-header-cell *matHeaderCellDef>#</th><td mat-cell *matCellDef="let r">{{r.id}}</td></ng-container>
-      <ng-container matColumnDef="name"><th mat-header-cell *matHeaderCellDef>Name</th><td mat-cell *matCellDef="let r">{{r.name}}</td></ng-container>
-      <ng-container matColumnDef="guardian"><th mat-header-cell *matHeaderCellDef>Guardian</th><td mat-cell *matCellDef="let r">{{r.guardianName}}</td></ng-container>
-      <ng-container matColumnDef="contact"><th mat-header-cell *matHeaderCellDef>Contact</th><td mat-cell *matCellDef="let r">{{r.contact}}</td></ng-container>
-      <ng-container matColumnDef="program"><th mat-header-cell *matHeaderCellDef>Program</th><td mat-cell *matCellDef="let r">{{r.facultyName}}</td></ng-container>
-      <ng-container matColumnDef="grade"><th mat-header-cell *matHeaderCellDef>Grade</th><td mat-cell *matCellDef="let r">{{r.gradeName}} {{r.sectionName}}</td></ng-container>
-      <ng-container matColumnDef="actions"><th mat-header-cell *matHeaderCellDef>Actions</th><td mat-cell *matCellDef="let r">
-        <button mat-icon-button color="accent" [routerLink]="['/student-profile', r.id]" title="View Profile"><mat-icon>visibility</mat-icon></button>
-        <button mat-icon-button color="primary" (click)="edit(r)"><mat-icon>edit</mat-icon></button>
-        <button mat-icon-button color="warn" (click)="delete(r.id)"><mat-icon>delete</mat-icon></button>
-      </td></ng-container>
-      <tr mat-header-row *matHeaderRowDef="cols"></tr>
-      <tr mat-row *matRowDef="let row; columns: cols;"></tr>
-    </table>
-    <p class="empty" *ngIf="!students.length">No students found.</p>
-  </mat-card>
+  </div>
+
+  <!-- LIST / SEARCH VIEW -->
+  <div *ngIf="searching || viewMode === 'list'">
+    <mat-card class="table-card">
+      <table class="student-table full-width">
+        <thead>
+          <tr>
+            <th>#</th><th>Name</th><th>Email</th><th>Program</th>
+            <th>Grade</th><th>Guardian</th><th>Contact</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of students; let i = index">
+            <td class="td-num">{{ i + 1 }}</td>
+            <td class="td-name">{{ s.name }}</td>
+            <td>{{ s.email || '-' }}</td>
+            <td>{{ s.facultyName || '-' }}</td>
+            <td>{{ s.gradeName || '' }} {{ s.sectionName || '' }}</td>
+            <td>{{ s.guardianName || '-' }}</td>
+            <td>{{ s.contact || '-' }}</td>
+            <td class="td-actions">
+              <a mat-icon-button color="accent"
+                [routerLink]="['/student-profile', s.id]" matTooltip="View profile">
+                <mat-icon>visibility</mat-icon>
+              </a>
+              <button mat-icon-button color="primary" (click)="edit(s)" matTooltip="Edit">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="delete(s.id)" matTooltip="Delete">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="empty-state" *ngIf="!students.length">
+        <mat-icon>people_outline</mat-icon>
+        <p>No students found.</p>
+      </div>
+    </mat-card>
+  </div>
+
 </div>
