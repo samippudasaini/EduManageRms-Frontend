@@ -1,1 +1,430 @@
-.layout-row{display:flex;gap:20px;flex-wrap:wrap;} .form-card{width:300px;padding:20px;} .form-card h3{margin-bottom:16px;} .flex-1{flex:1;min-width:300px;} .form-actions{display:flex;gap:8px;} .empty{padding:20px;text-align:center;color:#999;}
+// faculty.component.scss
+// ============================================================
+// FACULTY MANAGEMENT - CLEAN & ATTRACTIVE UI
+// ============================================================
+
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* ============================================================
+   PAGE HEADER
+   ============================================================ */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 24px 0;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  .header-left {
+    .page-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 4px 0;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: #64748b;
+      margin: 0;
+    }
+  }
+
+  .header-right {
+    .stats-badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 20px;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+      .stats-number {
+        font-size: 24px;
+        font-weight: 800;
+        color: #0f172a;
+      }
+
+      .stats-label {
+        font-size: 13px;
+        color: #64748b;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+/* ============================================================
+   LAYOUT ROW
+   ============================================================ */
+.layout-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   FORM CARD
+   ============================================================ */
+.form-card {
+  width: 340px;
+  padding: 28px;
+  border-radius: 16px !important;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  flex-shrink: 0;
+
+  .form-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+
+    .form-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+      color: #3b82f6;
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #0f172a;
+      margin: 0;
+    }
+  }
+
+  .full-width {
+    width: 100%;
+    margin-bottom: 4px;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 24px;
+      border-radius: 10px !important;
+      font-weight: 600;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+
+    .mat-mdc-raised-button[color="primary"] {
+      background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+    }
+  }
+
+  .form-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    padding: 8px 14px;
+    background: #eff6ff;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #1d4ed8;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: #3b82f6;
+    }
+
+    strong {
+      font-weight: 600;
+    }
+  }
+}
+
+/* ============================================================
+   TABLE CARD
+   ============================================================ */
+.table-card {
+  flex: 1;
+  min-width: 400px;
+  padding: 24px;
+  border-radius: 16px !important;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  display: flex;
+  flex-direction: column;
+
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .table-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      mat-icon {
+        color: #64748b;
+        font-size: 22px;
+        width: 22px;
+        height: 22px;
+      }
+
+      span {
+        font-size: 16px;
+        font-weight: 600;
+        color: #0f172a;
+      }
+
+      .table-count {
+        font-size: 12px;
+        font-weight: 500;
+        color: #94a3b8;
+        background: #f1f5f9;
+        padding: 2px 12px;
+        border-radius: 20px;
+      }
+    }
+
+    .table-actions {
+      button {
+        color: #64748b;
+
+        &:hover {
+          color: #0f172a;
+          background: #f1f5f9;
+        }
+      }
+    }
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    flex: 1;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      .mat-mdc-header-row {
+        background: #f8fafc;
+        border-radius: 10px;
+      }
+
+      .mat-mdc-header-cell {
+        font-size: 12px;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 12px 16px;
+        border-bottom: 2px solid #e2e8f0;
+      }
+
+      .mat-mdc-cell {
+        padding: 12px 16px;
+        font-size: 14px;
+        color: #1e293b;
+        border-bottom: 1px solid #f1f5f9;
+      }
+
+      .mat-mdc-row {
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: #f8fafc;
+        }
+
+        &:last-child .mat-mdc-cell {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+
+  /* ── Faculty Name with Icon ── */
+  .faculty-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .name-icon {
+      font-size: 16px;
+    }
+  }
+
+  /* ── Action Buttons ── */
+  .action-buttons {
+    display: flex;
+    gap: 4px;
+
+    button {
+      width: 36px;
+      height: 36px;
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+
+      &[color="primary"]:hover {
+        background: #eff6ff;
+      }
+
+      &[color="warn"]:hover {
+        background: #fee2e2;
+      }
+    }
+  }
+
+  /* ── Empty State ── */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+
+    mat-icon {
+      font-size: 56px;
+      width: 56px;
+      height: 56px;
+      color: #cbd5e1;
+      margin-bottom: 12px;
+    }
+
+    p {
+      font-size: 18px;
+      font-weight: 600;
+      color: #64748b;
+      margin: 0;
+    }
+
+    span {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+  }
+
+  /* ── Table Footer ── */
+  .table-footer {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #f1f5f9;
+    font-size: 13px;
+    color: #94a3b8;
+    text-align: center;
+  }
+}
+
+/* ============================================================
+   MATERIAL OVERRIDES
+   ============================================================ */
+.mat-mdc-card {
+  box-shadow: none !important;
+}
+
+.mat-mdc-form-field {
+  .mat-mdc-form-field-outline {
+    border-radius: 10px;
+  }
+
+  .mat-mdc-text-field-wrapper {
+    border-radius: 10px;
+  }
+}
+
+.mat-mdc-raised-button {
+  border-radius: 10px !important;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  .form-card {
+    width: 100%;
+  }
+
+  .table-card {
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .header-right {
+      width: 100%;
+    }
+  }
+
+  .layout-row {
+    flex-direction: column;
+  }
+
+  .form-card {
+    padding: 20px;
+  }
+
+  .table-card {
+    padding: 16px;
+    min-width: auto;
+  }
+
+  .action-buttons {
+    flex-direction: row !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header .header-left .page-title {
+    font-size: 20px;
+  }
+
+  .form-card {
+    padding: 16px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .table-card .table-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}

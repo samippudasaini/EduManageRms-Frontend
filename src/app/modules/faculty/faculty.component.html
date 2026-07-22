@@ -1,38 +1,124 @@
+<!-- faculty.component.html -->
 <div class="page-container">
-  <h2 class="page-title">Faculty Management</h2>
+
+  <!-- ====== PAGE HEADER ====== -->
+  <div class="page-header">
+    <div class="header-left">
+      <h2 class="page-title">🏛️ Faculty Management</h2>
+      <p class="page-subtitle">Manage your college faculties and departments</p>
+    </div>
+    <div class="header-right">
+      <div class="stats-badge">
+        <span class="stats-number">{{ faculties.length }}</span>
+        <span class="stats-label">Total Faculties</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== MAIN LAYOUT ====== -->
   <div class="layout-row">
+    
+    <!-- ====== FORM CARD ====== -->
     <mat-card class="form-card">
-      <h3>{{editId ? 'Edit Faculty' : 'Add Faculty'}}</h3>
+      <div class="form-header">
+        <mat-icon class="form-icon">{{ editId ? 'edit' : 'add_circle' }}</mat-icon>
+        <h3>{{ editId ? '✏️ Edit Faculty' : '➕ Add New Faculty' }}</h3>
+      </div>
+      
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Faculty Name</mat-label>
-        <input matInput [(ngModel)]="formName" placeholder="e.g. +2 Science, BCA">
+        <input matInput [(ngModel)]="formName" placeholder="e.g. Science, Management, Humanities" 
+               (keyup.enter)="save()">
+        <mat-icon matSuffix>school</mat-icon>
       </mat-form-field>
+      
       <div class="form-actions">
-        <button mat-raised-button color="primary" (click)="save()">{{editId?'Update':'Add'}}</button>
-        <button mat-button (click)="reset()" *ngIf="editId">Cancel</button>
+        <button mat-raised-button color="primary" (click)="save()" [disabled]="!formName.trim()">
+          <mat-icon>{{ editId ? 'update' : 'save' }}</mat-icon>
+          {{ editId ? 'Update Faculty' : 'Add Faculty' }}
+        </button>
+        <button mat-stroked-button (click)="reset()" *ngIf="editId">
+          <mat-icon>close</mat-icon> Cancel
+        </button>
+      </div>
+      
+      <div class="form-hint" *ngIf="editId">
+        <mat-icon>info</mat-icon>
+        Editing: <strong>{{ formName }}</strong>
       </div>
     </mat-card>
-    <mat-card class="table-card flex-1">
-      <table mat-table [dataSource]="faculties" class="full-width">
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef>#</th>
-          <td mat-cell *matCellDef="let r">{{r.id}}</td>
-        </ng-container>
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Faculty Name</th>
-          <td mat-cell *matCellDef="let r">{{r.name}}</td>
-        </ng-container>
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
-          <td mat-cell *matCellDef="let r">
-            <button mat-icon-button color="primary" (click)="edit(r)"><mat-icon>edit</mat-icon></button>
-            <button mat-icon-button color="warn" (click)="delete(r.id)"><mat-icon>delete</mat-icon></button>
-          </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="cols"></tr>
-        <tr mat-row *matRowDef="let row; columns: cols;"></tr>
-      </table>
-      <p class="empty" *ngIf="!faculties.length">No faculties found.</p>
+
+    <!-- ====== TABLE CARD ====== -->
+    <mat-card class="table-card">
+      
+      <!-- Table Header -->
+      <div class="table-header">
+        <div class="table-title">
+          <mat-icon>list_alt</mat-icon>
+          <span>Faculty List</span>
+          <span class="table-count">{{ faculties.length }} records</span>
+        </div>
+        <div class="table-actions">
+          <button mat-icon-button matTooltip="Refresh" (click)="load()">
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrapper">
+        <table mat-table [dataSource]="faculties" class="full-width mat-elevation-z0">
+          
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>#</th>
+            <td mat-cell *matCellDef="let r">{{ r.id }}</td>
+          </ng-container>
+          
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Faculty Name</th>
+            <td mat-cell *matCellDef="let r">
+              <div class="faculty-name">
+                <span class="name-icon">📚</span>
+                {{ r.name }}
+              </div>
+            </td>
+          </ng-container>
+          
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let r">
+              <div class="action-buttons">
+                <button mat-icon-button color="primary" (click)="edit(r)" matTooltip="Edit Faculty">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="delete(r.id)" matTooltip="Delete Faculty">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+          
+          <tr mat-header-row *matHeaderRowDef="cols"></tr>
+          <tr mat-row *matRowDef="let row; columns: cols;"></tr>
+          
+        </table>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="!faculties.length">
+        <mat-icon>school</mat-icon>
+        <p>No faculties found</p>
+        <span>Add your first faculty using the form</span>
+      </div>
+
+      <!-- Table Footer -->
+      <div class="table-footer" *ngIf="faculties.length">
+        <span>Showing {{ faculties.length }} faculty{{ faculties.length > 1 ? 'ies' : '' }}</span>
+      </div>
+      
     </mat-card>
   </div>
 </div>
