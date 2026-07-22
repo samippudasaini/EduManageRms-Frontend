@@ -1,17 +1,14 @@
-// ============================================================
-// SIDEBAR - WIDER & CLEAN
-// ============================================================
-
+/* ── CONTAINER ──────────────────────────────────────────── */
 .sidenav-container {
   height: 100vh;
   background: #f0f4f8;
 }
 
 /* ============================================================
-   SIDEBAR - WIDER (300px)
+   SIDEBAR - LIGHT & CLEAN
    ============================================================ */
 .sidenav {
-  width: 300px;  /* ✅ INCREASED FROM 270px TO 300px */
+  width: 300px;
   display: flex;
   flex-direction: column;
   background: #ffffff;
@@ -38,13 +35,13 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 20px 24px 18px;  /* ✅ Increased padding */
+  padding: 20px 24px 18px;
   text-decoration: none;
   border-bottom: 1px solid #e2e8f0;
   background: #ffffff;
 
   .logo-circle {
-    width: 48px;  /* ✅ Slightly larger */
+    width: 48px;
     height: 48px;
     border-radius: 12px;
     background: linear-gradient(135deg, #3b82f6, #8b5cf6);
@@ -68,7 +65,7 @@
     overflow: hidden;
 
     .logo-text {
-      font-size: 20px;  /* ✅ Slightly larger */
+      font-size: 20px;
       font-weight: 800;
       color: #0f172a;
       white-space: nowrap;
@@ -90,17 +87,17 @@
   }
 }
 
-/* ── User Profile ───────────────────────────────────────── */
+/* ── User Profile in Sidebar ───────────────────────────── */
 .sidebar-user {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 16px 24px;  /* ✅ Increased padding */
+  padding: 16px 24px;
   border-bottom: 1px solid #e2e8f0;
   background: #f8fafc;
 
   .user-avatar {
-    width: 44px;  /* ✅ Slightly larger */
+    width: 44px;
     height: 44px;
     border-radius: 50%;
     background: linear-gradient(135deg, #3b82f6, #8b5cf6);
@@ -118,7 +115,7 @@
     min-width: 0;
 
     .user-name {
-      font-size: 16px;  /* ✅ Slightly larger */
+      font-size: 16px;
       font-weight: 700;
       color: #0f172a;
       margin: 0;
@@ -159,7 +156,7 @@ mat-nav-list {
 }
 
 .nav-section {
-  padding: 20px 16px 8px;  /* ✅ Increased padding */
+  padding: 20px 16px 8px;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 1.5px;
@@ -174,8 +171,8 @@ mat-nav-list a {
   transition: all 0.2s ease;
   font-weight: 600;
   font-size: 14px;
-  padding: 12px 16px;  /* ✅ Increased padding */
-  height: 48px;  /* ✅ Slightly taller */
+  padding: 12px 16px;
+  height: 48px;
   position: relative;
   cursor: pointer;
 
@@ -185,7 +182,7 @@ mat-nav-list a {
     font-size: 22px;
     width: 22px;
     height: 22px;
-    margin-right: 8px;  /* ✅ More space */
+    margin-right: 8px;
   }
 
   span.mat-list-item-title {
@@ -193,8 +190,6 @@ mat-nav-list a {
     color: #334155;
     font-size: 14px;
   }
-
-
 
   &:hover {
     background: #f1f5f9;
@@ -227,7 +222,7 @@ mat-nav-list a {
 
 /* ── Sidebar Footer ────────────────────────────────────── */
 .sidenav-footer {
-  padding: 14px 20px 18px;  /* ✅ Increased padding */
+  padding: 14px 20px 18px;
   border-top: 1px solid #e2e8f0;
   background: #ffffff;
 
@@ -236,7 +231,7 @@ mat-nav-list a {
     color: #475569 !important;
     border-color: #e2e8f0 !important;
     border-radius: 10px;
-    padding: 12px;  /* ✅ More padding */
+    padding: 12px;
     font-weight: 600;
     font-size: 14px;
 
@@ -266,7 +261,7 @@ mat-nav-list a {
 }
 
 /* ============================================================
-   TOOLBAR - Adjust for wider sidebar
+   TOOLBAR - CLEAN & STRUCTURED
    ============================================================ */
 .toolbar {
   position: sticky;
@@ -277,32 +272,41 @@ mat-nav-list a {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   height: 72px;
   padding: 0 28px;
+  display: flex;
+  align-items: center;
 
-  .menu-btn {
-    color: #475569;
-    margin-right: 8px;
-
-    &:hover {
-      background: #f1f5f9;
-    }
-  }
-
-  .toolbar-title {
+  /* ── LEFT SECTION ── */
+  .toolbar-left {
     display: flex;
-    flex-direction: column;
-    margin-left: 4px;
+    align-items: center;
+    gap: 12px;
 
-    .title-main {
-      font-size: 20px;
-      font-weight: 700;
-      color: #0f172a;
-      line-height: 1.2;
+    .menu-btn {
+      color: #475569;
+      width: 40px;
+      height: 40px;
+
+      &:hover {
+        background: #f1f5f9;
+      }
     }
 
-    .title-sub {
-      font-size: 12px;
-      color: #64748b;
-      font-weight: 400;
+    .toolbar-title {
+      display: flex;
+      flex-direction: column;
+
+      .title-main {
+        font-size: 20px;
+        font-weight: 700;
+        color: #0f172a;
+        line-height: 1.2;
+      }
+
+      .title-sub {
+        font-size: 12px;
+        color: #64748b;
+        font-weight: 400;
+      }
     }
   }
 
@@ -310,70 +314,96 @@ mat-nav-list a {
     flex: 1;
   }
 
-  .toolbar-btn {
-    color: #64748b;
-    width: 40px;
-    height: 40px;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: #f1f5f9;
-      color: #0f172a;
-    }
-  }
-
-  .notification-btn {
-    position: relative;
-
-    .notification-dot {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #ef4444;
-      border: 2px solid #fff;
-    }
-  }
-
-  .user-btn {
+  /* ── RIGHT SECTION ── */
+  .toolbar-right {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 4px 14px 4px 4px;
-    border-radius: 50px;
-    background: #f1f5f9;
-    color: #1e293b;
-    font-weight: 600;
-    margin-left: 4px;
-    transition: all 0.3s ease;
+    gap: 6px;
 
-    &:hover {
-      background: #e2e8f0;
-    }
-
-    .user-avatar-small {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    .toolbar-btn {
+      color: #64748b;
+      width: 40px;
+      height: 40px;
+      transition: all 0.3s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 700;
-      font-size: 14px;
-      color: #fff;
+
+      &:hover {
+        background: #f1f5f9;
+        color: #0f172a;
+      }
+
+      mat-icon {
+        font-size: 22px;
+        width: 22px;
+        height: 22px;
+      }
     }
 
-    .user-name-small {
-      font-size: 13px;
-      font-weight: 600;
+    .notification-btn {
+      position: relative;
+
+      .notification-dot {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #ef4444;
+        border: 2px solid #fff;
+        animation: pulse-dot 2s infinite;
+      }
     }
 
-    .dropdown-icon {
-      font-size: 20px;
-      color: #94a3b8;
+    /* ── ADMIN USER BUTTON - FIXED ── */
+    .user-btn {
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+      padding: 4px 12px 4px 4px !important;
+      border-radius: 50px !important;
+      background: #f1f5f9 !important;
+      color: #1e293b !important;
+      font-weight: 600 !important;
+      margin-left: 4px !important;
+      transition: all 0.3s ease !important;
+      border: none !important;
+      min-height: 44px !important;
+      line-height: 1 !important;
+
+      &:hover {
+        background: #e2e8f0 !important;
+      }
+
+      .user-avatar-small {
+        width: 34px !important;
+        height: 34px !important;
+        border-radius: 50% !important;
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-weight: 700 !important;
+        font-size: 14px !important;
+        color: #ffffff !important;
+        flex-shrink: 0 !important;
+      }
+
+      .user-name-small {
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: #0f172a !important;
+        white-space: nowrap !important;
+      }
+
+      .dropdown-icon {
+        font-size: 20px !important;
+        width: 20px !important;
+        height: 20px !important;
+        color: #94a3b8 !important;
+      }
     }
   }
 }
@@ -438,7 +468,11 @@ mat-nav-list a {
     }
 
     .user-btn .user-name-small {
-      display: none;
+      display: none !important;
+    }
+
+    .toolbar-right {
+      gap: 4px;
     }
   }
 
@@ -457,7 +491,12 @@ mat-nav-list a {
     }
 
     .user-btn {
-      padding: 4px 8px 4px 4px;
+      padding: 4px 8px 4px 4px !important;
+    }
+
+    .toolbar-right .toolbar-btn {
+      width: 36px;
+      height: 36px;
     }
   }
 

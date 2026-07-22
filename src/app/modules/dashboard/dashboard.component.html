@@ -1,4 +1,4 @@
-<div class="page-container">
+<!-- <div class="page-container">
   <div class="dashboard-banner">
     <div class="banner-logo">
       <img [src]="logoSrc" alt="College logo">
@@ -36,4 +36,184 @@
       <button mat-raised-button routerLink="/assignments"><mat-icon>assignment</mat-icon> Assignments</button>
     </div>
   </div>
+</div> -->
+
+
+<!-- dashboard.component.html -->
+<div class="dashboard-container">
+
+  <!-- ====== BANNER / HEADER ====== -->
+  <div class="dashboard-banner">
+    <div class="banner-left">
+      <div class="banner-logo">
+        <img [src]="logoSrc" alt="College logo">
+      </div>
+      <div class="banner-text">
+        <h2 class="page-title">{{ profile?.name || 'School Management System' }}</h2>
+        <p class="banner-address" *ngIf="profile?.address">
+          <mat-icon>location_on</mat-icon> {{ profile.address }}
+        </p>
+        <p class="welcome">
+          👋 Welcome back, <strong>{{ authService.getCurrentUser()?.name || 'Admin' }}</strong>!
+        </p>
+      </div>
+    </div>
+    <div class="banner-right">
+      <div class="date-badge">
+        <mat-icon>calendar_today</mat-icon>
+        <span>{{ todayDate }}</span>
+      </div>
+      <div class="admin-badge">
+        <div class="admin-avatar">
+          {{ authService.getCurrentUser()?.name?.charAt(0) || 'A' }}
+        </div>
+        <div class="admin-info">
+          <span class="admin-name">{{ authService.getCurrentUser()?.name || 'Admin' }}</span>
+          <span class="admin-role">
+            <span class="role-dot"></span>
+            {{ authService.isAdmin() ? 'Administrator' : 'Teacher' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== STATS CARDS ====== -->
+  <div class="stats-grid">
+    <mat-card class="stat-card blue" routerLink="/students">
+      <div class="stat-icon">
+        <mat-icon>people</mat-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-num">{{ stats.students }}</span>
+        <span class="stat-label">Students</span>
+      </div>
+      <div class="stat-arrow">
+        <mat-icon>arrow_forward</mat-icon>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card green" routerLink="/faculty">
+      <div class="stat-icon">
+        <mat-icon>school</mat-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-num">{{ stats.faculties }}</span>
+        <span class="stat-label">Faculties</span>
+      </div>
+      <div class="stat-arrow">
+        <mat-icon>arrow_forward</mat-icon>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card orange" routerLink="/subjects">
+      <div class="stat-icon">
+        <mat-icon>menu_book</mat-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-num">{{ stats.subjects }}</span>
+        <span class="stat-label">Subjects</span>
+      </div>
+      <div class="stat-arrow">
+        <mat-icon>arrow_forward</mat-icon>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card purple" routerLink="/examinations">
+      <div class="stat-icon">
+        <mat-icon>grading</mat-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-num">{{ stats.examinations }}</span>
+        <span class="stat-label">Examinations</span>
+      </div>
+      <div class="stat-arrow">
+        <mat-icon>arrow_forward</mat-icon>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- ====== QUICK ACTIONS ====== -->
+  <div class="quick-actions">
+    <div class="quick-header">
+      <h3>⚡ Quick Actions</h3>
+      <span class="quick-sub">Frequently used tasks</span>
+    </div>
+    <div class="links-grid">
+      <button mat-raised-button color="primary" routerLink="/attendance">
+        <mat-icon>how_to_reg</mat-icon> Take Attendance
+      </button>
+      <button mat-raised-button color="accent" routerLink="/students">
+        <mat-icon>person_add</mat-icon> Add Student
+      </button>
+      <button mat-raised-button color="primary" routerLink="/examinations">
+        <mat-icon>add_circle</mat-icon> New Examination
+      </button>
+      <button mat-raised-button routerLink="/assignments" class="assignments-btn">
+        <mat-icon>assignment</mat-icon> Assignments
+      </button>
+    </div>
+  </div>
+
+  <!-- ====== BOTTOM SECTION ====== -->
+  <div class="bottom-section">
+    <!-- Recent Activity -->
+    <div class="activity-card">
+      <div class="activity-header">
+        <h3>📋 Recent Activity</h3>
+        <span class="view-all">View All →</span>
+      </div>
+      <div class="activity-list">
+        <div class="activity-item">
+          <div class="activity-dot blue"></div>
+          <div class="activity-text">
+            <strong>{{ stats.students }}</strong> students enrolled
+          </div>
+          <div class="activity-time">Today</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot green"></div>
+          <div class="activity-text">
+            <strong>{{ stats.faculties }}</strong> faculties active
+          </div>
+          <div class="activity-time">This week</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot orange"></div>
+          <div class="activity-text">
+            <strong>{{ stats.subjects }}</strong> subjects available
+          </div>
+          <div class="activity-time">This month</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot purple"></div>
+          <div class="activity-text">
+            <strong>{{ stats.examinations }}</strong> exams scheduled
+          </div>
+          <div class="activity-time">Upcoming</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="quick-stats">
+      <div class="quick-stat-item">
+        <div class="qs-number">{{ stats.students }}</div>
+        <div class="qs-label">Total Students</div>
+      </div>
+      <div class="quick-stat-item">
+        <div class="qs-number">{{ stats.faculties }}</div>
+        <div class="qs-label">Total Faculties</div>
+      </div>
+      <div class="quick-stat-item">
+        <div class="qs-number">{{ stats.subjects }}</div>
+        <div class="qs-label">Total Subjects</div>
+      </div>
+      <div class="quick-stat-item">
+        <div class="qs-number">{{ stats.examinations }}</div>
+        <div class="qs-label">Total Exams</div>
+      </div>
+    </div>
+  </div>
+
 </div>

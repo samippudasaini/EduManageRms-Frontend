@@ -15,7 +15,7 @@
       </div>
     </a>
 
-    <!-- User Profile -->
+    <!-- User Profile in Sidebar -->
     <div class="sidebar-user" *ngIf="authService.getCurrentUser()">
       <div class="user-avatar">
         {{ authService.getCurrentUser()?.name?.charAt(0) || 'A' }}
@@ -63,7 +63,6 @@
       <a mat-list-item routerLink="/grades" routerLinkActive="active-link">
         <mat-icon matListItemIcon>class</mat-icon>
         <span matListItemTitle>Grades & Sections</span>
-        <!-- ✅ REMOVED: <span class="nav-badge">12</span> -->
       </a>
 
       <!-- STUDENTS -->
@@ -71,12 +70,10 @@
       <a mat-list-item routerLink="/students" routerLinkActive="active-link">
         <mat-icon matListItemIcon>people</mat-icon>
         <span matListItemTitle>Students</span>
-        <!-- ✅ REMOVED: <span class="nav-badge">1.2k</span> -->
       </a>
       <a mat-list-item routerLink="/attendance" routerLinkActive="active-link">
         <mat-icon matListItemIcon>how_to_reg</mat-icon>
         <span matListItemTitle>Attendance</span>
-        <!-- ✅ REMOVED: <span class="nav-badge warning">8</span> -->
       </a>
       <a mat-list-item routerLink="/assignments" routerLinkActive="active-link">
         <mat-icon matListItemIcon>assignment</mat-icon>
@@ -121,52 +118,64 @@
   <!-- ====== MAIN CONTENT ====== -->
   <mat-sidenav-content>
     
-    <!-- ====== TOP TOOLBAR ====== -->
-    <mat-toolbar class="toolbar">
-      <button mat-icon-button (click)="sidenav.toggle()" class="menu-btn">
-        <mat-icon>menu</mat-icon>
-      </button>
-      
-      <div class="toolbar-title">
-        <span class="title-main">Dashboard</span>
-        <span class="title-sub">Welcome back, {{ authService.getCurrentUser()?.name || 'Admin' }}!</span>
+ <!-- ====== TOP TOOLBAR - FIXED ADMIN ====== -->
+<mat-toolbar class="toolbar">
+  
+  <!-- LEFT: Menu + Page Title -->
+  <div class="toolbar-left">
+    <button mat-icon-button (click)="sidenav.toggle()" class="menu-btn">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <div class="toolbar-title">
+      <span class="title-main">Dashboard</span>
+      <span class="title-sub">Welcome back, {{ authService.getCurrentUser()?.name || 'Admin' }}!</span>
+    </div>
+  </div>
+  
+  <!-- SPACER -->
+  <span class="spacer"></span>
+
+  <!-- RIGHT: Search + Notifications + Admin -->
+  <div class="toolbar-right">
+    
+    <!-- Search Button -->
+    <button mat-icon-button class="toolbar-btn" matTooltip="Search">
+      <mat-icon>search</mat-icon>
+    </button>
+
+    <!-- Notifications Button with Badge -->
+    <button mat-icon-button class="toolbar-btn notification-btn" matTooltip="Notifications">
+      <mat-icon>notifications</mat-icon>
+      <span class="notification-dot"></span>
+    </button>
+
+    <!-- Admin User Menu - FIXED -->
+    <button mat-button [matMenuTriggerFor]="userMenu" class="user-btn">
+      <div class="user-avatar-small">
+        {{ authService.getCurrentUser()?.name?.charAt(0)?.toUpperCase() || 'A' }}
       </div>
-      
-      <span class="spacer"></span>
-
-      <button mat-icon-button class="toolbar-btn">
-        <mat-icon>search</mat-icon>
+      <span class="user-name-small">{{ authService.getCurrentUser()?.name || 'Admin' }}</span>
+      <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+    </button>
+    
+    <mat-menu #userMenu="matMenu" class="user-menu">
+      <a mat-menu-item routerLink="/profile">
+        <mat-icon>account_balance</mat-icon> 
+        <span>College Profile</span>
+      </a>
+      <a mat-menu-item routerLink="/settings">
+        <mat-icon>settings</mat-icon> 
+        <span>Settings</span>
+      </a>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="authService.logout()" class="logout-menu-item">
+        <mat-icon color="warn">logout</mat-icon> 
+        <span>Logout</span>
       </button>
-
-      <button mat-icon-button class="toolbar-btn notification-btn">
-        <mat-icon>notifications</mat-icon>
-        <span class="notification-dot"></span>
-      </button>
-
-      <button mat-button [matMenuTriggerFor]="userMenu" class="user-btn">
-        <div class="user-avatar-small">
-          {{ authService.getCurrentUser()?.name?.charAt(0) || 'A' }}
-        </div>
-        <span class="user-name-small">{{ authService.getCurrentUser()?.name || 'Admin' }}</span>
-        <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
-      </button>
-      
-      <mat-menu #userMenu="matMenu" class="user-menu">
-        <a mat-menu-item routerLink="/profile">
-          <mat-icon>account_balance</mat-icon> 
-          <span>College Profile</span>
-        </a>
-        <a mat-menu-item routerLink="/settings">
-          <mat-icon>settings</mat-icon> 
-          <span>Settings</span>
-        </a>
-        <mat-divider></mat-divider>
-        <button mat-menu-item (click)="authService.logout()" class="logout-menu-item">
-          <mat-icon color="warn">logout</mat-icon> 
-          <span>Logout</span>
-        </button>
-      </mat-menu>
-    </mat-toolbar>
+    </mat-menu>
+    
+  </div>
+</mat-toolbar>
 
     <!-- ====== CONTENT AREA ====== -->
     <div class="content-area">
