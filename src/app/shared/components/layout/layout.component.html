@@ -1,6 +1,11 @@
+<!-- layout.component.html -->
 <mat-sidenav-container class="sidenav-container">
+  
+  <!-- ====== SIDEBAR ====== -->
   <mat-sidenav #sidenav mode="side" opened class="sidenav">
-    <a class="logo-area" routerLink="/profile">
+    
+    <!-- Logo Area -->
+    <a class="logo-area" routerLink="/dashboard">
       <div class="logo-circle">
         <img [src]="logoSrc" alt="College logo" class="logo-img">
       </div>
@@ -10,7 +15,24 @@
       </div>
     </a>
 
+    <!-- User Profile -->
+    <div class="sidebar-user" *ngIf="authService.getCurrentUser()">
+      <div class="user-avatar">
+        {{ authService.getCurrentUser()?.name?.charAt(0) || 'A' }}
+      </div>
+      <div class="user-info">
+        <div class="user-name">{{ authService.getCurrentUser()?.name || 'Admin' }}</div>
+        <div class="user-role">
+          <span class="status-dot"></span>
+          {{ authService.isAdmin() ? 'Administrator' : 'Teacher' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
     <mat-nav-list>
+      <!-- MAIN -->
+      <div class="nav-section">MAIN</div>
       <a mat-list-item routerLink="/dashboard" routerLinkActive="active-link">
         <mat-icon matListItemIcon>dashboard</mat-icon>
         <span matListItemTitle>Dashboard</span>
@@ -20,6 +42,7 @@
         <span matListItemTitle>College Profile</span>
       </a>
 
+      <!-- ACADEMICS -->
       <div class="nav-section">ACADEMICS</div>
       <a mat-list-item routerLink="/faculty" routerLinkActive="active-link">
         <mat-icon matListItemIcon>category</mat-icon>
@@ -40,22 +63,27 @@
       <a mat-list-item routerLink="/grades" routerLinkActive="active-link">
         <mat-icon matListItemIcon>class</mat-icon>
         <span matListItemTitle>Grades & Sections</span>
+        <!-- ✅ REMOVED: <span class="nav-badge">12</span> -->
       </a>
 
+      <!-- STUDENTS -->
       <div class="nav-section">STUDENTS</div>
       <a mat-list-item routerLink="/students" routerLinkActive="active-link">
         <mat-icon matListItemIcon>people</mat-icon>
         <span matListItemTitle>Students</span>
+        <!-- ✅ REMOVED: <span class="nav-badge">1.2k</span> -->
       </a>
       <a mat-list-item routerLink="/attendance" routerLinkActive="active-link">
         <mat-icon matListItemIcon>how_to_reg</mat-icon>
         <span matListItemTitle>Attendance</span>
+        <!-- ✅ REMOVED: <span class="nav-badge warning">8</span> -->
       </a>
       <a mat-list-item routerLink="/assignments" routerLinkActive="active-link">
         <mat-icon matListItemIcon>assignment</mat-icon>
         <span matListItemTitle>Assignments</span>
       </a>
 
+      <!-- EXAMINATION -->
       <div class="nav-section">EXAMINATION</div>
       <a mat-list-item routerLink="/examinations" routerLinkActive="active-link">
         <mat-icon matListItemIcon>grading</mat-icon>
@@ -66,44 +94,84 @@
         <span matListItemTitle>Results</span>
       </a>
 
-      <div class="nav-section" *ngIf="authService.isAdmin()">ADMIN</div>
+      <!-- ADMIN -->
+      <div class="nav-section" *ngIf="authService.isAdmin()">SYSTEM</div>
       <a mat-list-item routerLink="/users" routerLinkActive="active-link"
         *ngIf="authService.isAdmin()">
         <mat-icon matListItemIcon>manage_accounts</mat-icon>
         <span matListItemTitle>Users</span>
       </a>
+      <a mat-list-item routerLink="/settings" routerLinkActive="active-link"
+        *ngIf="authService.isAdmin()">
+        <mat-icon matListItemIcon>settings</mat-icon>
+        <span matListItemTitle>Settings</span>
+      </a>
     </mat-nav-list>
 
+    <!-- Footer -->
     <div class="sidenav-footer">
       <button mat-stroked-button class="logout-btn" (click)="authService.logout()">
-        <mat-icon>logout</mat-icon> Logout
+        <mat-icon>logout</mat-icon> 
+        <span>Logout</span>
       </button>
+      <div class="footer-version">v2.0 • Made with ❤️</div>
     </div>
   </mat-sidenav>
 
+  <!-- ====== MAIN CONTENT ====== -->
   <mat-sidenav-content>
+    
+    <!-- ====== TOP TOOLBAR ====== -->
     <mat-toolbar class="toolbar">
-      <button mat-icon-button (click)="sidenav.toggle()">
+      <button mat-icon-button (click)="sidenav.toggle()" class="menu-btn">
         <mat-icon>menu</mat-icon>
       </button>
-      <span class="toolbar-title">{{ collegeName }}</span>
+      
+      <div class="toolbar-title">
+        <span class="title-main">Dashboard</span>
+        <span class="title-sub">Welcome back, {{ authService.getCurrentUser()?.name || 'Admin' }}!</span>
+      </div>
+      
       <span class="spacer"></span>
-      <button mat-button [matMenuTriggerFor]="userMenu" class="user-btn">
-        <mat-icon>account_circle</mat-icon>
-        {{ authService.getCurrentUser()?.name }}
+
+      <button mat-icon-button class="toolbar-btn">
+        <mat-icon>search</mat-icon>
       </button>
-      <mat-menu #userMenu="matMenu">
+
+      <button mat-icon-button class="toolbar-btn notification-btn">
+        <mat-icon>notifications</mat-icon>
+        <span class="notification-dot"></span>
+      </button>
+
+      <button mat-button [matMenuTriggerFor]="userMenu" class="user-btn">
+        <div class="user-avatar-small">
+          {{ authService.getCurrentUser()?.name?.charAt(0) || 'A' }}
+        </div>
+        <span class="user-name-small">{{ authService.getCurrentUser()?.name || 'Admin' }}</span>
+        <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+      </button>
+      
+      <mat-menu #userMenu="matMenu" class="user-menu">
         <a mat-menu-item routerLink="/profile">
-          <mat-icon>account_balance</mat-icon> College Profile
+          <mat-icon>account_balance</mat-icon> 
+          <span>College Profile</span>
         </a>
-        <button mat-menu-item (click)="authService.logout()">
-          <mat-icon>logout</mat-icon> Logout
+        <a mat-menu-item routerLink="/settings">
+          <mat-icon>settings</mat-icon> 
+          <span>Settings</span>
+        </a>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="authService.logout()" class="logout-menu-item">
+          <mat-icon color="warn">logout</mat-icon> 
+          <span>Logout</span>
         </button>
       </mat-menu>
     </mat-toolbar>
 
+    <!-- ====== CONTENT AREA ====== -->
     <div class="content-area">
       <router-outlet />
     </div>
+
   </mat-sidenav-content>
 </mat-sidenav-container>
