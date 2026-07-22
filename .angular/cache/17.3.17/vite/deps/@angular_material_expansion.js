@@ -2,17 +2,17 @@ import {
   CdkPortalOutlet,
   PortalModule,
   TemplatePortal
-} from "./chunk-AJFOW4WU.js";
+} from "./chunk-WLGIFZK7.js";
 import {
   UniqueSelectionDispatcher
-} from "./chunk-KDULSFOS.js";
+} from "./chunk-TVMODPGE.js";
 import {
   animate,
   state,
   style,
   transition,
   trigger
-} from "./chunk-XPRV3U6R.js";
+} from "./chunk-P4YJ4XOL.js";
 import {
   ENTER,
   FocusKeyManager,
@@ -20,10 +20,10 @@ import {
   MatCommonModule,
   SPACE,
   hasModifierKey
-} from "./chunk-4EVMJIEH.js";
+} from "./chunk-USYGRZ3V.js";
 import {
   DOCUMENT
-} from "./chunk-T76FZRMF.js";
+} from "./chunk-FFY7VSBW.js";
 import {
   ANIMATION_MODULE_TYPE,
   Attribute,
@@ -86,7 +86,7 @@ import {
   ɵɵstyleProp,
   ɵɵtemplate,
   ɵɵviewQuery
-} from "./chunk-6JJ7KVRE.js";
+} from "./chunk-PCGAWVWW.js";
 import {
   EMPTY,
   Subject,
@@ -95,7 +95,8 @@ import {
   merge,
   startWith,
   take
-} from "./chunk-T4QU4GDF.js";
+} from "./chunk-E5ECCKE6.js";
+import "./chunk-WDMUDEB6.js";
 
 // node_modules/@angular/cdk/fesm2022/accordion.mjs
 var nextId$1 = 0;

@@ -1,0 +1,130 @@
+<div class="page-container" *ngIf="!loading; else spinner">
+
+  <!-- BACK + HEADER -->
+  <div class="page-header">
+    <a mat-button routerLink="/attendance">
+      <mat-icon>arrow_back</mat-icon> Back to Classes
+    </a>
+    <div class="title-row">
+      <h2 class="page-title">Daily Attendance Grid</h2>
+      <p class="subtitle">
+        Grade {{ data?.gradeName }} — Section {{ data?.sectionName }}
+      </p>
+    </div>
+  </div>
+
+  <!-- MONTH NAVIGATOR -->
+  <div class="month-nav">
+    <button mat-icon-button (click)="prevMonth()" class="nav-btn">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <div class="month-labels">
+      <span class="month-nepali">{{ nepaliMonthLabel }}</span>
+      <span class="month-english">({{ englishMonthLabel }})</span>
+    </div>
+    <button mat-icon-button (click)="nextMonth()" class="nav-btn">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <!-- LEGEND + PRINT BUTTONS -->
+  <div class="toolbar">
+    <div class="legend">
+      <span class="leg leg-p">P Present</span>
+      <span class="leg leg-a">A Absent</span>
+      <span class="leg leg-l">L Late</span>
+      <span class="leg leg-e">— Not marked</span>
+      <span class="leg-hint">Click cell to cycle: → P → A → L → (clear)</span>
+    </div>
+    <div class="print-btns">
+      <button mat-stroked-button color="primary" (click)="printAll()">
+        <mat-icon>print</mat-icon> Print All Students
+      </button>
+    </div>
+  </div>
+
+  <!-- GRID -->
+  <div class="grid-outer" *ngIf="data && data.students?.length">
+    <div class="grid-scroll">
+      <table class="att-table">
+        <thead>
+          <tr>
+            <th class="th-no sticky-col-1">#</th>
+            <th class="th-name sticky-col-2">Student Name</th>
+            <!-- ✅ BS days as PRIMARY (big), AD as SECONDARY (small in brackets) -->
+            <th class="th-day" *ngFor="let d of days">
+              <span class="date-primary">{{ getBSDay(d) }}</span>
+              <span class="date-secondary">{{ getADDay(d) }}</span>
+            </th>
+            <th class="th-stat">P</th>
+            <th class="th-stat">A</th>
+            <th class="th-stat">L</th>
+            <th class="th-stat">Total</th>
+            <th class="th-pct">%</th>
+            <th class="th-print"></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let s of data.students; let i = index">
+            <td class="td-no sticky-col-1">{{ i + 1 }}</td>
+            <td class="td-name sticky-col-2">{{ s.studentName }}</td>
+
+            <!-- ✅ Cells with BS day mapping -->
+            <td *ngFor="let d of days"
+              class="td-cell"
+              [class]="cellClass(getStatus(s, d))"
+              (click)="cycleStatus(s, d)"
+              [matTooltip]="getStatus(s,d) === 'P' ? 'Present → click for Absent'
+                : getStatus(s,d) === 'A' ? 'Absent → click for Late'
+                : getStatus(s,d) === 'L' ? 'Late → click to clear'
+                : 'Not marked → click for Present'">
+              {{ getStatus(s, d) || '—' }}
+            </td>
+
+            <td class="td-stat stat-p">{{ s.present }}</td>
+            <td class="td-stat stat-a">{{ s.absent }}</td>
+            <td class="td-stat stat-l">{{ s.late }}</td>
+            <td class="td-stat">{{ s.totalMarked }}</td>
+            <td class="td-pct" [class]="pctClass(s.pct)">
+              {{ s.pct ? s.pct + '%' : '—' }}
+            </td>
+            <td class="td-print">
+              <button mat-icon-button color="primary"
+                (click)="printStudent(s)"
+                matTooltip="Print this student">
+                <mat-icon>print</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+
+        <tfoot>
+          <tr class="summary-row">
+            <td colspan="2" class="td-name sticky-col-2 summary-label">Daily Count</td>
+            <td *ngFor="let d of days" class="td-cell td-summary">
+              <span class="dc-p">{{ data.dailySummary?.[d]?.P || 0 }}</span>
+              <span class="dc-a">{{ data.dailySummary?.[d]?.A || 0 }}</span>
+            </td>
+            <td colspan="4" class="td-stat">
+              <span class="avg-label">Class Avg</span>
+            </td>
+            <td class="td-pct" [class]="pctClass(classAvg())">
+              {{ classAvg() }}%
+            </td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="data && !data.students?.length">
+    <mat-icon>people_outline</mat-icon>
+    <p>No students in this class.</p>
+  </div>
+</div>
+
+<ng-template #spinner>
+  <div class="spinner-center">Loading attendance grid...</div>
+</ng-template>

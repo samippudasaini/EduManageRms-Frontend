@@ -14,7 +14,15 @@ import { ApiService } from '../../core/services/api.service';
   styleUrl: './attendance.component.scss'
 })
 export class AttendanceComponent implements OnInit {
-  gradeSections: any[] = [];
+  sections: any[] = [];
+  loading = true;
+
   constructor(private api: ApiService) {}
-  ngOnInit() { this.api.get<any[]>('grade-sections').subscribe(d => this.gradeSections = d); }
+
+  ngOnInit() {
+    this.api.get<any[]>('attendance/sections').subscribe({
+      next: d => { this.sections = d; this.loading = false; },
+      error: () => { this.loading = false; }
+    });
+  }
 }

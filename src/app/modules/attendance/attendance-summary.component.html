@@ -1,0 +1,94 @@
+<div class="page-container" *ngIf="!loading; else spinner">
+
+  <div class="page-header">
+    <a mat-button routerLink="/attendance">
+      <mat-icon>arrow_back</mat-icon> Back to Classes
+    </a>
+    <div class="title-row">
+      <h2 class="page-title">Monthly Attendance Summary</h2>
+      <p class="subtitle">Grade {{ gradeName }} — Section {{ sectionName }} | {{ year }}</p>
+    </div>
+    <button mat-raised-button color="primary" (click)="printAll()">
+      <mat-icon>print</mat-icon> Print All
+    </button>
+  </div>
+
+  <div class="grid-outer" *ngIf="data && data.students?.length">
+    <div class="grid-scroll">
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th class="th-no">#</th>
+            <th class="th-name sticky-col">Student Name</th>
+            <ng-container *ngFor="let m of data.months">
+              <th class="th-month">
+                <!-- Nepali (BS) month = PRIMARY, English (AD) = small reference below -->
+                <span class="date-primary">{{ nepaliMonth(m) }}</span>
+                <span class="date-secondary">{{ englishMonth(m) }}</span>
+              </th>
+            </ng-container>
+            <th class="th-cumulative">Annual<br>Total</th>
+            <th class="th-print"></th>
+          </tr>
+          <!-- Sub-header: P / A / Total / % -->
+          <tr class="sub-header">
+            <th colspan="2" class="sticky-col sh-label">P = Present | A = Absent</th>
+            <th class="sh-cell" *ngFor="let m of data.months">P / A / Total Days / %</th>
+            <th class="sh-cell">P / A / Total Days / %</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let s of data.students; let i = index">
+            <td class="td-no">{{ i + 1 }}</td>
+            <td class="td-name sticky-col">{{ s.studentName }}</td>
+
+            <td *ngFor="let m of data.months" class="td-month">
+              <div class="month-stats" *ngIf="getMonthData(s, m).total > 0">
+                <span class="ms-p"><b>P=</b> {{ getMonthData(s, m).present }}</span>
+                <span class="ms-a"><b>A=</b> {{ getMonthData(s, m).absent }}</span>
+                <span class="ms-t"><b>Total=</b> {{ getMonthData(s, m).total }}</span>
+                <span class="ms-pct" [class]="pctClass(getMonthData(s, m).pct)">
+                  {{ getMonthData(s, m).pct }}%
+                </span>
+              </div>
+              <div class="no-data" *ngIf="getMonthData(s, m).total === 0">—</div>
+            </td>
+
+            <td class="td-cumulative">
+              <div class="cum-stats">
+                <span class="ms-p"><b>P=</b> {{ s.totalPresent }}</span>
+                <span class="ms-a"><b>A=</b> {{ s.totalAbsent }}</span>
+                <span class="ms-t"><b>Total=</b> {{ s.grandTotal }}</span>
+                <span class="ms-pct cum-pct" [class]="pctClass(s.cumPct)">
+                  {{ s.cumPct }}%
+                </span>
+              </div>
+            </td>
+            <td class="td-print">
+              <button mat-icon-button color="primary"
+                (click)="printStudent(s)" matTooltip="Print this student">
+                <mat-icon>print</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="data && !data.students?.length">
+    <mat-icon>people_outline</mat-icon>
+    <p>No attendance data found for this year.</p>
+  </div>
+
+  <div class="empty-state" *ngIf="!data">
+    <mat-icon>calendar_month</mat-icon>
+    <p>No data loaded yet.</p>
+  </div>
+</div>
+
+<ng-template #spinner>
+  <div class="spinner-center">Loading summary...</div>
+</ng-template>

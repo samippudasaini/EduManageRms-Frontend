@@ -1,17 +1,32 @@
 <div class="page-container">
-  <h2 class="page-title">Attendance</h2>
-  <p style="color:#555;margin-bottom:20px">Select a class to take attendance:</p>
-  <div class="class-grid">
-    <mat-card class="class-card" *ngFor="let gs of gradeSections">
-      <mat-icon>class</mat-icon>
-      <div class="class-info">
-        <h3>Grade {{gs.gradeName}}</h3>
-        <p>Section {{gs.sectionName}}</p>
+  <h2 class="page-title">Attendance Management</h2>
+  <p class="page-sub">Select a class to manage attendance.</p>
+  <div class="loading" *ngIf="loading">Loading...</div>
+  <div class="cards-grid" *ngIf="!loading">
+    <mat-card class="class-card" *ngFor="let gs of sections">
+      <div class="card-top">
+        <mat-icon class="card-icon">class</mat-icon>
+        <div class="card-info">
+          <h3>Grade {{ gs.gradeName }}
+            <span *ngIf="gs.sectionName"> — {{ gs.sectionName }}</span>
+          </h3>
+          <p>{{ gs.studentCount }} students</p>
+        </div>
       </div>
-      <button mat-raised-button color="primary" [routerLink]="['/attendance/conduct', gs.id]">
-        <mat-icon>how_to_reg</mat-icon> Take Attendance
-      </button>
+      <div class="card-actions">
+        <a mat-raised-button color="primary"
+          [routerLink]="['/attendance/monthly', gs.id]">
+          <mat-icon>grid_on</mat-icon> Daily Grid
+        </a>
+        <a mat-stroked-button color="primary"
+          [routerLink]="['/attendance/summary', gs.id]">
+          <mat-icon>summarize</mat-icon> Monthly Summary
+        </a>
+      </div>
     </mat-card>
   </div>
-  <p class="empty" *ngIf="!gradeSections.length">No grade-sections found. Add them in Grades & Sections.</p>
+  <div class="empty-state" *ngIf="!loading && !sections.length">
+    <mat-icon>class</mat-icon>
+    <p>No classes found. Add grades and sections first.</p>
+  </div>
 </div>
