@@ -1,12 +1,411 @@
 
-.page-sub { color: #78909c; margin-bottom: 24px; }
-.loading { text-align: center; padding: 40px; color: #90a4ae; }
-.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-.class-card { padding: 18px; border-radius: 12px !important; }
-.card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.card-icon { color: #1e88e5; font-size: 36px; width: 36px; height: 36px; }
-.card-info h3 { margin: 0 0 4px; font-size: 16px; color: #1a237e; }
-.card-info p { margin: 0; font-size: 13px; color: #78909c; }
-.card-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-.empty-state { text-align: center; padding: 60px 20px; color: #90a4ae; }
-.empty-state mat-icon { font-size: 52px; width: 52px; height: 52px; margin-bottom: 12px; }
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* ============================================================
+   PAGE HEADER
+   ============================================================ */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 24px 0;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  .header-left {
+    .page-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 4px 0;
+    }
+
+    .page-sub {
+      font-size: 14px;
+      color: #64748b;
+      margin: 0;
+    }
+  }
+
+  .header-right {
+    .stats-badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 20px;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+      .stats-number {
+        font-size: 24px;
+        font-weight: 800;
+        color: #0f172a;
+      }
+
+      .stats-label {
+        font-size: 13px;
+        color: #64748b;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: #3b82f6;
+    animation: spin 1.5s linear infinite;
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-size: 16px;
+    color: #94a3b8;
+    margin: 0;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   CARDS GRID
+   ============================================================ */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+/* ============================================================
+   CLASS CARD
+   ============================================================ */
+.class-card {
+  padding: 0;
+  border-radius: 16px !important;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  background: #ffffff;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08) !important;
+    border-color: #3b82f6;
+  }
+
+  /* ── Card Header ── */
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    background: #fafbfc;
+
+    .card-title-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+
+      .card-icon-wrapper {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #eff6ff, #dbeafe);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        .card-icon {
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+          color: #3b82f6;
+        }
+      }
+
+      .card-info {
+        h3 {
+          margin: 0;
+          font-size: 15px;
+          font-weight: 600;
+          color: #0f172a;
+
+          .grade-name {
+            color: #0f172a;
+          }
+
+          .section-name {
+            color: #64748b;
+            font-weight: 400;
+            margin-left: 4px;
+          }
+        }
+      }
+    }
+
+    .student-count-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 14px 4px 10px;
+      background: #eff6ff;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1d4ed8;
+      white-space: nowrap;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+        color: #3b82f6;
+      }
+
+      .count-label {
+        font-size: 11px;
+        font-weight: 400;
+        color: #64748b;
+        margin-left: 2px;
+      }
+    }
+  }
+
+  /* ── Card Body ── */
+  .card-body {
+    padding: 16px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+
+      .btn-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        mat-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+          color: #ffffff;
+        }
+
+        &.daily-icon {
+          background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+
+        &.summary-icon {
+          background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+      }
+
+      .btn-content {
+        flex: 1;
+
+        .btn-title {
+          display: block;
+          font-size: 14px;
+          font-weight: 600;
+          color: #0f172a;
+          line-height: 1.2;
+        }
+
+        .btn-sub {
+          display: block;
+          font-size: 12px;
+          color: #94a3b8;
+          font-weight: 400;
+        }
+      }
+
+      .btn-arrow {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        color: #cbd5e1;
+        transition: all 0.3s ease;
+      }
+
+      /* ── Daily Grid Button ── */
+      &.daily-btn {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+
+        &:hover {
+          background: #eff6ff;
+          border-color: #3b82f6;
+          transform: translateX(4px);
+
+          .btn-arrow {
+            color: #3b82f6;
+            transform: translateX(4px);
+          }
+
+          .btn-title {
+            color: #1d4ed8;
+          }
+        }
+      }
+
+      /* ── Monthly Summary Button ── */
+      &.summary-btn {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+
+        &:hover {
+          background: #f5f3ff;
+          border-color: #8b5cf6;
+          transform: translateX(4px);
+
+          .btn-arrow {
+            color: #8b5cf6;
+            transform: translateX(4px);
+          }
+
+          .btn-title {
+            color: #7c3aed;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: #cbd5e1;
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-size: 20px;
+    font-weight: 600;
+    color: #64748b;
+    margin: 0;
+  }
+
+  span {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+}
+
+/* ============================================================
+   MATERIAL OVERRIDES
+   ============================================================ */
+.mat-mdc-card {
+  box-shadow: none !important;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  .cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .header-right {
+      width: 100%;
+    }
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .class-card .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .class-card .card-body .action-btn {
+    padding: 10px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header .header-left .page-title {
+    font-size: 20px;
+  }
+
+  .class-card .card-header .card-title-group {
+    width: 100%;
+  }
+
+  .class-card .card-header .student-count-badge {
+    align-self: flex-start;
+  }
+
+  .class-card .card-body .action-btn .btn-sub {
+    display: none;
+  }
+
+  .class-card .card-body .action-btn {
+    justify-content: center;
+  }
+}

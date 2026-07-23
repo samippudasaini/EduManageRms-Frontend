@@ -1,88 +1,665 @@
-
-.page-container { max-width: 1600px; }
-
-.page-header {
-  display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
+.page-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0;
 }
-.title-row { flex: 1; }
-.subtitle { color: #78909c; margin: 0; font-size: 13px; }
 
+/* ============================================================
+   PAGE HEADER
+   ============================================================ */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 16px 0;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    .back-btn {
+      color: #64748b;
+      border-radius: 8px;
+      font-weight: 500;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      &:hover {
+        background: #f1f5f9;
+      }
+    }
+
+    .title-row {
+      .page-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0 0 2px 0;
+      }
+
+      .subtitle {
+        font-size: 13px;
+        color: #64748b;
+        margin: 0;
+
+        .grade-info {
+          font-weight: 600;
+          color: #0f172a;
+        }
+        .section-info {
+          color: #64748b;
+        }
+        .year-info {
+          color: #64748b;
+        }
+        .separator {
+          color: #cbd5e1;
+          margin: 0 4px;
+        }
+      }
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    .stats-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px 6px 12px;
+      background: #ffffff;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: #64748b;
+      }
+
+      span {
+        font-size: 16px;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      .stats-label {
+        font-size: 12px;
+        font-weight: 400;
+        color: #94a3b8;
+      }
+    }
+
+    .print-btn {
+      border-radius: 10px !important;
+      font-weight: 600;
+      background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+      padding: 0 20px;
+      height: 38px;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      &:hover {
+        box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3) !important;
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+/* ============================================================
+   GRID
+   ============================================================ */
 .grid-outer {
-  border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-  background: #fff; overflow: hidden;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
   width: 100%;
 }
-.grid-scroll { overflow-x: auto; width: 100%; }
 
-.summary-table { border-collapse: collapse; width: 100%; min-width: 900px; table-layout: auto; }
+.grid-scroll {
+  overflow-x: auto;
+  width: 100%;
+  padding: 4px;
+}
 
-/* Header */
+.summary-table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 900px;
+  table-layout: auto;
+  font-size: 13px;
+}
+
+/* ── Header ── */
 .summary-table thead th {
-  background: #1a237e; color: #fff;
-  padding: 10px 8px; text-align: center;
-  font-size: 11px; font-weight: 700;
-  border-right: 1px solid rgba(255,255,255,0.1);
-  position: sticky; top: 0; z-index: 3;
+  background: #f8fafc;
+  color: #0f172a;
+  padding: 8px 6px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e2e8f0;
+  border-right: 1px solid #f1f5f9;
+  position: sticky;
+  top: 0;
+  z-index: 3;
 }
-.th-no   { width: 36px; }
-.th-name { text-align: left !important; padding-left: 12px !important; min-width: 160px; }
-.th-month { min-width: 140px; }
-.th-cumulative { min-width: 140px; background: #0d47a1 !important; }
-.th-print { width: 40px; }
 
-/* Nepali (BS) month = PRIMARY, big & bold. English (AD) = small reference below. */
-.date-primary { display: block; font-size: 17px; font-weight: 800; line-height: 1.2; }
-.date-secondary { display: block; font-size: 10px; color: #90caf9; font-weight: 400; opacity: 0.8; margin-top: 2px; }
-.date-secondary::before { content: '('; }
-.date-secondary::after  { content: ')'; }
+.th-no {
+  width: 32px;
+  min-width: 32px;
+  max-width: 32px;
+}
 
-/* Sub-header */
+.th-name {
+  text-align: left !important;
+  padding-left: 12px !important;
+  min-width: 140px;
+  width: 16%;
+}
+
+.th-month {
+  min-width: 90px;
+  padding: 6px 4px !important;
+}
+
+.th-cumulative {
+  min-width: 100px;
+  background: #f1f5f9 !important;
+  border-left: 2px solid #e2e8f0;
+  padding: 6px 4px !important;
+}
+
+.th-print {
+  width: 36px;
+  min-width: 36px;
+  max-width: 36px;
+}
+
+/* ── Month Header ── */
+.date-primary {
+  display: block;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #0f172a;
+}
+
+.date-secondary {
+  display: block;
+  font-size: 9px;
+  color: #94a3b8;
+  font-weight: 400;
+  opacity: 0.8;
+  margin-top: 1px;
+}
+.date-secondary::before {
+  content: '(';
+}
+.date-secondary::after {
+  content: ')';
+}
+
+/* ── Sub Header ── */
 .sub-header th {
-  background: #283593 !important;
-  font-size: 10px !important;
-  font-weight: normal !important;
-  color: #b0bec5 !important;
-  padding: 5px 6px !important;
+  background: #f1f5f9 !important;
+  font-size: 8px !important;
+  font-weight: 600 !important;
+  color: #94a3b8 !important;
+  padding: 3px 4px !important;
+  border-bottom: 1px solid #e2e8f0;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
-.sh-label { text-align: left !important; padding-left: 12px !important; }
-.sh-cell  { text-align: center; }
 
-/* Sticky */
-.sticky-col { position: sticky; left: 36px; z-index: 2; background: #fff; }
-.summary-table thead .sticky-col { background: #1a237e; z-index: 4; }
-.summary-table tbody tr:hover .sticky-col { background: #f8f9ff; }
+.sh-label {
+  text-align: left !important;
+  padding-left: 12px !important;
+}
+.sh-cell {
+  text-align: center;
+  font-size: 8px !important;
+}
 
-/* Body */
-.summary-table tbody tr { border-bottom: 1px solid #f0f0f0; }
-.summary-table tbody tr:hover { background: rgba(30,136,229,0.03); }
+/* ── Sticky Columns ── */
+.sticky-col {
+  position: sticky;
+  left: 32px;
+  z-index: 2;
+  background: #ffffff;
+}
 
-.td-no { text-align: center; color: #90a4ae; font-size: 12px; padding: 8px 4px; width: 36px; }
-.td-name { padding: 10px 8px 10px 12px; font-weight: 600; color: #263238; font-size: 14px; white-space: nowrap; }
+.summary-table thead .sticky-col {
+  background: #f8fafc;
+  z-index: 4;
+}
 
-/* Month cell — wider, more vertical breathing room, bigger numbers */
-.td-month { text-align: center; padding: 12px 10px; vertical-align: middle; border-right: 1px solid #f5f5f5; }
+.summary-table tbody tr:hover .sticky-col {
+  background: #f8fafc;
+}
+
+.summary-table tfoot .sticky-col {
+  background: #f8fafc;
+  z-index: 2;
+}
+
+/* ── Body ── */
+.summary-table tbody tr {
+  border-bottom: 1px solid #f1f5f9;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #f8fafc;
+  }
+
+  &:last-child td {
+    border-bottom: none;
+  }
+}
+
+.td-no {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 2px;
+  width: 32px;
+  min-width: 32px;
+  max-width: 32px;
+}
+
+.td-name {
+  padding: 4px 4px 4px 12px;
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 13px;
+  white-space: nowrap;
+  min-width: 140px;
+}
+
+.student-name {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 13px;
+}
+
+/* ── Month Cell ── */
+.td-month {
+  text-align: center;
+  padding: 4px 4px;
+  vertical-align: middle;
+  border-right: 1px solid #f1f5f9;
+  min-width: 90px;
+}
 
 .month-stats {
-  display: flex; flex-direction: column; gap: 5px; align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 2px;
+  align-items: center;
+  font-size: 11px;
 }
-.ms-p { font-size: 16px; font-weight: 700; color: #2e7d32; }
-.ms-a { font-size: 16px; font-weight: 700; color: #c62828; }
-.ms-t { font-size: 13px; color: #78909c; }
-.ms-p b, .ms-a b, .ms-t b { font-weight: 700; margin-right: 4px; opacity: 0.7; }
-.ms-pct { font-size: 15px; font-weight: 700; padding: 3px 10px; border-radius: 8px; margin-top: 2px; }
 
-.pct-high { color: #2e7d32; background: #e8f5e9; }
-.pct-mid  { color: #e65100; background: #fff8e1; }
-.pct-low  { color: #c62828; background: #ffebee; }
+.ms-p {
+  font-weight: 700;
+  color: #15803d;
+  font-size: 12px;
+  text-align: center;
+}
+.ms-a {
+  font-weight: 700;
+  color: #b91c1c;
+  font-size: 12px;
+  text-align: center;
+}
+.ms-t {
+  font-weight: 600;
+  color: #64748b;
+  font-size: 11px;
+  text-align: center;
+}
+.ms-pct {
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  text-align: center;
+}
 
-.no-data { color: #bdbdbd; font-size: 16px; }
+.pct-high {
+  color: #15803d;
+  background: #dcfce7;
+}
+.pct-mid {
+  color: #d97706;
+  background: #fef3c7;
+}
+.pct-low {
+  color: #b91c1c;
+  background: #fee2e2;
+}
 
-/* Cumulative column */
-.td-cumulative { text-align: center; padding: 12px 10px; background: #f0f4ff; }
-.cum-stats { display: flex; flex-direction: column; gap: 5px; align-items: center; }
-.cum-pct { font-size: 16px !important; }
+.no-data {
+  color: #cbd5e1;
+  font-size: 14px;
+  font-weight: 700;
+}
 
-.td-print { text-align: center; padding: 0; }
-.spinner-center { padding: 60px; text-align: center; color: #90a4ae; }
-.empty-state { text-align: center; padding: 60px 20px; color: #90a4ae; }
-.empty-state mat-icon { font-size: 52px; width: 52px; height: 52px; margin-bottom: 12px; }
+/* ── Cumulative Column ── */
+.td-cumulative {
+  text-align: center;
+  padding: 4px 4px;
+  background: #fafbfc;
+  border-left: 2px solid #e2e8f0;
+  min-width: 100px;
+}
+
+.cum-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 2px;
+  align-items: center;
+  font-size: 11px;
+}
+
+.cum-pct {
+  font-size: 13px !important;
+  padding: 1px 8px !important;
+}
+
+/* ── Print Button ── */
+.td-print {
+  text-align: center;
+  padding: 0;
+
+  button {
+    width: 38px;      /* ✅ Increased from 32px */
+    height: 38px;     /* ✅ Increased from 32px */
+
+    mat-icon {
+      font-size: 22px;   /* ✅ Increased from 16px */
+      width: 22px;       /* ✅ Increased from 16px */
+      height: 22px;      /* ✅ Increased from 16px */
+    }
+
+    &:hover {
+      background: #eff6ff;
+    }
+  }
+}
+
+
+/* ── Footer ── */
+.summary-footer {
+  background: #f8fafc;
+  border-top: 2px solid #e2e8f0;
+
+  td {
+    padding: 6px 4px;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .footer-label {
+    text-align: left !important;
+    padding-left: 12px !important;
+    font-weight: 700;
+    color: #0f172a;
+    font-size: 12px;
+  }
+
+  .footer-month {
+    font-weight: 600;
+    font-size: 11px;
+  }
+
+  .footer-cumulative {
+    font-weight: 700;
+    background: #f1f5f9;
+    border-left: 2px solid #e2e8f0;
+  }
+
+  .footer-pct {
+    font-weight: 700;
+    padding: 1px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+}
+
+/* ── Grid Footer ── */
+.grid-footer {
+  padding: 12px 20px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: center;
+  background: #fafbfc;
+
+  .print-bottom-btn {
+    border-radius: 10px !important;
+    font-weight: 600;
+    background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+    padding: 0 20px;
+    height: 36px;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+
+    &:hover {
+      box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3) !important;
+      transform: translateY(-2px);
+    }
+  }
+}
+
+/* ============================================================
+   SPINNER
+   ============================================================ */
+.spinner-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: #3b82f6;
+    animation: spin 1.5s linear infinite;
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-size: 16px;
+    color: #94a3b8;
+    margin: 0;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #94a3b8;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+
+  mat-icon {
+    font-size: 52px;
+    width: 52px;
+    height: 52px;
+    color: #cbd5e1;
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-size: 18px;
+    font-weight: 600;
+    color: #64748b;
+    margin: 0;
+  }
+
+  span {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  .th-month { min-width: 80px; }
+  .td-month { min-width: 80px; padding: 4px 3px; }
+  .month-stats { font-size: 10px; }
+  .ms-p, .ms-a { font-size: 11px; }
+  .ms-pct { font-size: 11px; }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .th-month { min-width: 70px; }
+  .td-month { min-width: 70px; padding: 3px 2px; }
+  .th-name { min-width: 100px; }
+  .td-name { min-width: 100px; font-size: 12px; padding: 4px 2px 4px 8px; }
+
+  .month-stats {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1px;
+    font-size: 9px;
+  }
+  .ms-p, .ms-a { font-size: 10px; }
+  .ms-t { font-size: 9px; }
+  .ms-pct { font-size: 10px; padding: 1px 4px; }
+
+  .date-primary { font-size: 12px; }
+  .date-secondary { font-size: 8px; }
+
+  .td-cumulative { min-width: 80px; padding: 4px 3px; }
+  .cum-stats { font-size: 9px; }
+  .cum-pct { font-size: 11px !important; }
+}
+
+@media (max-width: 480px) {
+  .page-header .header-left .title-row .page-title { font-size: 18px; }
+
+  .th-month { min-width: 60px; }
+  .td-month { min-width: 60px; padding: 2px 2px; }
+  .th-name { min-width: 80px; }
+  .td-name { min-width: 80px; font-size: 11px; padding: 3px 2px 3px 6px; }
+
+  .month-stats {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1px;
+    font-size: 8px;
+  }
+  .ms-p, .ms-a { font-size: 9px; }
+  .ms-t { font-size: 8px; }
+  .ms-pct { font-size: 9px; padding: 1px 3px; }
+
+  .date-primary { font-size: 10px; }
+  .date-secondary { font-size: 7px; }
+
+  .td-cumulative { min-width: 70px; padding: 3px 2px; }
+  .cum-stats { font-size: 8px; }
+  .cum-pct { font-size: 10px !important; }
+
+  .td-print button {
+    width: 24px;
+    height: 24px;
+    mat-icon { font-size: 12px; width: 12px; height: 12px; }
+  }
+
+  .sub-header th { font-size: 7px !important; }
+  .sh-cell { font-size: 7px !important; }
+}
+
+/* ============================================================
+   PRINT STYLES
+   ============================================================ */
+@media print {
+  .page-header .header-right .stats-badge { display: none !important; }
+  .page-header .header-right .print-btn { display: none !important; }
+  .grid-footer .print-bottom-btn { display: none !important; }
+
+  .summary-table thead th {
+    background: #1a237e !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color: #ffffff !important;
+  }
+
+  .summary-table .sub-header th {
+    background: #283593 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .ms-pct, .footer-pct, .cum-pct {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .td-cumulative {
+    background: #f0f4ff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .summary-footer {
+    background: #f5f5f5 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .grid-outer {
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+  }
+
+  .summary-table tbody tr {
+    page-break-inside: avoid;
+  }
+}

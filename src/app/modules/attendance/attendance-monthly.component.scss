@@ -1,468 +1,867 @@
 /* ── Layout ──────────────────────────────────────────── */
-.page-header { 
-  margin-bottom: 12px; 
+.page-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0;
 }
-.title-row h2 { 
-  margin: 4px 0 0; 
-}
-.subtitle { 
-  color: #78909c; 
-  margin: 0; 
-  font-size: 13px; 
+
+/* ============================================================
+   PAGE HEADER
+   ============================================================ */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 16px 0;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    .back-btn {
+      color: #64748b;
+      border-radius: 8px;
+      font-weight: 500;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      &:hover {
+        background: #f1f5f9;
+      }
+    }
+
+    .title-row {
+      .page-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0 0 2px 0;
+      }
+
+      .subtitle {
+        font-size: 13px;
+        color: #64748b;
+        margin: 0;
+
+        .grade-info {
+          font-weight: 600;
+          color: #0f172a;
+        }
+        .section-info {
+          color: #64748b;
+        }
+        .separator {
+          color: #cbd5e1;
+          margin: 0 4px;
+        }
+      }
+    }
+  }
+
+  .header-right {
+    .stats-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px 6px 12px;
+      background: #ffffff;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: #64748b;
+      }
+
+      span {
+        font-size: 16px;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      .stats-label {
+        font-size: 12px;
+        font-weight: 400;
+        color: #94a3b8;
+      }
+    }
+  }
 }
 
 /* ── Month navigator ─────────────────────────────────── */
 .month-nav {
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  gap: 16px;
-  background: #1a237e; 
-  border-radius: 10px; 
-  padding: 12px 20px;
-  color: #fff; 
-  margin: 12px 0;
-}
-.nav-btn { 
-  color: #fff !important; 
-}
-.nav-btn[disabled] { 
-  opacity: 0.35; 
-}
-.month-labels { 
-  text-align: center; 
-  min-width: 240px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border-radius: 14px;
+  padding: 14px 24px;
+  color: #fff;
+  margin: 12px 0 16px;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.25);
 }
 
-/* ✅ BS month = PRIMARY, big and bold */
-.month-nepali { 
-  display: block; 
-  font-size: 28px; 
-  font-weight: 800; 
-  line-height: 1.2; 
+.nav-btn {
+  color: #ffffff !important;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    transform: scale(1.05);
+  }
+
+  &[disabled] {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+}
+
+.month-labels {
+  text-align: center;
+  min-width: 240px;
+}
+
+.month-nepali {
+  display: block;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.2;
   color: #ffffff;
   letter-spacing: 0.5px;
 }
-.month-english { 
-  display: block; 
-  font-size: 13px; 
-  font-weight: 400; 
-  color: #90caf9; 
-  opacity: 0.85; 
-  margin-top: 4px; 
+
+.month-english {
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+  color: #94a3b8;
+  opacity: 0.85;
+  margin-top: 4px;
 }
 
 /* ── Toolbar ─────────────────────────────────────────── */
 .toolbar {
-  display: flex; 
-  align-items: center; 
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap; 
-  gap: 10px; 
-  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 10px 16px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
 }
-.legend { 
-  display: flex; 
-  align-items: center; 
-  gap: 8px; 
-  flex-wrap: wrap; 
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
+
 .leg {
-  padding: 3px 10px; 
-  border-radius: 4px; 
-  font-size: 12px; 
+  padding: 4px 14px;
+  border-radius: 6px;
+  font-size: 12px;
   font-weight: 600;
+
+  &.leg-p {
+    background: #dcfce7;
+    color: #15803d;
+  }
+  &.leg-a {
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+  &.leg-l {
+    background: #fef3c7;
+    color: #d97706;
+  }
+  &.leg-e {
+    background: #f1f5f9;
+    color: #94a3b8;
+  }
 }
-.leg-p { 
-  background: #e8f5e9; 
-  color: #2e7d32; 
+
+.leg-hint {
+  font-size: 11px;
+  color: #94a3b8;
+  font-style: italic;
 }
-.leg-a { 
-  background: #ffebee; 
-  color: #c62828; 
-}
-.leg-l { 
-  background: #fff9c4; 
-  color: #f57f17; 
-}
-.leg-e { 
-  background: #f5f5f5; 
-  color: #9e9e9e; 
-}
-.leg-hint { 
-  font-size: 11px; 
-  color: #90a4ae; 
-  font-style: italic; 
+
+.print-btn {
+  border-radius: 10px !important;
+  font-weight: 600;
+  background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+  padding: 0 20px;
+  height: 38px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3) !important;
+    transform: translateY(-2px);
+  }
 }
 
 /* ── Grid ────────────────────────────────────────────── */
-.page-container { 
-  max-width: 1600px; 
+.grid-outer {
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  background: #ffffff;
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
 }
 
-.grid-outer { 
-  border-radius: 10px; 
-  box-shadow: 0 2px 12px rgba(0,0,0,0.1); 
-  background: #fff; 
-  width: 100%; 
-}
-.grid-scroll { 
-  overflow-x: auto; 
-  width: 100%; 
+.grid-scroll {
+  overflow-x: auto;
+  width: 100%;
+  padding: 4px;
 }
 
-.att-table { 
-  border-collapse: collapse; 
-  width: 100%; 
-  min-width: 800px; 
+.att-table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 800px;
+  font-size: 13px;
 }
 
-/* Header */
+/* ── Header ── */
 .att-table thead th {
-  background: #1a237e; 
-  color: #fff;
-  padding: 8px 4px; 
+  background: #f8fafc;
+  color: #0f172a;
+  padding: 10px 4px;
   text-align: center;
-  font-size: 11px; 
+  font-size: 10px;
   font-weight: 700;
-  border-right: 1px solid rgba(255,255,255,0.1);
-  position: sticky; 
-  top: 0; 
-  z-index: 3; 
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e2e8f0;
+  border-right: 1px solid #f1f5f9;
+  position: sticky;
+  top: 0;
+  z-index: 3;
   white-space: nowrap;
 }
-.th-no { 
-  width: 36px; 
-  min-width: 36px; 
-  max-width: 36px; 
+
+.th-no {
+  width: 38px;
+  min-width: 38px;
+  max-width: 38px;
 }
-.th-name { 
-  text-align: left !important; 
-  padding-left: 12px !important; 
-  width: 150px; 
-  min-width: 150px; 
-  max-width: 150px; 
+
+.th-name {
+  text-align: left !important;
+  padding-left: 14px !important;
+  min-width: 160px;
+  width: 18%;
 }
-.th-day {  
-  min-width: 54px; 
-  line-height: 1.2; 
+
+.th-day {
+  min-width: 56px;
+  line-height: 1.2;
   padding: 8px 2px !important;
   vertical-align: bottom;
 }
-.th-stat { 
-  min-width: 44px; 
-  background: #283593 !important; 
-}
-.th-pct { 
-  min-width: 60px; 
-  background: #0d47a1 !important; 
-}
-.th-print { 
-  width: 40px; 
-}
-.th-today { 
-  background: #1565c0 !important; 
-  position: relative; 
-}
-.th-today::after {
-  content: ''; 
-  position: absolute; 
-  bottom: 0; 
-  left: 0; 
-  right: 0;
-  height: 4px; 
-  background: #ffd740;
+
+.th-stat {
+  min-width: 40px;
+  background: #f1f5f9 !important;
+
+  &.th-p { color: #15803d; }
+  &.th-a { color: #b91c1c; }
+  &.th-l { color: #d97706; }
+  &.th-total { color: #0f172a; }
 }
 
-/* ✅ BS DAY - PRIMARY, large, bold, white */
+.th-pct {
+  min-width: 56px;
+  background: #f1f5f9 !important;
+}
+
+.th-print {
+  width: 40px;
+  min-width: 40px;
+}
+
+/* ── BS Day Header ── */
 .date-primary {
   display: block;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 800;
   line-height: 1.1;
-  color: #ffffff;
+  color: #0f172a;
   letter-spacing: 0.5px;
 }
 
-/* ✅ AD DAY - SECONDARY, small, faint, in parentheses */
 .date-secondary {
   display: block;
   font-size: 9px;
   font-weight: 400;
-  color: #90caf9;
+  color: #94a3b8;
   opacity: 0.7;
   margin-top: 2px;
 }
-.date-secondary::before { 
-  content: '('; 
+.date-secondary::before {
+  content: '(';
 }
-.date-secondary::after { 
-  content: ')'; 
+.date-secondary::after {
+  content: ')';
 }
 
-/* Sticky columns */
-.sticky-col-1 { 
-  position: sticky; 
-  left: 0; 
-  z-index: 2; 
-  background: #fff; 
+/* ── Sticky columns ── */
+.sticky-col-1 {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #ffffff;
 }
-.sticky-col-2 { 
-  position: sticky; 
-  left: 36px; 
-  z-index: 2; 
-  background: #fff; 
+
+.sticky-col-2 {
+  position: sticky;
+  left: 38px;
+  z-index: 2;
+  background: #ffffff;
 }
+
 .att-table thead .sticky-col-1,
-.att-table thead .sticky-col-2 { 
-  background: #1a237e; 
-  z-index: 4; 
+.att-table thead .sticky-col-2 {
+  background: #f8fafc;
+  z-index: 4;
 }
 
-/* Body */
-.att-table tbody tr { 
-  border-bottom: 1px solid #f5f5f5; 
-}
-.att-table tbody tr:hover { 
-  background: rgba(30,136,229,0.03); 
-}
-.att-table tbody tr:hover .sticky-col-1,
-.att-table tbody tr:hover .sticky-col-2 { 
-  background: #f8f9ff; 
+/* ── Body ── */
+.att-table tbody tr {
+  border-bottom: 1px solid #f1f5f9;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #f8fafc;
+  }
+
+  &:hover .sticky-col-1,
+  &:hover .sticky-col-2 {
+    background: #f8fafc;
+  }
+
+  &:last-child td {
+    border-bottom: none;
+  }
 }
 
-.td-no { 
-  text-align: center; 
-  color: #90a4ae; 
-  font-size: 12px; 
-  padding: 0 4px; 
-  width: 36px; 
-  min-width: 36px; 
-  max-width: 36px; 
-  box-sizing: border-box; 
-}
-.td-name { 
-  padding: 0 8px 0 12px; 
-  font-weight: 600; 
-  color: #263238; 
-  font-size: 13px; 
-  white-space: nowrap; 
-  width: 150px; 
-  min-width: 150px; 
-  max-width: 150px; 
-  box-sizing: border-box; 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
+.td-no {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0 4px;
+  width: 38px;
+  min-width: 38px;
+  max-width: 38px;
+  box-sizing: border-box;
 }
 
-/* ✅ Attendance cells - spacious and properly sized */
+.td-name {
+  padding: 0 8px 0 14px;
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 13px;
+  white-space: nowrap;
+  min-width: 160px;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.student-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.student-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.student-name {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 13px;
+}
+
+/* ── Attendance Cells ── */
 .td-cell {
   width: 54px;
   min-width: 54px;
   max-width: 54px;
-  height: 44px;
-  text-align: center; 
+  height: 42px;
+  text-align: center;
   cursor: pointer;
-  font-weight: 700; 
+  font-weight: 700;
   font-size: 15px;
-  border-right: 1px solid #f0f0f0;
+  border-right: 1px solid #f1f5f9;
   vertical-align: middle;
-  transition: filter 0.15s, transform 0.15s;
+  transition: all 0.15s ease;
   user-select: none;
-}
-.td-cell:hover { 
-  filter: brightness(0.88); 
-  transform: scale(1.08); 
-  z-index: 1; 
-}
-.td-today { 
-  border-left: 3px solid #1e88e5 !important; 
-  border-right: 3px solid #1e88e5 !important;
-}
-.td-saving { 
-  opacity: 0.4; 
-  pointer-events: none; 
+
+  &:hover {
+    transform: scale(1.08);
+    z-index: 1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
 }
 
-/* Cell status colors */
-.cell-p { 
-  background: #e8f5e9; 
-  color: #2e7d32; 
-}
-.cell-a { 
-  background: #ffebee; 
-  color: #c62828; 
-}
-.cell-l { 
-  background: #fff9c4; 
-  color: #f57f17; 
-}
-.cell-empty { 
-  background: #fafafa; 
-  color: #bdbdbd; 
-  font-size: 12px; 
+.cell-p {
+  background: #dcfce7;
+  color: #15803d;
 }
 
-/* Stats columns */
-.td-stat { 
-  text-align: center; 
-  font-size: 13px; 
-  padding: 0 4px; 
-  font-weight: 600; 
-}
-.stat-p { 
-  color: #2e7d32; 
-}
-.stat-a { 
-  color: #c62828; 
-}
-.stat-l { 
-  color: #f57f17; 
+.cell-a {
+  background: #fee2e2;
+  color: #b91c1c;
 }
 
-/* Percentage */
-.td-pct { 
-  text-align: center; 
-  font-weight: 700; 
-  font-size: 13px; 
-  padding: 0 6px; 
-}
-.pct-high { 
-  color: #2e7d32; 
-  background: #f1f8e9; 
-}
-.pct-mid { 
-  color: #e65100; 
-  background: #fff8e1; 
-}
-.pct-low { 
-  color: #c62828; 
-  background: #ffebee; 
+.cell-l {
+  background: #fef3c7;
+  color: #d97706;
 }
 
-.td-print { 
-  text-align: center; 
-  padding: 0; 
+.cell-empty {
+  background: #fafafa;
+  color: #cbd5e1;
+  font-size: 13px;
 }
 
-/* Footer summary */
-.summary-row { 
-  background: #f0f4ff; 
-}
-.summary-row td { 
-  border-top: 2px solid #c5cae9; 
-  padding: 6px 2px; 
-}
-.summary-label { 
-  color: #3949ab; 
-  font-size: 11px; 
-  font-weight: 700; 
-}
-.td-summary { 
-  text-align: center; 
-  font-size: 11px; 
-  padding: 4px 2px;
-}
-.dc-p { 
-  display: inline-block; 
-  color: #2e7d32; 
-  font-weight: 700; 
-  margin-right: 4px;
-}
-.dc-a { 
-  display: inline-block; 
-  color: #c62828; 
-  font-weight: 700; 
-}
-.avg-label { 
-  font-size: 11px; 
-  color: #5c6bc0; 
-  font-weight: 600; 
+/* ── Stats columns ── */
+.td-stat {
+  text-align: center;
+  font-size: 13px;
+  padding: 0 4px;
+  font-weight: 600;
+
+  &.stat-p {
+    color: #15803d;
+  }
+  &.stat-a {
+    color: #b91c1c;
+  }
+  &.stat-l {
+    color: #d97706;
+  }
+  &.stat-total {
+    color: #0f172a;
+  }
 }
 
-.empty-state { 
-  text-align: center; 
-  padding: 60px 20px; 
-  color: #90a4ae; 
-}
-.empty-state mat-icon { 
-  font-size: 52px; 
-  width: 52px; 
-  height: 52px; 
-  margin-bottom: 12px; 
-}
-.spinner-center { 
-  padding: 60px; 
-  text-align: center; 
-  color: #90a4ae; 
+/* ── Percentage ── */
+.td-pct {
+  text-align: center;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 0 6px;
+  border-radius: 4px;
+
+  &.pct-high {
+    color: #15803d;
+    background: #dcfce7;
+  }
+  &.pct-mid {
+    color: #d97706;
+    background: #fef3c7;
+  }
+  &.pct-low {
+    color: #b91c1c;
+    background: #fee2e2;
+  }
 }
 
-/* ✅ Responsive adjustments */
+.td-print {
+  text-align: center;
+  padding: 0;
+
+  button {
+    width: 38px;      /* ✅ Increased from 32px */
+    height: 38px;     /* ✅ Increased from 32px */
+
+    mat-icon {
+      font-size: 22px;   /* ✅ Increased from 16px */
+      width: 22px;       /* ✅ Increased from 16px */
+      height: 22px;      /* ✅ Increased from 16px */
+    }
+
+    &:hover {
+      background: #eff6ff;
+    }
+  }
+}
+
+/* ── Footer summary ── */
+.summary-row {
+  background: #f8fafc;
+
+  td {
+    border-top: 2px solid #e2e8f0;
+    padding: 8px 2px;
+    font-size: 12px;
+  }
+}
+
+.summary-label {
+  color: #0f172a;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.td-summary {
+  text-align: center;
+  font-size: 11px;
+  padding: 6px 2px;
+
+  .dc-p {
+    display: block;
+    color: #15803d;
+    font-weight: 700;
+  }
+
+  .dc-a {
+    display: block;
+    color: #b91c1c;
+    font-weight: 700;
+  }
+}
+
+.avg-label {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+/* ── Empty State ── */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #94a3b8;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+
+  mat-icon {
+    font-size: 52px;
+    width: 52px;
+    height: 52px;
+    color: #cbd5e1;
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-size: 18px;
+    font-weight: 600;
+    color: #64748b;
+    margin: 0;
+  }
+
+  span {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+}
+
+/* ── Spinner ── */
+.spinner-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: #3b82f6;
+    animation: spin 1.5s linear infinite;
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-size: 16px;
+    color: #94a3b8;
+    margin: 0;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  .td-cell {
+    width: 46px;
+    min-width: 46px;
+    max-width: 46px;
+    height: 38px;
+    font-size: 14px;
+  }
+
+  .th-day {
+    min-width: 48px;
+  }
+
+  .date-primary {
+    font-size: 17px;
+  }
+}
+
 @media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .header-left {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .header-right {
+      width: 100%;
+    }
+  }
+
+  .month-nav {
+    padding: 10px 16px;
+    gap: 12px;
+  }
+
+  .month-labels {
+    min-width: 140px;
+  }
+
   .month-nepali {
     font-size: 20px;
   }
   .month-english {
     font-size: 11px;
   }
+
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .legend {
+    justify-content: center;
+  }
+
+  .print-btns {
+    text-align: center;
+  }
+
   .th-day {
     min-width: 40px;
   }
+
   .td-cell {
     width: 40px;
     min-width: 40px;
     max-width: 40px;
-    height: 36px;
+    height: 34px;
     font-size: 13px;
   }
+
   .date-primary {
-    font-size: 16px;
+    font-size: 15px;
   }
   .date-secondary {
-    font-size: 8px;
+    font-size: 7px;
   }
+
   .td-name {
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
+    min-width: 120px;
+  }
+
+  .th-name {
+    min-width: 120px;
+  }
+
+  .student-avatar {
+    width: 24px;
+    height: 24px;
+    font-size: 9px;
+  }
+
+  .student-name {
     font-size: 12px;
   }
-  .th-name {
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
+
+  .td-stat {
+    font-size: 11px;
   }
+  .td-pct {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header .header-left .title-row .page-title {
+    font-size: 18px;
+  }
+
   .month-nav {
     padding: 8px 12px;
     gap: 8px;
   }
+
   .month-labels {
-    min-width: 140px;
+    min-width: 100px;
+  }
+
+  .month-nepali {
+    font-size: 16px;
+  }
+  .month-english {
+    font-size: 10px;
+  }
+
+  .td-cell {
+    width: 34px;
+    min-width: 34px;
+    max-width: 34px;
+    height: 30px;
+    font-size: 11px;
+  }
+
+  .th-day {
+    min-width: 34px;
+  }
+
+  .date-primary {
+    font-size: 13px;
+  }
+  .date-secondary {
+    font-size: 6px;
+  }
+
+  .td-name {
+    min-width: 90px;
+    padding: 0 4px 0 8px;
+  }
+
+  .th-name {
+    min-width: 90px;
+    padding-left: 8px !important;
+  }
+
+  .student-avatar {
+    width: 20px;
+    height: 20px;
+    font-size: 8px;
+  }
+
+  .student-name {
+    font-size: 11px;
+  }
+
+  .td-stat {
+    font-size: 10px;
+    padding: 0 2px;
+  }
+  .td-pct {
+    font-size: 10px;
+    padding: 0 2px;
+  }
+
+  .td-print button {
+    width: 28px;
+    height: 28px;
+
+    mat-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
   }
 }
 
+/* ============================================================
+   PRINT STYLES
+   ============================================================ */
 @media print {
+  .page-header .header-right .stats-badge {
+    display: none !important;
+  }
+
   .month-nav {
     background: #1a237e !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
+
   .att-table thead th {
     background: #1a237e !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
-  .cell-p, .cell-a, .cell-l, .cell-empty {
+
+  .cell-p,
+  .cell-a,
+  .cell-l,
+  .cell-empty {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
+
   .td-cell {
-    height: 30px;
+    height: 28px;
   }
+
   .date-primary {
-    font-size: 16px;
+    font-size: 14px;
   }
   .date-secondary {
     font-size: 7px;
+  }
+
+  .td-pct {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-btn {
+    display: none !important;
   }
 }

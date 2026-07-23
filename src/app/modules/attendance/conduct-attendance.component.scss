@@ -1,1 +1,621 @@
-.att-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;} .att-list{display:flex;flex-direction:column;gap:8px;} .att-row{display:flex;align-items:center;gap:12px;padding:12px;border-radius:8px;background:#f8f9fa;} .att-row.absent{background:#fff3e0;} .student-num{width:30px;color:#999;font-size:13px;} .student-name{flex:1;font-weight:500;} .toggle-btns{display:flex;gap:8px;} .status-text{width:70px;font-size:13px;font-weight:600;} .status-text.present{color:#2e7d32;} .status-text.absent-text{color:#c62828;}
+.page-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* ============================================================
+   PAGE HEADER
+   ============================================================ */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 16px 0;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    .back-btn {
+      color: #64748b;
+      border-radius: 8px;
+      font-weight: 500;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      &:hover {
+        background: #f1f5f9;
+      }
+    }
+
+    .title-row {
+      .page-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0 0 2px 0;
+      }
+
+      .subtitle {
+        font-size: 13px;
+        color: #64748b;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        .date-info {
+          font-weight: 500;
+          color: #0f172a;
+        }
+        .student-count {
+          color: #64748b;
+        }
+        .separator {
+          color: #cbd5e1;
+        }
+      }
+    }
+  }
+
+  .header-right {
+    .stats-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 16px;
+      background: #ffffff;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+      .present-count {
+        color: #15803d;
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      .absent-count {
+        color: #b91c1c;
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      .separator-dot {
+        color: #e2e8f0;
+      }
+    }
+  }
+}
+
+/* ============================================================
+   MAIN CARD
+   ============================================================ */
+.main-card {
+  padding: 24px;
+  border-radius: 16px !important;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  margin-bottom: 20px;
+}
+
+/* ============================================================
+   TOOLBAR
+   ============================================================ */
+.att-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 16px;
+
+  .att-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+
+    .action-btn {
+      border-radius: 10px !important;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      &.present-all {
+        background: linear-gradient(135deg, #16a34a, #22c55e) !important;
+
+        &:hover {
+          box-shadow: 0 4px 20px rgba(22, 163, 74, 0.3) !important;
+          transform: translateY(-2px);
+        }
+      }
+
+      &.absent-all {
+        background: linear-gradient(135deg, #dc2626, #ef4444) !important;
+
+        &:hover {
+          box-shadow: 0 4px 20px rgba(220, 38, 38, 0.3) !important;
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+
+  .att-count {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    padding: 6px 14px;
+    background: #f8fafc;
+    border-radius: 8px;
+
+    .total-label {
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .total-count {
+      color: #0f172a;
+      font-weight: 700;
+      margin-right: 8px;
+    }
+
+    .present-label {
+      color: #15803d;
+      font-weight: 500;
+    }
+
+    .present-count {
+      color: #15803d;
+      font-weight: 700;
+      margin-right: 8px;
+    }
+
+    .absent-label {
+      color: #b91c1c;
+      font-weight: 500;
+    }
+
+    .absent-count {
+      color: #b91c1c;
+      font-weight: 700;
+    }
+  }
+}
+
+/* ============================================================
+   STUDENT LIST
+   ============================================================ */
+.att-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 4px;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+}
+
+.att-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #f8fafc;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+
+  &.absent {
+    background: #fef2f2;
+    border-color: #fca5a5;
+
+    .student-name {
+      color: #991b1b;
+    }
+  }
+
+  &:hover {
+    transform: translateX(4px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .student-num {
+    width: 30px;
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .student-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+
+    .student-avatar {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .student-name {
+      font-weight: 600;
+      color: #0f172a;
+      font-size: 14px;
+    }
+  }
+
+  .toggle-btns {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+
+    .toggle-btn {
+      width: 34px;
+      height: 34px;
+      transition: all 0.3s ease;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      &.present-btn {
+        background: #e2e8f0;
+        color: #94a3b8;
+
+        &.active {
+          background: #22c55e;
+          color: #ffffff;
+          box-shadow: 0 2px 12px rgba(34, 197, 94, 0.3);
+        }
+
+        &:hover:not(.active) {
+          background: #dcfce7;
+          color: #16a34a;
+        }
+      }
+
+      &.absent-btn {
+        background: #e2e8f0;
+        color: #94a3b8;
+
+        &.active {
+          background: #ef4444;
+          color: #ffffff;
+          box-shadow: 0 2px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        &:hover:not(.active) {
+          background: #fee2e2;
+          color: #dc2626;
+        }
+      }
+    }
+  }
+
+  .status-text {
+    width: 80px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: right;
+    flex-shrink: 0;
+
+    &.present {
+      color: #15803d;
+    }
+    &.absent-text {
+      color: #b91c1c;
+    }
+  }
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.att-footer {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: flex-end;
+
+  .save-btn {
+    border-radius: 10px !important;
+    font-weight: 600;
+    padding: 0 32px;
+    height: 44px;
+    background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover {
+      box-shadow: 0 4px 25px rgba(37, 99, 235, 0.35) !important;
+      transform: translateY(-2px);
+    }
+  }
+}
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+
+  mat-icon {
+    font-size: 52px;
+    width: 52px;
+    height: 52px;
+    color: #cbd5e1;
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-size: 18px;
+    font-weight: 600;
+    color: #64748b;
+    margin: 0;
+  }
+
+  span {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .header-left {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .header-right {
+      width: 100%;
+    }
+  }
+
+  .main-card {
+    padding: 16px;
+  }
+
+  .att-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+
+    .att-actions {
+      flex-direction: column;
+
+      .action-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    .att-count {
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  }
+
+  .att-row {
+    flex-wrap: wrap;
+    padding: 10px 12px;
+    gap: 8px;
+
+    .student-num {
+      width: 24px;
+      font-size: 11px;
+    }
+
+    .student-info {
+      .student-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 10px;
+      }
+
+      .student-name {
+        font-size: 13px;
+      }
+    }
+
+    .toggle-btns .toggle-btn {
+      width: 30px;
+      height: 30px;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    .status-text {
+      width: 70px;
+      font-size: 12px;
+      text-align: left;
+    }
+  }
+
+  .att-footer {
+    justify-content: center;
+
+    .save-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header .header-left .title-row .page-title {
+    font-size: 18px;
+  }
+
+  .page-header .header-left .title-row .subtitle {
+    font-size: 12px;
+    flex-wrap: wrap;
+  }
+
+  .main-card {
+    padding: 12px;
+  }
+
+  .att-row {
+    padding: 8px 10px;
+    gap: 6px;
+
+    .student-num {
+      width: 20px;
+      font-size: 10px;
+    }
+
+    .student-info {
+      gap: 6px;
+
+      .student-avatar {
+        width: 24px;
+        height: 24px;
+        font-size: 9px;
+      }
+
+      .student-name {
+        font-size: 12px;
+      }
+    }
+
+    .toggle-btns {
+      gap: 4px;
+
+      .toggle-btn {
+        width: 28px;
+        height: 28px;
+
+        mat-icon {
+          font-size: 14px;
+          width: 14px;
+          height: 14px;
+        }
+      }
+    }
+
+    .status-text {
+      width: 60px;
+      font-size: 11px;
+    }
+  }
+
+  .att-toolbar .att-count {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+
+  .att-footer .save-btn {
+    height: 40px;
+    font-size: 13px;
+  }
+}
+
+/* ============================================================
+   PRINT STYLES
+   ============================================================ */
+@media print {
+  .page-header .header-right .stats-badge {
+    display: none !important;
+  }
+
+  .main-card {
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+  }
+
+  .att-toolbar .att-actions .action-btn {
+    display: none !important;
+  }
+
+  .att-footer .save-btn {
+    display: none !important;
+  }
+
+  .att-row {
+    background: #f5f5f5 !important;
+    border: 1px solid #ddd !important;
+    page-break-inside: avoid;
+
+    &.absent {
+      background: #fff3e0 !important;
+    }
+  }
+
+  .att-row .student-avatar {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

@@ -1,29 +1,107 @@
 <div class="page-container">
-  <button mat-button routerLink="/attendance"><mat-icon>arrow_back</mat-icon> Back</button>
-  <h2 class="page-title">Conduct Attendance — {{today}}</h2>
-  <mat-card style="padding:20px">
-    <div class="att-header">
-      <span>{{attendance.length}} students</span>
-      <div>
-        <button mat-stroked-button (click)="markAll(true)" style="margin-right:8px">Mark All Present</button>
-        <button mat-stroked-button color="warn" (click)="markAll(false)">Mark All Absent</button>
+
+  <!-- ====== PAGE HEADER ====== -->
+  <div class="page-header">
+    <div class="header-left">
+      <a mat-button routerLink="/attendance" class="back-btn">
+        <mat-icon>arrow_back</mat-icon> Back to Classes
+      </a>
+      <div class="title-row">
+        <h2 class="page-title">📋 Conduct Attendance</h2>
+        <p class="subtitle">
+          <span class="date-info">{{ today }}</span>
+          <span class="separator">•</span>
+          <span class="student-count">{{ attendance.length }} students</span>
+        </p>
       </div>
     </div>
+    <div class="header-right">
+      <div class="stats-badge">
+        <span class="present-count">✅ {{ getPresentCount() }}</span>
+        <span class="separator-dot">|</span>
+        <span class="absent-count">❌ {{ getAbsentCount() }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== MAIN CARD ====== -->
+  <mat-card class="main-card">
+    
+    <!-- Toolbar -->
+    <div class="att-toolbar">
+      <div class="att-actions">
+        <button mat-raised-button color="primary" (click)="markAll(true)" class="action-btn present-all">
+          <mat-icon>check_circle</mat-icon> Mark All Present
+        </button>
+        <button mat-raised-button color="warn" (click)="markAll(false)" class="action-btn absent-all">
+          <mat-icon>cancel</mat-icon> Mark All Absent
+        </button>
+      </div>
+      <div class="att-count">
+        <span class="total-label">Total:</span>
+        <span class="total-count">{{ attendance.length }}</span>
+        <span class="present-label">Present:</span>
+        <span class="present-count">{{ getPresentCount() }}</span>
+        <span class="absent-label">Absent:</span>
+        <span class="absent-count">{{ getAbsentCount() }}</span>
+      </div>
+    </div>
+
+    <!-- Student List -->
     <div class="att-list">
-      <div class="att-row" *ngFor="let a of attendance; let i=index" [class.absent]="!a.status">
-        <span class="student-num">{{i+1}}</span>
-        <span class="student-name">{{a.studentName}}</span>
-        <div class="toggle-btns">
-          <button mat-mini-fab [color]="a.status?'primary':''" (click)="a.status=true" title="Present"><mat-icon>check</mat-icon></button>
-          <button mat-mini-fab [color]="!a.status?'warn':''" (click)="a.status=false" title="Absent"><mat-icon>close</mat-icon></button>
+      <div class="att-row" *ngFor="let a of attendance; let i=index" 
+           [class.absent]="!a.status">
+        
+        <!-- Serial Number -->
+        <span class="student-num">{{ i + 1 }}</span>
+        
+        <!-- Student Name with Avatar -->
+        <div class="student-info">
+          <span class="student-avatar">{{ a.studentName?.charAt(0) || 'S' }}</span>
+          <span class="student-name">{{ a.studentName }}</span>
         </div>
-        <span class="status-text" [class.present]="a.status" [class.absent-text]="!a.status">{{a.status?'Present':'Absent'}}</span>
+        
+        <!-- Toggle Buttons -->
+        <div class="toggle-btns">
+          <button mat-mini-fab 
+                  [color]="a.status ? 'primary' : ''" 
+                  (click)="a.status = true" 
+                  title="Present"
+                  class="toggle-btn present-btn"
+                  [class.active]="a.status">
+            <mat-icon>check</mat-icon>
+          </button>
+          <button mat-mini-fab 
+                  [color]="!a.status ? 'warn' : ''" 
+                  (click)="a.status = false" 
+                  title="Absent"
+                  class="toggle-btn absent-btn"
+                  [class.active]="!a.status">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        
+        <!-- Status Text -->
+        <span class="status-text" [class.present]="a.status" [class.absent-text]="!a.status">
+          {{ a.status ? '✅ Present' : '❌ Absent' }}
+        </span>
       </div>
     </div>
-    <div style="margin-top:20px;text-align:right">
-      <button mat-raised-button color="primary" (click)="save()" style="min-width:140px">
+
+    <!-- Save Button -->
+    <div class="att-footer">
+      <button mat-raised-button color="primary" (click)="save()" class="save-btn">
         <mat-icon>save</mat-icon> Save Attendance
       </button>
     </div>
+
   </mat-card>
+
+  <!-- ====== EMPTY STATE ====== -->
+  <div class="empty-state" *ngIf="!attendance.length">
+    <mat-icon>people_outline</mat-icon>
+    <p>No students found</p>
+    <span>Add students to this class to conduct attendance</span>
+  </div>
+
 </div>

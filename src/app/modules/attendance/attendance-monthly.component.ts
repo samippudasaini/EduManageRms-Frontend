@@ -7,12 +7,12 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ApiService } from '../../core/services/api.service';
 import { 
-  toNepali, 
-  adToNepaliMonth, 
-  getDaysInBSMonth, 
-  bsToAD,
-  getADDayFromBS,
-  getCurrentBSDate,
+  toNepali,
+  adToNepaliMonth,
+  getDaysInBSMonth,      // ✅ Now exported
+  bsToAD,                // ✅ Now exported
+  getADDayFromBS,        // ✅ Now exported
+  getCurrentBSDate,      // ✅ Now exported
   NepaliDate
 } from './nepali-date.component';
 
@@ -26,10 +26,10 @@ import {
 })
 export class AttendanceMonthlyComponent implements OnInit {
   gsId!: number;
-  year!: number;  // AD year (for backend)
-  month!: number; // AD month (for backend)
-  bsYear!: number; // BS year
-  bsMonth!: number; // BS month
+  year!: number;
+  month!: number;
+  bsYear!: number;
+  bsMonth!: number;
   bsMonthName!: string;
   bsDaysInMonth!: number;
   data: any = null;
@@ -44,7 +44,6 @@ export class AttendanceMonthlyComponent implements OnInit {
     'L': null
   };
 
-  // ✅ DYNAMIC days based on BS month (30, 31, or 32)
   get days(): number[] {
     if (this.bsYear && this.bsMonth) {
       const days = getDaysInBSMonth(this.bsYear, this.bsMonth);
@@ -53,11 +52,20 @@ export class AttendanceMonthlyComponent implements OnInit {
     return Array.from({ length: 30 }, (_, i) => i + 1);
   }
 
-  // ✅ BS month label (ONLY ONE month)
   get nepaliMonthLabel(): string {
     if (this.bsYear && this.bsMonth) {
       return `${this.bsMonthName} ${this.bsYear} BS`;
     }
+    
+    if (this.data) {
+      const bsInfo = adToNepaliMonth(this.year, this.month);
+      this.bsYear = bsInfo.bsYear;
+      this.bsMonth = bsInfo.bsMonth;
+      this.bsMonthName = bsInfo.bsMonthName;
+      this.bsDaysInMonth = getDaysInBSMonth(this.bsYear, this.bsMonth);
+      return `${bsInfo.bsMonthName} ${bsInfo.bsYear} BS`;
+    }
+    
     return 'Loading...';
   }
 
@@ -73,18 +81,15 @@ export class AttendanceMonthlyComponent implements OnInit {
 
   ngOnInit() {
     this.gsId = +this.route.snapshot.params['gsId'];
+    const now = new Date();
+    this.year = now.getFullYear();
+    this.month = now.getMonth() + 1;
     
-    // ✅ Initialize with current BS date
-    const currentBS = getCurrentBSDate();
-    this.bsYear = currentBS.year;
-    this.bsMonth = currentBS.month;
-    this.bsMonthName = currentBS.monthName;
+    const bsInfo = adToNepaliMonth(this.year, this.month);
+    this.bsYear = bsInfo.bsYear;
+    this.bsMonth = bsInfo.bsMonth;
+    this.bsMonthName = bsInfo.bsMonthName;
     this.bsDaysInMonth = getDaysInBSMonth(this.bsYear, this.bsMonth);
-    
-    // Convert BS to AD for backend
-    const adDate = bsToAD(this.bsYear, this.bsMonth, 1);
-    this.year = adDate.getFullYear();
-    this.month = adDate.getMonth() + 1;
     
     this.load();
   }
@@ -93,12 +98,17 @@ export class AttendanceMonthlyComponent implements OnInit {
     this.loading = true;
     this.data = null;
     
-    // Send AD dates to backend
     this.api.get<any>(`attendance/monthly/${this.gsId}?year=${this.year}&month=${this.month}`)
       .subscribe({
         next: d => { 
           this.data = d;
           this.loading = false;
+          
+          const bsInfo = adToNepaliMonth(this.year, this.month);
+          this.bsYear = bsInfo.bsYear;
+          this.bsMonth = bsInfo.bsMonth;
+          this.bsMonthName = bsInfo.bsMonthName;
+          this.bsDaysInMonth = getDaysInBSMonth(this.bsYear, this.bsMonth);
         },
         error: () => { 
           this.loading = false; 
@@ -107,76 +117,40 @@ export class AttendanceMonthlyComponent implements OnInit {
       });
   }
 
-  // ✅ Navigate through BS months
   prevMonth() {
-    if (this.bsMonth === 1) {
-      this.bsMonth = 12;
-      this.bsYear--;
-    } else {
-      this.bsMonth--;
-    }
-    this.updateMonth();
-  }
-
-  nextMonth() {
-    if (this.bsMonth === 12) {
-      this.bsMonth = 1;
-      this.bsYear++;
-    } else {
-      this.bsMonth++;
-    }
-    this.updateMonth();
-  }
-
-  private updateMonth() {
-    this.bsMonthName = this.getBSMonthName(this.bsMonth);
-    this.bsDaysInMonth = getDaysInBSMonth(this.bsYear, this.bsMonth);
-    
-    // Convert BS to AD for backend
-    const adDate = bsToAD(this.bsYear, this.bsMonth, 1);
-    this.year = adDate.getFullYear();
-    this.month = adDate.getMonth() + 1;
-    
+    if (this.month === 1) { this.month = 12; this.year--; } 
+    else { this.month--; }
     this.load();
   }
 
-  // ✅ Get BS month name
-  getBSMonthName(month: number): string {
-    const months = [
-      'Baishakh', 'Jestha', 'Ashadh', 'Shrawan',
-      'Bhadra', 'Ashwin', 'Kartik', 'Mangsir',
-      'Poush', 'Magh', 'Falgun', 'Chaitra'
-    ];
-    return months[month - 1] || '';
+  nextMonth() {
+    if (this.month === 12) { this.month = 1; this.year++; } 
+    else { this.month++; }
+    this.load();
   }
 
-  // ✅ Get status for a student on a specific BS day
   getStatus(student: any, day: number): string {
     return student.days?.[day] || '';
   }
 
-  // ✅ Get BS day number (PRIMARY - big, bold)
   getBSDay(bsDayNumber: number): string {
     return this.toNepaliDigits(bsDayNumber);
   }
 
-  // ✅ Get AD day number (SECONDARY - small, in brackets)
   getADDay(bsDayNumber: number): string {
     try {
       const adDate = bsToAD(this.bsYear, this.bsMonth, bsDayNumber);
       return String(adDate.getDate());
     } catch {
-      return String(bsDayNumber + 16); // Fallback
+      return String(bsDayNumber);
     }
   }
 
-  // ✅ Convert to Nepali digits
   toNepaliDigits(n: number): string {
     const digits = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
     return String(n).split('').map(d => digits[parseInt(d, 10)] ?? d).join('');
   }
 
-  // ✅ Get AD date string for backend
   getADDateString(bsDay: number): string {
     const adDate = bsToAD(this.bsYear, this.bsMonth, bsDay);
     const y = adDate.getFullYear();
@@ -185,15 +159,12 @@ export class AttendanceMonthlyComponent implements OnInit {
     return `${y}-${m}-${d}`;
   }
 
-  // ✅ Cycle status with BS date
   cycleStatus(student: any, day: number) {
     const current = this.getStatus(student, day);
     const next = this.CYCLE[current] ?? null;
     const key = `${student.studentId}-${day}`;
-    
     const dateStr = this.getADDateString(day);
 
-    // Optimistic update
     if (!student.days) student.days = {};
     if (next === null) delete student.days[day];
     else student.days[day] = next;
@@ -219,7 +190,6 @@ export class AttendanceMonthlyComponent implements OnInit {
     });
   }
 
-  // ✅ Mark all for a specific BS day
   markDayAll(day: number, status: string) {
     const dateStr = this.getADDateString(day);
     this.data.students.forEach((s: any) => {
@@ -276,8 +246,6 @@ export class AttendanceMonthlyComponent implements OnInit {
     const s = this.data.students.reduce((sum: number, r: any) => sum + (r.pct || 0), 0);
     return Math.round((s / this.data.students.length) * 10) / 10;
   }
-
-  // ── Print ────────────────────────────────────────────────
 
   printStudent(student: any) {
     this.openPrint([student]);

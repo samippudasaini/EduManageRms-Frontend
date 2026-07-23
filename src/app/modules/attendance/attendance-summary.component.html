@@ -1,54 +1,77 @@
 <div class="page-container" *ngIf="!loading; else spinner">
 
+  <!-- ====== PAGE HEADER ====== -->
   <div class="page-header">
-    <a mat-button routerLink="/attendance">
-      <mat-icon>arrow_back</mat-icon> Back to Classes
-    </a>
-    <div class="title-row">
-      <h2 class="page-title">Monthly Attendance Summary</h2>
-      <p class="subtitle">Grade {{ gradeName }} — Section {{ sectionName }} | {{ year }}</p>
+    <div class="header-left">
+      <a mat-button routerLink="/attendance" class="back-btn">
+        <mat-icon>arrow_back</mat-icon> Back to Classes
+      </a>
+      <div class="title-row">
+        <h2 class="page-title">📊 Monthly Attendance Summary</h2>
+        <p class="subtitle">
+          <span class="grade-info">{{ gradeName || 'Grade' }}</span>
+          <span class="separator">•</span>
+          <span class="section-info">{{ sectionName || 'Section' }}</span>
+          <span class="separator">•</span>
+          <span class="year-info">{{ year || '2026' }}</span>
+        </p>
+      </div>
     </div>
-    <button mat-raised-button color="primary" (click)="printAll()">
-      <mat-icon>print</mat-icon> Print All
-    </button>
+    <div class="header-right">
+      <div class="stats-badge">
+        <mat-icon>people</mat-icon>
+        <span>{{ data?.students?.length || 0 }}</span>
+        <span class="stats-label">Students</span>
+      </div>
+      <button mat-raised-button color="primary" (click)="printAll()" class="print-btn">
+        <mat-icon>print</mat-icon> Print All
+      </button>
+    </div>
   </div>
 
+  <!-- ====== SUMMARY TABLE ====== -->
   <div class="grid-outer" *ngIf="data && data.students?.length">
     <div class="grid-scroll">
       <table class="summary-table">
+        
+        <!-- Header Row 1: Month Names -->
         <thead>
           <tr>
             <th class="th-no">#</th>
             <th class="th-name sticky-col">Student Name</th>
             <ng-container *ngFor="let m of data.months">
               <th class="th-month">
-                <!-- Nepali (BS) month = PRIMARY, English (AD) = small reference below -->
-                <span class="date-primary">{{ nepaliMonth(m) }}</span>
-                <span class="date-secondary">{{ englishMonth(m) }}</span>
+                <span class="date-primary">{{ getNepaliMonth(m) }}</span>
+                <span class="date-secondary">{{ getEnglishMonth(m) }}</span>
               </th>
             </ng-container>
             <th class="th-cumulative">Annual<br>Total</th>
             <th class="th-print"></th>
           </tr>
-          <!-- Sub-header: P / A / Total / % -->
+          
+          <!-- Header Row 2: P / A / Total / % -->
           <tr class="sub-header">
-            <th colspan="2" class="sticky-col sh-label">P = Present | A = Absent</th>
-            <th class="sh-cell" *ngFor="let m of data.months">P / A / Total Days / %</th>
-            <th class="sh-cell">P / A / Total Days / %</th>
+            <th colspan="2" class="sticky-col sh-label">Present / Absent</th>
+            <th class="sh-cell" *ngFor="let m of data.months">P / A / Total / %</th>
+            <th class="sh-cell">P / A / Total / %</th>
             <th></th>
           </tr>
         </thead>
 
+        <!-- Table Body -->
         <tbody>
           <tr *ngFor="let s of data.students; let i = index">
             <td class="td-no">{{ i + 1 }}</td>
-            <td class="td-name sticky-col">{{ s.studentName }}</td>
+            <td class="td-name sticky-col">
+              <span class="student-name">{{ s.studentName }}</span>
+            </td>
 
+            <!-- Month Stats -->
             <td *ngFor="let m of data.months" class="td-month">
               <div class="month-stats" *ngIf="getMonthData(s, m).total > 0">
-                <span class="ms-p"><b>P=</b> {{ getMonthData(s, m).present }}</span>
-                <span class="ms-a"><b>A=</b> {{ getMonthData(s, m).absent }}</span>
-                <span class="ms-t"><b>Total=</b> {{ getMonthData(s, m).total }}</span>
+                <span class="ms-p">{{ getMonthData(s, m).present }}</span>
+                <span class="ms-a">{{ getMonthData(s, m).absent }}</span>
+                <span class="ms-t">{{ getMonthData(s, m).total }}</span>
                 <span class="ms-pct" [class]="pctClass(getMonthData(s, m).pct)">
                   {{ getMonthData(s, m).pct }}%
                 </span>
@@ -56,16 +79,18 @@
               <div class="no-data" *ngIf="getMonthData(s, m).total === 0">—</div>
             </td>
 
+            <!-- Cumulative Stats -->
             <td class="td-cumulative">
               <div class="cum-stats">
-                <span class="ms-p"><b>P=</b> {{ s.totalPresent }}</span>
-                <span class="ms-a"><b>A=</b> {{ s.totalAbsent }}</span>
-                <span class="ms-t"><b>Total=</b> {{ s.grandTotal }}</span>
+                <span class="ms-p">{{ s.totalPresent || 0 }}</span>
+                <span class="ms-a">{{ s.totalAbsent || 0 }}</span>
+                <span class="ms-t">{{ s.grandTotal || 0 }}</span>
                 <span class="ms-pct cum-pct" [class]="pctClass(s.cumPct)">
-                  {{ s.cumPct }}%
+                  {{ s.cumPct || 0 }}%
                 </span>
               </div>
             </td>
+            
             <td class="td-print">
               <button mat-icon-button color="primary"
                 (click)="printStudent(s)" matTooltip="Print this student">
@@ -74,21 +99,54 @@
             </td>
           </tr>
         </tbody>
+
+        <!-- Table Footer -->
+        <tfoot>
+          <tr class="summary-footer">
+            <td colspan="2" class="sticky-col footer-label">Class Average</td>
+            <td *ngFor="let m of data.months" class="footer-month">
+              <span class="footer-pct" [class]="pctClass(getMonthAverage(m))">
+                {{ getMonthAverage(m) }}%
+              </span>
+            </td>
+            <td class="footer-cumulative">
+              <span class="footer-pct" [class]="pctClass(classAverage())">
+                {{ classAverage() }}%
+              </span>
+            </td>
+            <td></td>
+          </tr>
+        </tfoot>
+
       </table>
+    </div>
+    
+    <!-- Print All button at bottom -->
+    <div class="grid-footer">
+      <button mat-raised-button color="primary" (click)="printAll()" class="print-bottom-btn">
+        <mat-icon>print</mat-icon> Print All Students
+      </button>
     </div>
   </div>
 
+  <!-- ====== EMPTY STATES ====== -->
   <div class="empty-state" *ngIf="data && !data.students?.length">
     <mat-icon>people_outline</mat-icon>
-    <p>No attendance data found for this year.</p>
+    <p>No attendance data found</p>
+    <span>No students enrolled in this class</span>
   </div>
 
   <div class="empty-state" *ngIf="!data">
     <mat-icon>calendar_month</mat-icon>
-    <p>No data loaded yet.</p>
+    <p>No data loaded yet</p>
+    <span>Please select a class to view attendance summary</span>
   </div>
+
 </div>
 
 <ng-template #spinner>
-  <div class="spinner-center">Loading summary...</div>
+  <div class="spinner-center">
+    <mat-icon>hourglass_top</mat-icon>
+    <p>Loading summary...</p>
+  </div>
 </ng-template>

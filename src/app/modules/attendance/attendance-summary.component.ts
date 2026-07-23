@@ -26,8 +26,17 @@ export class AttendanceSummaryComponent implements OnInit {
   gradeName = '';
   sectionName = '';
 
-  years = [2082, 2083, 2084]; // BS years
-  selectedBsYear = 2083;
+  // BS Month names
+  private readonly BS_MONTHS = [
+    'Baishakh', 'Jestha', 'Ashadh', 'Shrawan',
+    'Bhadra', 'Ashwin', 'Kartik', 'Mangsir',
+    'Poush', 'Magh', 'Falgun', 'Chaitra'
+  ];
+
+  private readonly EN_MONTHS = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
 
   constructor(
     private route: ActivatedRoute,
@@ -37,43 +46,87 @@ export class AttendanceSummaryComponent implements OnInit {
 
   ngOnInit() {
     this.gsId = +this.route.snapshot.params['gsId'];
-    const adYear = new Date().getFullYear();
-    this.year    = adYear;
-    this.selectedBsYear = adToNepaliMonth(adYear, 7).bsYear; // approximate current BS year
+    this.year = new Date().getFullYear();
     this.load();
   }
 
   load() {
     this.loading = true;
     this.api.get<any>(`attendance/summary/${this.gsId}?year=${this.year}`).subscribe({
-      next: d => { this.data = d; this.loading = false; },
-      error: () => { this.loading = false; this.snack.open('Could not load summary', '', { duration: 2000 }); }
+      next: d => { 
+        this.data = d; 
+        this.loading = false;
+        
+        // 🔍 Debug - check what months are coming from backend
+        console.log('Months from backend:', this.data?.months);
+      },
+      error: () => { 
+        this.loading = false; 
+        this.snack.open('Could not load summary', '', { duration: 2000 }); 
+      }
     });
+    
     this.api.get<any[]>('attendance/sections').subscribe({
       next: sections => {
         const s = sections.find((s: any) => s.id === this.gsId);
-        if (s) { this.gradeName = s.gradeName; this.sectionName = s.sectionName; }
+        if (s) { 
+          this.gradeName = s.gradeName; 
+          this.sectionName = s.sectionName; 
+        }
       }
     });
   }
 
+  // ✅ Get month data for a student
   getMonthData(student: any, month: number): any {
     return student.months?.[month] || { present: 0, absent: 0, total: 0, pct: 0 };
   }
 
-  monthLabel(month: number): string {
-    const np = adToNepaliMonth(this.year, month);
-    return `${np.label.split(' ')[0]}\n(${new Date(this.year, month - 1, 1).toLocaleString('default', { month: 'short' })})`;
+  // ✅ Get Nepali month name - USING adToNepaliMonth
+  getNepaliMonth(month: number): string {
+    try {
+      const np = adToNepaliMonth(this.year, month);
+      return np.label.split(' ')[0];
+    } catch (e) {
+      // Fallback if adToNepaliMonth fails
+      return this.getNepaliMonthFallback(month);
+    }
   }
 
-  nepaliMonth(month: number): string {
-    return adToNepaliMonth(this.year, month).label.split(' ')[0];
+  // ✅ FALLBACK - Direct mapping if adToNepaliMonth fails
+  getNepaliMonthFallback(adMonth: number): string {
+    // AD Month to BS Month mapping for BS 2083
+    // AD: Jun (6) → Ashadh, Jul (7) → Shrawan
+    const mapping: { [key: number]: number } = {
+      1: 9,   // Jan → Poush
+      2: 10,  // Feb → Magh
+      3: 11,  // Mar → Falgun
+      4: 12,  // Apr → Chaitra
+      5: 1,   // May → Baishakh
+      6: 2,   // Jun → Jestha
+      7: 3,   // Jul → Ashadh
+      8: 4,   // Aug → Shrawan
+      9: 5,   // Sep → Bhadra
+      10: 6,  // Oct → Ashwin
+      11: 7,  // Nov → Kartik
+      12: 8   // Dec → Mangsir
+    };
+    
+    const bsIndex = mapping[adMonth] || adMonth;
+    return this.BS_MONTHS[bsIndex - 1] || adMonth.toString();
   }
 
-  englishMonth(month: number): string {
-    return new Date(this.year, month - 1, 1).toLocaleString('default', { month: 'short' });
+  // ✅ Get English month name
+  getEnglishMonth(month: number): string {
+    return this.EN_MONTHS[month - 1] || month.toString();
   }
 
+  // ✅ Get month label for header (BS with EN in brackets)
+  getMonthLabel(month: number): string {
+    return `${this.getNepaliMonth(month)} (${this.getEnglishMonth(month)})`;
+  }
+
+  // ✅ Percentage class for styling
   pctClass(pct: number): string {
     if (!pct) return '';
     if (pct >= 90) return 'pct-high';
@@ -81,11 +134,53 @@ export class AttendanceSummaryComponent implements OnInit {
     return 'pct-low';
   }
 
-  printAll() { this.openPrint(this.data?.students || []); }
+  // ✅ Get month average
+  getMonthAverage(month: number): number {
+    if (!this.data?.students?.length) return 0;
+    
+    let total = 0;
+    let count = 0;
+    for (const student of this.data.students) {
+      const data = this.getMonthData(student, month);
+      if (data.total > 0) {
+        total += data.pct || 0;
+        count++;
+      }
+    }
+    return count > 0 ? Math.round((total / count) * 10) / 10 : 0;
+  }
 
-  printStudent(s: any) { this.openPrint([s]); }
+  // ✅ Get class average
+  classAverage(): number {
+    if (!this.data?.students?.length) return 0;
+    
+    let total = 0;
+    let count = 0;
+    for (const student of this.data.students) {
+      if (student.cumPct !== undefined && student.cumPct !== null) {
+        total += student.cumPct || 0;
+        count++;
+      }
+    }
+    return count > 0 ? Math.round((total / count) * 10) / 10 : 0;
+  }
+
+  // ✅ Print all students
+  printAll() { 
+    this.openPrint(this.data?.students || []); 
+  }
+
+  // ✅ Print single student
+  printStudent(s: any) { 
+    this.openPrint([s]); 
+  }
 
   private openPrint(students: any[]) {
+    if (!students.length) {
+      this.snack.open('No data to print', '', { duration: 2000 });
+      return;
+    }
+
     const months: number[] = this.data?.months || [];
     const title = `Grade ${this.gradeName} — Section ${this.sectionName} | Annual Summary ${this.year}`;
 
@@ -114,17 +209,25 @@ export class AttendanceSummaryComponent implements OnInit {
       </tr>`;
     }).join('');
 
-    const headerCells = months.map(m =>
-      `<th style="background:#1a237e;color:#fff;padding:6px 4px;text-align:center;border:1px solid #283593;font-size:11px;">
-        ${this.nepaliMonth(m)}<br><small style="color:#90caf9;">(${this.englishMonth(m)})</small>
-      </th>`).join('');
+    const headerCells = months.map(m => {
+      const bsName = this.getNepaliMonth(m);
+      const enName = this.getEnglishMonth(m);
+      return `<th style="background:#1a237e;color:#fff;padding:6px 4px;text-align:center;border:1px solid #283593;font-size:11px;">
+        ${bsName}<br><small style="color:#90caf9;">(${enName})</small>
+      </th>`;
+    }).join('');
 
     const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Attendance Summary</title>
-      <style>body{font-family:Arial,sans-serif;font-size:12px;}@media print{body{margin:0}}</style>
+      <style>
+        body{font-family:Arial,sans-serif;font-size:12px;}
+        @media print{body{margin:0}}
+        table{width:100%;border-collapse:collapse;}
+        th, td{border:1px solid #e0e0e0;}
+      </style>
     </head><body>
       <h2 style="color:#1a237e;margin-bottom:4px;">Monthly Attendance Summary</h2>
       <p style="margin-bottom:16px;">${title}</p>
-      <table style="border-collapse:collapse;width:100%;">
+      <table>
         <thead>
           <tr>
             <th style="background:#1a237e;color:#fff;padding:8px 10px;text-align:left;border:1px solid #283593;">Student Name</th>
@@ -149,7 +252,10 @@ export class AttendanceSummaryComponent implements OnInit {
     </body></html>`;
 
     const w = window.open('', '_blank');
-    if (!w) { this.snack.open('Allow popups to print', '', { duration: 3000 }); return; }
+    if (!w) { 
+      this.snack.open('Allow popups to print', '', { duration: 3000 }); 
+      return; 
+    }
     w.document.write(html);
     w.document.close();
   }

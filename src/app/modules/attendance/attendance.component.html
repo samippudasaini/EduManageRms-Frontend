@@ -1,32 +1,87 @@
 <div class="page-container">
-  <h2 class="page-title">Attendance Management</h2>
-  <p class="page-sub">Select a class to manage attendance.</p>
-  <div class="loading" *ngIf="loading">Loading...</div>
-  <div class="cards-grid" *ngIf="!loading">
+
+  <!-- ====== PAGE HEADER ====== -->
+  <div class="page-header">
+    <div class="header-left">
+      <h2 class="page-title">📋 Attendance Management</h2>
+      <p class="page-sub">Select a class to manage attendance</p>
+    </div>
+    <div class="header-right">
+      <div class="stats-badge">
+        <span class="stats-number">{{ sections.length }}</span>
+        <span class="stats-label">Total Classes</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== LOADING ====== -->
+  <div class="loading" *ngIf="loading">
+    <mat-icon>hourglass_top</mat-icon>
+    <p>Loading classes...</p>
+  </div>
+
+  <!-- ====== CLASS CARDS GRID ====== -->
+  <div class="cards-grid" *ngIf="!loading && sections.length">
+    
+    <!-- Card with Student Count Badge -->
     <mat-card class="class-card" *ngFor="let gs of sections">
-      <div class="card-top">
-        <mat-icon class="card-icon">class</mat-icon>
-        <div class="card-info">
-          <h3>Grade {{ gs.gradeName }}
-            <span *ngIf="gs.sectionName"> — {{ gs.sectionName }}</span>
-          </h3>
-          <p>{{ gs.studentCount }} students</p>
+      
+      <!-- Card Header with Grade and Section -->
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="card-icon-wrapper">
+            <mat-icon class="card-icon">class</mat-icon>
+          </div>
+          <div class="card-info">
+            <h3>
+              <span class="grade-name">{{ gs.gradeName || 'Grade' }}</span>
+              <span class="section-name" *ngIf="gs.sectionName">— {{ gs.sectionName }}</span>
+            </h3>
+          </div>
+        </div>
+        <!-- Student Count Badge -->
+        <div class="student-count-badge">
+          <mat-icon>people</mat-icon>
+          <span>{{ gs.studentCount || 0 }}</span>
+          <span class="count-label">students</span>
         </div>
       </div>
-      <div class="card-actions">
-        <a mat-raised-button color="primary"
-          [routerLink]="['/attendance/monthly', gs.id]">
-          <mat-icon>grid_on</mat-icon> Daily Grid
+
+      <!-- Card Body with Action Buttons -->
+      <div class="card-body">
+        <!-- Daily Grid Button -->
+        <a class="action-btn daily-btn" [routerLink]="['/attendance/monthly', gs.id]">
+          <div class="btn-icon daily-icon">
+            <mat-icon>grid_on</mat-icon>
+          </div>
+          <div class="btn-content">
+            <span class="btn-title">Daily Grid</span>
+            <span class="btn-sub">Mark daily attendance</span>
+          </div>
+          <mat-icon class="btn-arrow">arrow_forward</mat-icon>
         </a>
-        <a mat-stroked-button color="primary"
-          [routerLink]="['/attendance/summary', gs.id]">
-          <mat-icon>summarize</mat-icon> Monthly Summary
+
+        <!-- Monthly Summary Button -->
+        <a class="action-btn summary-btn" [routerLink]="['/attendance/summary', gs.id]">
+          <div class="btn-icon summary-icon">
+            <mat-icon>summarize</mat-icon>
+          </div>
+          <div class="btn-content">
+            <span class="btn-title">Monthly Summary</span>
+            <span class="btn-sub">View monthly report</span>
+          </div>
+          <mat-icon class="btn-arrow">arrow_forward</mat-icon>
         </a>
       </div>
+
     </mat-card>
   </div>
+
+  <!-- ====== EMPTY STATE ====== -->
   <div class="empty-state" *ngIf="!loading && !sections.length">
     <mat-icon>class</mat-icon>
-    <p>No classes found. Add grades and sections first.</p>
+    <p>No classes found</p>
+    <span>Add grades and sections first to manage attendance</span>
   </div>
+
 </div>

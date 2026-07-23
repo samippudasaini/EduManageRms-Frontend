@@ -17,6 +17,12 @@ import { ApiService } from '../../core/services/api.service';
   styleUrl: './conduct-attendance.component.scss'
 })
 export class ConductAttendanceComponent implements OnInit {
+getPresentCount() {
+throw new Error('Method not implemented.');
+}
+getAbsentCount() {
+throw new Error('Method not implemented.');
+}
   attendance: any[] = [];
   today = new Date().toLocaleDateString('en-US', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
   gsId: any;
