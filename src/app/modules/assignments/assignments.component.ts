@@ -15,6 +15,7 @@ import { ApiService } from '../../core/services/api.service';
   styleUrl: './assignments.component.scss'
 })
 export class AssignmentsComponent implements OnInit {
+[x: string]: any;
   cards: any[] = [];
   loading = true;
 

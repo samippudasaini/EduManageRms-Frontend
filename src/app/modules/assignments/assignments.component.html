@@ -1,29 +1,105 @@
+
 <div class="page-container">
-  <h2 class="page-title">Assignments</h2>
-  <p class="page-sub">Select a class to manage its assignments.</p>
 
-  <div class="loading" *ngIf="loading">Loading...</div>
+  <!-- ====== PAGE HEADER ====== -->
+  <div class="page-header">
+    <div class="header-left">
+      <h2 class="page-title">📋 Assignments</h2>
+      <p class="page-sub">Select a class to manage its assignments</p>
+    </div>
+    <div class="header-right">
+      <div class="stats-badge">
+        <div class="stats-icon-wrapper">
+          <mat-icon>assignment</mat-icon>
+        </div>
+        <div class="stats-content">
+          <span class="stats-number">{{ totalAssignments }}</span>
+          <span class="stats-label">Total Assignments</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <div class="cards-grid" *ngIf="!loading">
+  <!-- ====== QUICK STATS ====== -->
+  <div class="quick-stats" *ngIf="cards.length">
+    <div class="quick-stat">
+      <span class="qs-number">{{ totalAssignments }}</span>
+      <span class="qs-label">📝 Assignments</span>
+    </div>
+    <div class="quick-stat-divider"></div>
+    <div class="quick-stat">
+      <span class="qs-number">{{ totalPending }}</span>
+      <span class="qs-label">⏳ Pending</span>
+    </div>
+    <div class="quick-stat-divider"></div>
+    <div class="quick-stat">
+      <span class="qs-number">{{ cards.length }}</span>
+      <span class="qs-label">🏫 Classes</span>
+    </div>
+  </div>
+
+  <!-- ====== LOADING ====== -->
+  <div class="loading" *ngIf="loading">
+    <mat-icon>hourglass_top</mat-icon>
+    <p>Loading classes...</p>
+  </div>
+
+  <!-- ====== CLASS CARDS ====== -->
+  <div class="cards-grid" *ngIf="!loading && cards.length">
     <mat-card class="section-card" *ngFor="let card of cards"
       [routerLink]="['/assignments', card.gradeSectionId]">
-      <div class="card-header">
-        <mat-icon class="card-icon">class</mat-icon>
-        <div class="card-info">
-          <h3>Grade {{ card.gradeName }}
-            <span *ngIf="card.sectionName"> — {{ card.sectionName }}</span>
-          </h3>
-          <p>{{ card.totalAssignments }} assignment(s)</p>
+      
+      <!-- Card Top Row -->
+      <div class="card-top">
+        <div class="card-icon-wrapper">
+          <mat-icon class="card-icon">class</mat-icon>
         </div>
-        <div class="badge-wrap" *ngIf="card.pendingCount > 0">
-          <span class="pending-badge">{{ card.pendingCount }} pending</span>
+        <div class="card-info">
+          <h3>
+            <span class="grade-name">Grade {{ card.gradeName }}</span>
+            <span class="section-name" *ngIf="card.sectionName">— {{ card.sectionName }}</span>
+          </h3>
+          <div class="card-meta">
+            <span class="meta-item">
+              <mat-icon>assignment</mat-icon>
+              {{ card.totalAssignments }} assignment{{ card.totalAssignments > 1 ? 's' : '' }}
+            </span>
+            <span class="meta-item" *ngIf="card.pendingCount > 0">
+              <mat-icon>schedule</mat-icon>
+              <span class="pending-text">{{ card.pendingCount }} pending</span>
+            </span>
+          </div>
+        </div>
+        <div class="card-arrow">
+          <mat-icon>arrow_forward</mat-icon>
+        </div>
+      </div>
+
+      <!-- Card Bottom - Quick Stats -->
+      <div class="card-bottom" *ngIf="card.totalAssignments > 0">
+        <div class="card-stat">
+          <span class="card-stat-number">{{ card.completedCount || 0 }}</span>
+          <span class="card-stat-label">✅ Completed</span>
+        </div>
+        <div class="card-stat-divider"></div>
+        <div class="card-stat">
+          <span class="card-stat-number">{{ card.pendingCount || 0 }}</span>
+          <span class="card-stat-label">⏳ Pending</span>
+        </div>
+        <div class="card-stat-divider"></div>
+        <div class="card-stat">
+          <span class="card-stat-number">{{ card.totalAssignments || 0 }}</span>
+          <span class="card-stat-label">📝 Total</span>
         </div>
       </div>
     </mat-card>
   </div>
 
+  <!-- ====== EMPTY STATE ====== -->
   <div class="empty-state" *ngIf="!loading && !cards.length">
     <mat-icon>assignment_late</mat-icon>
-    <p>No assignments yet. Go to a class and create one.</p>
+    <p>No classes found</p>
+    <span>Go to a class and create an assignment</span>
   </div>
+
 </div>

@@ -1,47 +1,53 @@
+
 <div class="page-container" *ngIf="!loading; else spinner">
 
-  <!-- HEADER -->
+  <!-- ====== PAGE HEADER ====== -->
   <div class="page-header">
-    <div>
-      <a mat-button [routerLink]="['/assignments', gsId]">
+    <div class="header-left">
+      <a mat-button [routerLink]="['/assignments', gsId]" class="back-btn">
         <mat-icon>arrow_back</mat-icon> Back to Assignments
       </a>
-      <h2 class="page-title">{{ assignment?.name }}</h2>
-      <p class="page-sub">
-        Date: {{ assignment?.date }}
-        <span *ngIf="assignment?.dueDate"> | Due: {{ assignment?.dueDate }}</span>
-      </p>
+      <div class="title-row">
+        <h2 class="page-title">📝 {{ assignment?.name }}</h2>
+        <p class="page-sub">
+          <span class="date-info">📅 {{ assignment?.date }}</span>
+          <span class="separator">•</span>
+          <span class="due-info" *ngIf="assignment?.dueDate">⏰ Due: {{ assignment?.dueDate }}</span>
+        </p>
+      </div>
     </div>
-    <button mat-raised-button color="primary" (click)="markAllDone()">
-      <mat-icon>done_all</mat-icon> Mark All as DONE
-    </button>
+    <div class="header-right">
+      <button mat-raised-button color="primary" (click)="markAllDone()" class="mark-all-btn">
+        <mat-icon>done_all</mat-icon> Mark All as DONE
+      </button>
+    </div>
   </div>
 
-  <!-- STATS BAR -->
+  <!-- ====== STATS BAR ====== -->
   <div class="stats-bar">
     <div class="stat done">
       <span class="stat-num">{{ stats().done }}</span>
-      <span class="stat-label">Done</span>
+      <span class="stat-label">✅ Done</span>
     </div>
     <div class="stat late">
       <span class="stat-num">{{ stats().late }}</span>
-      <span class="stat-label">Late</span>
+      <span class="stat-label">🕐 Late</span>
     </div>
     <div class="stat notdone">
       <span class="stat-num">{{ stats().notDone }}</span>
-      <span class="stat-label">Not Done</span>
+      <span class="stat-label">❌ Not Done</span>
     </div>
     <div class="stat pending">
       <span class="stat-num">{{ stats().pending }}</span>
-      <span class="stat-label">Pending</span>
+      <span class="stat-label">⏳ Pending</span>
     </div>
     <div class="stat total">
       <span class="stat-num">{{ stats().total }}</span>
-      <span class="stat-label">Total</span>
+      <span class="stat-label">📊 Total</span>
     </div>
   </div>
 
-  <!-- CLASSROOM SHEET -->
+  <!-- ====== CLASSROOM SHEET ====== -->
   <div class="classroom-sheet">
     <div class="sheet-header">
       <span class="col-num">#</span>
@@ -57,6 +63,7 @@
       <span class="col-num">{{ i + 1 }}</span>
 
       <span class="col-name">
+        <span class="student-avatar">{{ s.studentName?.charAt(0) || 'S' }}</span>
         {{ s.studentName }}
         <mat-icon class="saving-icon" *ngIf="savingId === s.id">sync</mat-icon>
       </span>
@@ -67,7 +74,6 @@
         </span>
       </span>
 
-      <!-- Quick-toggle buttons — auto-save on click, NO global save button -->
       <span class="col-actions">
         <button class="quick-btn btn-done"
           [class.active]="s.submissionStatus === 'DONE'"
@@ -89,7 +95,6 @@
         </button>
       </span>
 
-      <!-- Remarks — only visible for LATE or NOT_DONE -->
       <span class="col-remarks">
         <input *ngIf="remarksVisible.has(s.id)"
           class="remarks-input"
@@ -102,11 +107,15 @@
 
     <div class="empty-state" *ngIf="!submissions.length">
       <mat-icon>people_outline</mat-icon>
-      <p>No students found in this class.</p>
+      <p>No students found in this class</p>
+      <span>Add students to this class to mark submissions</span>
     </div>
   </div>
 </div>
 
 <ng-template #spinner>
-  <div class="spinner-center"><p>Loading classroom...</p></div>
+  <div class="spinner-center">
+    <mat-icon>hourglass_top</mat-icon>
+    <p>Loading classroom...</p>
+  </div>
 </ng-template>
