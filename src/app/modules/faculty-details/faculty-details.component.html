@@ -1,82 +1,225 @@
+<!-- program.component.html -->
 <div class="page-container">
-  <h2 class="page-title">Programs (Faculty Details)</h2>
-  <mat-card class="form-card" style="max-width:100%;margin-bottom:20px;">
-    <h3>{{editId?'Edit Program':'Add Program'}}</h3>
-    <div class="form-row">
-      <mat-form-field appearance="outline"><mat-label>Program Name</mat-label><input matInput [(ngModel)]="form.name" placeholder="e.g. Computer Science Grade 11"></mat-form-field>
-      <mat-form-field appearance="outline"><mat-label>Stream</mat-label>
-        <mat-select [(ngModel)]="form.streamId">
-          <mat-option *ngFor="let s of streams" [value]="s.id">{{s.name}} ({{s.facultyName}})</mat-option>
-        </mat-select></mat-form-field>
-      <mat-form-field appearance="outline" *ngIf="!editId"><mat-label>Initial Subjects (optional)</mat-label>
-        <mat-select [(ngModel)]="form.subjectIds" multiple>
-          <mat-option *ngFor="let s of subjects" [value]="s.id">{{s.name}}</mat-option>
-        </mat-select></mat-form-field>
+
+  <!-- ====== PAGE HEADER ====== -->
+  <div class="page-header">
+    <div class="header-left">
+      <h2 class="page-title">📚 Programs Management</h2>
+      <p class="page-subtitle">Manage faculty programs with subjects and streams</p>
     </div>
+    <div class="header-right">
+      <div class="stats-badge">
+        <span class="stats-number">{{ facultyDetails.length }}</span>
+        <span class="stats-label">Total Programs</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== FORM CARD ====== -->
+  <mat-card class="form-card">
+    <div class="form-header">
+      <mat-icon class="form-icon">{{ editId ? 'edit' : 'playlist_add' }}</mat-icon>
+      <h3>{{ editId ? '✏️ Edit Program' : '➕ Add New Program' }}</h3>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Program Name</mat-label>
+        <input matInput [(ngModel)]="form.name" placeholder="e.g. Computer Science Grade 11">
+        <mat-icon matSuffix>menu_book</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Select Stream</mat-label>
+        <mat-select [(ngModel)]="form.streamId">
+          <mat-option *ngFor="let s of streams" [value]="s.id">
+            {{ s.name }} 
+            <span class="stream-faculty">({{ s.facultyName }})</span>
+          </mat-option>
+          <mat-option *ngIf="!streams.length" disabled>
+            No streams available
+          </mat-option>
+        </mat-select>
+        <mat-icon matSuffix>account_tree</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field" *ngIf="!editId">
+        <mat-label>Initial Subjects (optional)</mat-label>
+        <mat-select [(ngModel)]="form.subjectIds" multiple>
+          <mat-option *ngFor="let s of subjects" [value]="s.id">
+            {{ s.name }} 
+            <span class="subject-meta">(Pass: {{ s.passMarks }} / Full: {{ s.fullMarks }})</span>
+          </mat-option>
+        </mat-select>
+        <mat-icon matSuffix>book</mat-icon>
+      </mat-form-field>
+    </div>
+
     <div class="form-actions">
-      <button mat-raised-button color="primary" (click)="save()">{{editId?'Update':'Add Program'}}</button>
-      <button mat-button (click)="reset()" *ngIf="editId">Cancel</button>
+      <button mat-raised-button color="primary" (click)="save()" 
+              [disabled]="!form.name?.trim() || !form.streamId">
+        <mat-icon>{{ editId ? 'update' : 'save' }}</mat-icon>
+        {{ editId ? 'Update Program' : 'Add Program' }}
+      </button>
+      <button mat-stroked-button (click)="reset()" *ngIf="editId">
+        <mat-icon>close</mat-icon> Cancel
+      </button>
+    </div>
+
+    <div class="form-hint" *ngIf="editId">
+      <mat-icon>info</mat-icon>
+      Editing: <strong>{{ form.name }}</strong>
     </div>
   </mat-card>
 
-  <mat-accordion>
-    <mat-expansion-panel *ngFor="let fd of facultyDetails">
-      <mat-expansion-panel-header>
-        <mat-panel-title>{{fd.name}}</mat-panel-title>
-        <mat-panel-description>{{fd.streamName}} | {{fd.facultyName}}</mat-panel-description>
-      </mat-expansion-panel-header>
+  <!-- ====== PROGRAMS LIST ====== -->
+  <div class="programs-section">
+    
+    <!-- List Header -->
+    <div class="list-header" *ngIf="facultyDetails.length">
+      <div class="list-header-left">
+        <mat-icon>library_books</mat-icon>
+        <h3>All Programs</h3>
+      </div>
+      <span class="list-count">{{ facultyDetails.length }} program{{ facultyDetails.length > 1 ? 's' : '' }}</span>
+    </div>
 
-      <table class="subject-table" *ngIf="fd.subjects?.length">
-        <thead>
-          <tr>
-            <th>Subject Name</th>
-            <th>Pass Mark</th>
-            <th>Full Mark</th>
-            <th>Type</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let s of fd.subjects">
-            <td>{{s.name}}</td>
-            <td>{{s.passMarks}}</td>
-            <td>{{s.fullMarks}}</td>
-            <td>
-              <mat-chip class="type-chip" [class.optional]="s.optional" [class.compulsory]="!s.optional"
-                        (click)="toggleType(fd, s)" matTooltip="Click to toggle Optional / Compulsory">
-                {{ s.optional ? 'Optional' : 'Compulsory' }}
-              </mat-chip>
-            </td>
-            <td>
-              <button mat-icon-button color="warn" (click)="removeSubject(fd, s.id)" matTooltip="Remove subject">
-                <mat-icon>delete</mat-icon>
+    <!-- Program Cards Grid -->
+    <div class="programs-grid">
+      <mat-card class="program-card" *ngFor="let fd of facultyDetails" 
+                [class.expanded]="fd === expandedProgram">
+        
+<!-- program-card-header - FIXED SPACING -->
+<div class="program-card-header" (click)="toggleExpand(fd)">
+  <div class="program-info">
+    <span class="program-icon">📘</span>
+    <div class="program-details">
+      <span class="program-name">{{ fd.name }}</span>
+      <div class="program-tags">
+        <span class="tag stream-tag">{{ fd.streamName }}</span>
+        <span class="tag faculty-tag">{{ fd.facultyName }}</span>
+        <span class="tag subject-count">{{ fd.subjects?.length || 0 }} subjects</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- RIGHT SIDE - ACTIONS WITH BETTER SPACING -->
+  <div class="program-actions-header">
+    <!-- Edit Button -->
+    <button mat-icon-button color="primary" 
+            (click)="$event.stopPropagation(); edit(fd)" 
+            matTooltip="Edit Program"
+            class="action-btn edit-btn">
+      <mat-icon>edit</mat-icon>
+    </button>
+    
+    <!-- Delete Button - WITH MORE SPACING -->
+    <button mat-icon-button color="warn" 
+            (click)="$event.stopPropagation(); delete(fd.id)" 
+            matTooltip="Delete Program"
+            class="action-btn delete-btn">
+      <mat-icon>delete</mat-icon>
+    </button>
+    
+    <!-- Expand/Collapse Icon - SEPARATED -->
+    <mat-icon class="expand-icon">{{ fd === expandedProgram ? 'expand_less' : 'expand_more' }}</mat-icon>
+  </div>
+</div>
+        <!-- Card Body - Expandable -->
+        <div class="program-card-body" *ngIf="fd === expandedProgram">
+          
+          <!-- Subjects Section -->
+          <div class="subjects-section">
+            <div class="subjects-header">
+              <div class="subjects-header-left">
+                <mat-icon>book</mat-icon>
+                <h4>Subjects</h4>
+                <span class="subject-count-badge">{{ fd.subjects?.length || 0 }}</span>
+              </div>
+            </div>
+
+            <!-- Subjects Table -->
+            <div class="table-wrapper" *ngIf="fd.subjects?.length">
+              <table class="subject-table">
+                <thead>
+                  <tr>
+                    <th>Subject Name</th>
+                    <th>Pass Mark</th>
+                    <th>Full Mark</th>
+                    <th>Type</th>
+                    <th class="action-col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let s of fd.subjects">
+                    <td>
+                      <span class="subject-name">
+                        <span class="subject-icon">📓</span>
+                        {{ s.name }}
+                      </span>
+                    </td>
+                    <td><span class="mark pass-mark">{{ s.passMarks }}</span></td>
+                    <td><span class="mark full-mark">{{ s.fullMarks }}</span></td>
+                    <td>
+                      <mat-chip class="type-chip" 
+                               [class.optional]="s.optional" 
+                               [class.compulsory]="!s.optional"
+                               (click)="toggleType(fd, s)" 
+                               matTooltip="Click to toggle Optional / Compulsory">
+                        <mat-icon>{{ s.optional ? 'check_box_outline_blank' : 'check_box' }}</mat-icon>
+                        {{ s.optional ? 'Optional' : 'Compulsory' }}
+                      </mat-chip>
+                    </td>
+                    <td>
+                      <button mat-icon-button color="warn" (click)="removeSubject(fd, s.id)" 
+                              matTooltip="Remove subject" class="remove-btn">
+                        <mat-icon>delete_outline</mat-icon>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Empty Subjects -->
+            <div class="empty-subjects" *ngIf="!fd.subjects?.length">
+              <mat-icon>book</mat-icon>
+              <p>No subjects added to this program yet</p>
+            </div>
+
+            <!-- Add Subject Row -->
+            <div class="add-subject-row">
+              <mat-form-field appearance="outline" class="subject-select">
+                <mat-label>Add Subject</mat-label>
+                <mat-select [(ngModel)]="getAddState(fd).subjectId">
+                  <mat-option *ngFor="let s of availableSubjects(fd)" [value]="s.id">
+                    {{ s.name }} (Pass {{ s.passMarks }} / Full {{ s.fullMarks }})
+                  </mat-option>
+                  <mat-option *ngIf="!availableSubjects(fd).length" disabled>
+                    No subjects available
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-checkbox class="optional-checkbox" [(ngModel)]="getAddState(fd).optional">
+                Mark as Optional
+              </mat-checkbox>
+
+              <button mat-raised-button color="primary" (click)="addSubject(fd)" 
+                      [disabled]="!getAddState(fd).subjectId" class="add-subject-btn">
+                <mat-icon>add</mat-icon> Add Subject
               </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <p *ngIf="!fd.subjects?.length" class="empty">No subjects added to this program yet.</p>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
 
-      <div class="add-subject-row">
-        <mat-form-field appearance="outline" class="subject-select">
-          <mat-label>Add Subject</mat-label>
-          <mat-select [(ngModel)]="getAddState(fd).subjectId">
-            <mat-option *ngFor="let s of availableSubjects(fd)" [value]="s.id">
-              {{s.name}} (Pass {{s.passMarks}} / Full {{s.fullMarks}})
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-checkbox [(ngModel)]="getAddState(fd).optional">Mark as Optional Subject</mat-checkbox>
-        <button mat-raised-button color="primary" (click)="addSubject(fd)">
-          <mat-icon>add</mat-icon> Add Subject
-        </button>
-      </div>
-
-      <div style="margin-top:16px;">
-        <button mat-stroked-button color="primary" (click)="edit(fd)" style="margin-right:8px"><mat-icon>edit</mat-icon> Edit Program</button>
-        <button mat-stroked-button color="warn" (click)="delete(fd.id)"><mat-icon>delete</mat-icon> Delete Program</button>
-      </div>
-    </mat-expansion-panel>
-  </mat-accordion>
-  <p class="empty" *ngIf="!facultyDetails.length">No programs found. Add one above.</p>
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!facultyDetails.length">
+      <mat-icon>library_books</mat-icon>
+      <p>No programs found</p>
+      <span>Add your first program using the form above</span>
+    </div>
+  </div>
 </div>

@@ -37,6 +37,7 @@ export class FacultyDetailsComponent implements OnInit {
 
   // per-program "add subject" row state, keyed by faculty-detail id
   addState: { [fdId: number]: AddSubjectState } = {};
+  expandedProgram: any;
 
   constructor(private api: ApiService, private snack: MatSnackBar) {}
 
@@ -120,4 +121,10 @@ export class FacultyDetailsComponent implements OnInit {
       error: () => this.snack.open('Could not update subject type', '', { duration: 2000 })
     });
   }
+  // Add this method to your program.component.ts
+
+// Toggle expand/collapse
+toggleExpand(fd: any) {
+  this.expandedProgram = this.expandedProgram === fd ? null : fd;
+}
 }
