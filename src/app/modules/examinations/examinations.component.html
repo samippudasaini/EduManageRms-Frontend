@@ -1,31 +1,111 @@
+
 <div class="page-container">
-  <h2 class="page-title">Examination Management</h2>
-  <mat-card style="padding:20px;margin-bottom:20px">
-    <h3>{{editId?'Edit Examination':'Add Examination'}}</h3>
-    <div class="form-row">
-      <mat-form-field appearance="outline"><mat-label>Exam Name</mat-label><input matInput [(ngModel)]="form.name" placeholder="e.g. Mid-Term Exam 2024"></mat-form-field>
-      <mat-form-field appearance="outline"><mat-label>Year</mat-label><input matInput [(ngModel)]="form.year" placeholder="e.g. 2024"></mat-form-field>
+
+  <!-- ====== PAGE HEADER ====== -->
+  <div class="page-header">
+    <div class="header-left">
+      <h2 class="page-title">📝 Examination Management</h2>
+      <p class="page-sub">Manage your examinations and assign programs</p>
     </div>
+    <div class="header-right">
+      <div class="stats-badge">
+        <mat-icon>grading</mat-icon>
+        <span>{{ examinations.length }}</span>
+        <span class="stats-label">Total Exams</span>
+      </div>
+      <button mat-raised-button color="primary" (click)="showForm = !showForm" class="add-btn">
+        <mat-icon>{{ showForm ? 'close' : 'add' }}</mat-icon>
+        {{ showForm ? 'Cancel' : 'New Exam' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- ====== CREATE/EDIT FORM ====== -->
+  <mat-card class="form-card" *ngIf="showForm">
+    <div class="form-header">
+      <mat-icon class="form-icon">{{ editId ? 'edit' : 'playlist_add' }}</mat-icon>
+      <h3>{{ editId ? '✏️ Edit Examination' : '➕ Add New Examination' }}</h3>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Exam Name</mat-label>
+        <input matInput [(ngModel)]="form.name" placeholder="e.g. Mid-Term Exam 2024">
+        <mat-icon matSuffix>title</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Year</mat-label>
+        <input matInput [(ngModel)]="form.year" placeholder="e.g. 2024">
+        <mat-icon matSuffix>calendar_today</mat-icon>
+      </mat-form-field>
+    </div>
+
     <div class="form-actions">
-      <button mat-raised-button color="primary" (click)="save()">{{editId?'Update':'Add Examination'}}</button>
-      <button mat-button (click)="reset()" *ngIf="editId">Cancel</button>
+      <button mat-raised-button color="primary" (click)="save()" [disabled]="!form.name?.trim()" class="save-btn">
+        <mat-icon>{{ editId ? 'update' : 'save' }}</mat-icon>
+        {{ editId ? 'Update Examination' : 'Add Examination' }}
+      </button>
+      <button mat-stroked-button (click)="resetForm()" *ngIf="editId">
+        <mat-icon>close</mat-icon> Cancel
+      </button>
+    </div>
+
+    <div class="form-hint" *ngIf="editId">
+      <mat-icon>info</mat-icon>
+      Editing: <strong>{{ form.name }}</strong>
     </div>
   </mat-card>
-  <div class="exam-grid">
+
+  <!-- ====== EXAM CARDS GRID ====== -->
+  <div class="exam-grid" *ngIf="examinations.length; else noExams">
     <mat-card class="exam-card" *ngFor="let e of examinations">
-      <div class="exam-header">
-        <mat-icon color="primary">grading</mat-icon>
+      
+      <!-- Card Header -->
+      <div class="exam-card-header">
+        <div class="exam-icon-wrapper">
+          <mat-icon class="exam-icon">grading</mat-icon>
+        </div>
         <div class="exam-info">
-          <h3>{{e.name}}</h3>
-          <p>Year: {{e.year}}</p>
+          <h3>{{ e.name }}</h3>
+          <p>
+            <mat-icon>calendar_today</mat-icon>
+            Year: {{ e.year }}
+          </p>
+          <p class="exam-programs" *ngIf="e.facultyDetails?.length">
+            <mat-icon>school</mat-icon>
+            {{ e.facultyDetails.length }} program{{ e.facultyDetails.length > 1 ? 's' : '' }} assigned
+          </p>
+          <span class="exam-badge" *ngIf="!e.facultyDetails?.length">No Programs</span>
         </div>
       </div>
-      <div class="exam-actions">
-        <button mat-raised-button color="primary" [routerLink]="['/examinations', e.id]"><mat-icon>visibility</mat-icon> Manage</button>
-        <button mat-icon-button color="primary" (click)="edit(e)"><mat-icon>edit</mat-icon></button>
-        <button mat-icon-button color="warn" (click)="delete(e.id)"><mat-icon>delete</mat-icon></button>
+
+      <!-- Card Actions -->
+      <div class="exam-card-actions">
+        <a mat-raised-button color="primary" class="manage-btn"
+          [routerLink]="['/examinations', e.id]">
+          <mat-icon>visibility</mat-icon> Manage
+        </a>
+        <button mat-icon-button color="primary" class="edit-btn"
+          (click)="edit(e)" matTooltip="Edit Examination">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" class="delete-btn"
+          (click)="delete(e.id)" matTooltip="Delete Examination">
+          <mat-icon>delete</mat-icon>
+        </button>
       </div>
+
     </mat-card>
   </div>
-  <p class="empty" *ngIf="!examinations.length">No examinations found.</p>
+
+  <!-- ====== EMPTY STATE ====== -->
+  <ng-template #noExams>
+    <div class="empty-state">
+      <mat-icon>assignment_late</mat-icon>
+      <p>No examinations found</p>
+      <span>Create your first examination using the button above</span>
+    </div>
+  </ng-template>
+
 </div>

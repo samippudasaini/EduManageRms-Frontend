@@ -1,93 +1,117 @@
-<!-- <div class="page-container">
-  <button mat-button routerLink="/examinations"><mat-icon>arrow_back</mat-icon> Back</button>
-  <h2 class="page-title">{{exam?.name}} — {{exam?.year}}</h2>
-  <div class="layout-row">
-    <mat-card class="form-card">
-      <h3>Assign Program</h3>
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Select Program</mat-label>
-        <mat-select [(ngModel)]="selectedFdId">
-          <mat-option *ngFor="let fd of allPrograms" [value]="fd.id">{{fd.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button mat-raised-button color="primary" (click)="assignFd()"><mat-icon>add</mat-icon> Assign</button>
-    </mat-card>
-    <div class="flex-1">
-      <h3 style="margin-bottom:12px">Assigned Programs</h3>
-      <mat-card class="fd-card" *ngFor="let fd of exam?.facultyDetails">
-        <div class="fd-row">
-          <mat-icon color="primary">menu_book</mat-icon>
-          <span class="fd-name">{{fd.name}}</span>
-          <button mat-stroked-button color="primary" [routerLink]="['/results', exam.id, fd.id]" style="margin-right:8px">
-            <mat-icon>bar_chart</mat-icon> Results
-          </button>
-          <button mat-icon-button color="warn" (click)="removeFd(fd.id)" title="Remove"><mat-icon>remove_circle</mat-icon></button>
-        </div>
-      </mat-card>
-      <p class="empty" *ngIf="!exam?.facultyDetails?.length">No programs assigned yet.</p>
-    </div>
-  </div>
-</div> -->
 
 <div class="page-container" *ngIf="exam; else loading">
+
+  <!-- ====== PAGE HEADER ====== -->
   <div class="page-header">
-    <div>
-      <a mat-button routerLink="/examinations">
+    <div class="header-left">
+      <a mat-button routerLink="/examinations" class="back-btn">
         <mat-icon>arrow_back</mat-icon> Back to Examinations
       </a>
-      <h2 class="page-title">{{ exam.name }}</h2>
-      <p class="page-sub">{{ exam.year }}</p>
+      <div class="title-row">
+        <h2 class="page-title">📊 {{ exam.name }}</h2>
+        <p class="page-sub">
+          <span class="year-info">📅 {{ exam.year }}</span>
+          <span class="separator">•</span>
+          <span class="program-count">
+            <mat-icon>school</mat-icon>
+            {{ exam.facultyDetails?.length || 0 }} program{{ (exam.facultyDetails?.length || 0) > 1 ? 's' : '' }} assigned
+          </span>
+        </p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="stats-badge">
+        <span class="stats-number">{{ exam.facultyDetails?.length || 0 }}</span>
+        <span class="stats-label">Programs</span>
+      </div>
     </div>
   </div>
 
-  <!-- Assign Program -->
+  <!-- ====== ASSIGN PROGRAM CARD ====== -->
   <mat-card class="assign-card">
-    <h3>Assign Program to this Examination</h3>
-    <p class="hint">When you assign a program, result rows are automatically created for all students in that program.</p>
+    <div class="assign-header">
+      <mat-icon class="assign-icon">playlist_add</mat-icon>
+      <div class="assign-title">
+        <h3>Assign Program to Examination</h3>
+        <p class="hint">When you assign a program, result rows are automatically created for all students in that program</p>
+      </div>
+    </div>
+
     <div class="assign-row">
       <mat-form-field appearance="outline" class="program-select">
         <mat-label>Select Program</mat-label>
         <mat-select [(ngModel)]="selectedFdId">
           <mat-option *ngFor="let p of availablePrograms()" [value]="p.id">
-            {{ p.name }}
+            <span class="program-option">{{ p.name }}</span>
+            <span class="program-option-faculty" *ngIf="p.facultyName">({{ p.facultyName }})</span>
+          </mat-option>
+          <mat-option *ngIf="!availablePrograms().length" disabled>
+            No programs available
           </mat-option>
         </mat-select>
+        <mat-icon matSuffix>school</mat-icon>
       </mat-form-field>
-      <button mat-raised-button color="primary" (click)="assignProgram()">
+
+      <button mat-raised-button color="primary" (click)="assignProgram()" 
+              [disabled]="!selectedFdId" class="assign-btn">
         <mat-icon>add</mat-icon> Assign Program
       </button>
     </div>
   </mat-card>
 
-  <!-- Assigned Programs -->
+  <!-- ====== ASSIGNED PROGRAMS ====== -->
   <mat-card class="programs-card" *ngIf="exam.facultyDetails?.length">
-    <h3>Assigned Programs</h3>
+    <div class="programs-header">
+      <div class="programs-title">
+        <mat-icon>list_alt</mat-icon>
+        <h3>Assigned Programs</h3>
+        <span class="programs-count">{{ exam.facultyDetails.length }} records</span>
+      </div>
+    </div>
+
     <div class="programs-list">
       <div class="program-row" *ngFor="let fd of exam.facultyDetails">
         <div class="program-info">
-          <mat-icon>school</mat-icon>
-          <span>{{ fd.name }}</span>
+          <div class="program-icon-wrapper">
+            <mat-icon>school</mat-icon>
+          </div>
+          <div class="program-details">
+            <span class="program-name">{{ fd.name }}</span>
+            <span class="program-faculty" *ngIf="fd.facultyName">{{ fd.facultyName }}</span>
+          </div>
         </div>
+
         <div class="program-actions">
-          <a mat-stroked-button color="primary"
+          <a mat-raised-button color="primary" class="manage-marks-btn"
             [routerLink]="['/results', exam.id, fd.id]">
             <mat-icon>edit_note</mat-icon> Manage Marks
           </a>
-          <button mat-icon-button color="warn" (click)="removeProgram(fd.id)"
-            matTooltip="Remove program from exam">
+          <button mat-icon-button color="warn" class="remove-btn"
+            (click)="removeProgram(fd.id)" matTooltip="Remove program from exam">
             <mat-icon>delete</mat-icon>
           </button>
         </div>
       </div>
     </div>
+
+    <!-- Footer Stats -->
+    <div class="programs-footer">
+      <span>Total: <strong>{{ exam.facultyDetails.length }}</strong> program{{ exam.facultyDetails.length > 1 ? 's' : '' }}</span>
+    </div>
   </mat-card>
 
+  <!-- ====== EMPTY STATE ====== -->
   <div class="empty-state" *ngIf="!exam.facultyDetails?.length">
     <mat-icon>assignment_late</mat-icon>
-    <p>No programs assigned yet. Assign a program above to start managing results.</p>
+    <p>No programs assigned yet</p>
+    <span>Assign a program above to start managing results</span>
   </div>
+
 </div>
 
 <ng-template #loading>
-  <div class="spinner-center"><p>Loading...</p></div>
+  <div class="spinner-center">
+    <mat-icon>hourglass_top</mat-icon>
+    <p>Loading examination details...</p>
+  </div>
 </ng-template>

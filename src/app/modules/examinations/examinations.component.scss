@@ -1,1 +1,402 @@
-.form-row{display:flex;gap:12px;flex-wrap:wrap;} .form-row mat-form-field{flex:1;min-width:200px;} .form-actions{display:flex;gap:8px;} .exam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;} .exam-card{padding:20px;} .exam-header{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px;} .exam-header mat-icon{font-size:36px;width:36px;height:36px;} .exam-info h3{margin:0 0 4px;} .exam-info p{margin:0;color:#666;} .exam-actions{display:flex;align-items:center;gap:8px;} .empty{padding:30px;text-align:center;color:#999;}
+
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* ============================================================
+   PAGE HEADER
+   ============================================================ */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 20px 0;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  .header-left {
+    .page-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 4px 0;
+    }
+
+    .page-sub {
+      font-size: 14px;
+      color: #64748b;
+      margin: 0;
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    .stats-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px 6px 12px;
+      background: #ffffff;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: #64748b;
+      }
+
+      span {
+        font-size: 16px;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      .stats-label {
+        font-size: 12px;
+        font-weight: 400;
+        color: #94a3b8;
+      }
+    }
+
+    .add-btn {
+      border-radius: 10px !important;
+      font-weight: 600;
+      background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      &:hover {
+        box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3) !important;
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+/* ============================================================
+   FORM CARD
+   ============================================================ */
+.form-card {
+  padding: 24px;
+  border-radius: 16px !important;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  margin-bottom: 24px;
+
+  .form-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+
+    .form-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+      color: #3b82f6;
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #0f172a;
+      margin: 0;
+    }
+  }
+
+  .form-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    .form-field {
+      flex: 1;
+      min-width: 200px;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+
+    .save-btn {
+      border-radius: 10px !important;
+      font-weight: 600;
+      background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .form-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    padding: 8px 14px;
+    background: #eff6ff;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #1d4ed8;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: #3b82f6;
+    }
+
+    strong {
+      font-weight: 600;
+    }
+  }
+}
+
+/* ============================================================
+   EXAM GRID
+   ============================================================ */
+.exam-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+/* ============================================================
+   EXAM CARD
+   ============================================================ */
+.exam-card {
+  padding: 20px 22px;
+  border-radius: 16px !important;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08) !important;
+    border-color: #3b82f6;
+  }
+
+  .exam-card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+
+    .exam-icon-wrapper {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      .exam-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        color: #3b82f6;
+      }
+    }
+
+    .exam-info {
+      flex: 1;
+      min-width: 0;
+
+      h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #0f172a;
+        margin: 0 0 4px 0;
+      }
+
+      p {
+        font-size: 13px;
+        color: #94a3b8;
+        margin: 2px 0;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        mat-icon {
+          font-size: 14px;
+          width: 14px;
+          height: 14px;
+          color: #94a3b8;
+        }
+
+        &.exam-programs {
+          color: #64748b;
+          font-weight: 500;
+        }
+      }
+
+      .exam-badge {
+        display: inline-block;
+        padding: 2px 12px;
+        background: #f1f5f9;
+        color: #94a3b8;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        margin-top: 4px;
+      }
+    }
+  }
+
+  .exam-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    .manage-btn {
+      border-radius: 10px !important;
+      font-weight: 600;
+      background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+      flex: 1;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      &:hover {
+        box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3) !important;
+        transform: translateY(-2px);
+      }
+    }
+
+    .edit-btn, .delete-btn {
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+
+      &:hover {
+        background: #f1f5f9;
+      }
+    }
+
+    .delete-btn:hover {
+      background: #fee2e2;
+    }
+  }
+}
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: #cbd5e1;
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-size: 20px;
+    font-weight: 600;
+    color: #64748b;
+    margin: 0;
+  }
+
+  span {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .header-right {
+      width: 100%;
+      flex-wrap: wrap;
+    }
+  }
+
+  .exam-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    flex-direction: column;
+
+    .form-field {
+      min-width: 100%;
+    }
+  }
+
+  .form-actions {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header .header-left .page-title {
+    font-size: 20px;
+  }
+
+  .exam-card {
+    padding: 16px;
+  }
+
+  .exam-card .exam-card-actions {
+    flex-wrap: wrap;
+
+    .manage-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}

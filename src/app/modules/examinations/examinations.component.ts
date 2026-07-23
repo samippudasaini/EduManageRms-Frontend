@@ -19,6 +19,7 @@ import { ApiService } from '../../core/services/api.service';
 })
 export class ExaminationsComponent implements OnInit {
   examinations: any[] = []; form: any = { name:'', year:'' }; editId: any = null;
+showForm: any;
   constructor(private api: ApiService, private snack: MatSnackBar) {}
   ngOnInit() { this.load(); }
   load() { this.api.get<any[]>('examinations').subscribe(d => this.examinations = d); }
