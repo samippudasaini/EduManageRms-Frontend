@@ -21,6 +21,9 @@ import { ApiService } from '../../core/services/api.service';
   styleUrl: './grades.component.scss'
 })
 export class GradesComponent implements OnInit {
+loadAll() {
+throw new Error('Method not implemented.');
+}
   gradeSections: any[] = []; grades: any[] = []; sections: any[] = [];
   gsForm: any = { gradeId: null, sectionId: null }; editGSId: any = null;
   gradeName = ''; editGradeId: any = null;
