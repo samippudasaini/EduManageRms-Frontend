@@ -14,7 +14,8 @@ import { ApiService } from '../../../core/services/api.service';
   selector: 'app-layout',
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule,
-    MatSidenavModule, MatToolbarModule, MatListModule, MatIconModule, MatButtonModule, MatMenuModule],
+    MatSidenavModule, MatToolbarModule, MatListModule, MatIconModule, MatButtonModule
+    , MatMenuModule ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss'
 })

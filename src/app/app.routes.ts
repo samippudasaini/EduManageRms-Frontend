@@ -2,6 +2,7 @@
 
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { StudentPerformanceComponent } from './modules/performance/student-performance.component';
 
 export const routes: Routes = [
   { path: 'login', loadComponent: () => import('./modules/auth/login.component').then(m => m.LoginComponent) },
@@ -34,6 +35,7 @@ export const routes: Routes = [
       { path: 'results', loadComponent: () => import('./modules/results/results-hub.component').then(m => m.ResultsHubComponent) },
       // Results entry — marks table for a specific exam + program
       { path: 'results/:examId/:fdId', loadComponent: () => import('./modules/results/results.component').then(m => m.ResultsComponent) },
+      { path: 'student-performance', component: StudentPerformanceComponent },
     ]
   },
   { path: '**', redirectTo: '' }

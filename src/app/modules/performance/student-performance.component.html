@@ -1,0 +1,85 @@
+<div class="perf-page">
+  <div class="page-header">
+    <div>
+      <h2>Student Performance</h2>
+      <p class="subtitle">AI-predicted performance category for each student</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="predictAll()">
+      <mat-icon>autorenew</mat-icon> Re-run Predictions
+    </button>
+  </div>
+
+  <div class="filters">
+    <input
+      type="text"
+      placeholder="Search student..."
+      [(ngModel)]="searchTerm"
+      class="search-box"
+    />
+    <select [(ngModel)]="filterCategory" class="category-filter">
+      <option value="all">All Categories</option>
+      <option value="Excellent">Excellent</option>
+      <option value="Good">Good</option>
+      <option value="Average">Average</option>
+      <option value="Needs Improvement">Needs Improvement</option>
+      <option value="At Risk">At Risk</option>
+    </select>
+  </div>
+
+  <div class="loading" *ngIf="loadingList">Loading students…</div>
+
+  <div class="student-grid" *ngIf="!loadingList">
+    <mat-card class="student-card" *ngFor="let s of filteredStudents">
+      <div class="card-top">
+        <div class="avatar">{{ s.name?.charAt(0) || '?' }}</div>
+        <div class="name-block">
+          <span class="s-name">{{ s.name }}</span>
+          <span
+            class="s-category"
+            *ngIf="s.category"
+            [style.color]="categoryColor(s.category)"
+          >
+            {{ s.category }} · {{ (s.confidence! * 100) | number: '1.0-0' }}%
+          </span>
+          <span class="s-category loading-tag" *ngIf="s.loading">Predicting…</span>
+          <span class="s-category error-tag" *ngIf="s.error">{{ s.error }}</span>
+        </div>
+      </div>
+
+      <div class="metrics">
+        <div class="metric">
+          <span class="m-label">Attendance</span>
+          <span class="m-value">{{ s.attendance }}%</span>
+        </div>
+        <div class="metric">
+          <span class="m-label">Assignment</span>
+          <span class="m-value">{{ s.assignmentScore }}%</span>
+        </div>
+        <div class="metric">
+          <span class="m-label">Midterm</span>
+          <span class="m-value">{{ s.midtermScore }}%</span>
+        </div>
+        <div class="metric">
+          <span class="m-label">Participation</span>
+          <span class="m-value">{{ s.participation }}%</span>
+        </div>
+        <div class="metric">
+          <span class="m-label">Prev GPA</span>
+          <span class="m-value">{{ s.prevGpa }}</span>
+        </div>
+      </div>
+
+      <div class="quick-tag" *ngIf="s.quickCategory" [style.borderColor]="categoryColor(s.category)">
+        {{ s.quickCategory }}
+      </div>
+
+      <button mat-stroked-button class="retry-btn" (click)="predictOne(s)" [disabled]="s.loading">
+        Re-predict
+      </button>
+    </mat-card>
+  </div>
+
+  <div class="empty" *ngIf="!loadingList && filteredStudents.length === 0">
+    No students match your filters.
+  </div>
+</div>
