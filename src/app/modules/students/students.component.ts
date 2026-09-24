@@ -50,7 +50,7 @@ export class StudentsComponent implements OnInit {
 
   ngOnInit() {
     forkJoin({
-      programs: this.api.get<any[]>('faculty-details'),
+      programs: this.api.get<any[]>('programs'),
       gradeSections: this.api.get<any[]>('grade-sections')
     }).subscribe(r => {
       this.programs = r.programs;

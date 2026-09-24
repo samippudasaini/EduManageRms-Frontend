@@ -43,6 +43,8 @@
       </a>
 
       <!-- ACADEMICS -->
+       <ng-container *ngIf="!authService.isTeacher()">
+
       <div class="nav-section">ACADEMICS</div>
       <a mat-list-item routerLink="/faculty" routerLinkActive="active-link">
         <mat-icon matListItemIcon>category</mat-icon>
@@ -64,34 +66,34 @@
         <mat-icon matListItemIcon>class</mat-icon>
         <span matListItemTitle>Grades & Sections</span>
       </a>
-
+</ng-container>
       <!-- STUDENTS -->
       <div class="nav-section">STUDENTS</div>
-      <a mat-list-item routerLink="/students" routerLinkActive="active-link">
+<a mat-list-item routerLink="/students" routerLinkActive="active-link" *ngIf="authService.can('canStudent')">
         <mat-icon matListItemIcon>people</mat-icon>
         <span matListItemTitle>Students</span>
       </a>
-      <a mat-list-item routerLink="/attendance" routerLinkActive="active-link">
+<a mat-list-item routerLink="/attendance" routerLinkActive="active-link" *ngIf="authService.can('canAttendance')">
         <mat-icon matListItemIcon>how_to_reg</mat-icon>
         <span matListItemTitle>Attendance</span>
       </a>
-      <a mat-list-item routerLink="/assignments" routerLinkActive="active-link">
+<a mat-list-item routerLink="/assignments" routerLinkActive="active-link" *ngIf="authService.can('canAssignment')">
         <mat-icon matListItemIcon>assignment</mat-icon>
         <span matListItemTitle>Assignments</span>
       </a>
 
-      <a mat-list-item routerLink="/student-performance" routerLinkActive="active-link">
+<a mat-list-item routerLink="/student-performance" routerLinkActive="active-link" *ngIf="!authService.isTeacher()">
       <mat-icon matListItemIcon>insights</mat-icon>
       <span matListItemTitle>Student Performance</span>
       </a>
 
       <!-- EXAMINATION -->
       <div class="nav-section">EXAMINATION</div>
-      <a mat-list-item routerLink="/examinations" routerLinkActive="active-link">
+<a mat-list-item routerLink="/examinations" routerLinkActive="active-link" *ngIf="authService.can('canExam')">
         <mat-icon matListItemIcon>grading</mat-icon>
         <span matListItemTitle>Examinations</span>
       </a>
-      <a mat-list-item routerLink="/results" routerLinkActive="active-link">
+<a mat-list-item routerLink="/results" routerLinkActive="active-link" *ngIf="authService.can('canResult')">
         <mat-icon matListItemIcon>fact_check</mat-icon>
         <span matListItemTitle>Results</span>
       </a>
@@ -109,6 +111,12 @@
         <span matListItemTitle>Settings</span>
       </a>
     </mat-nav-list>
+
+
+    <a mat-menu-item routerLink="/change-password">
+      <mat-icon>lock</mat-icon>
+      <span>Change Password</span>
+    </a>
 
     <!-- Footer -->
     <div class="sidenav-footer">

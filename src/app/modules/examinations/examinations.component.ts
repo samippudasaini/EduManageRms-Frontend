@@ -21,14 +21,22 @@ export class ExaminationsComponent implements OnInit {
   examinations: any[] = []; form: any = { name:'', year:'' }; editId: any = null;
 showForm: any;
   constructor(private api: ApiService, private snack: MatSnackBar) {}
-  ngOnInit() { this.load(); }
+
+  ngOnInit() { 
+    this.load();
+   }
+
   load() { this.api.get<any[]>('examinations').subscribe(d => this.examinations = d); }
+
   save() {
     if (!this.form.name.trim()) { this.snack.open('Enter exam name','',{duration:2000}); return; }
     const obs = this.editId ? this.api.put(`examinations/${this.editId}`, this.form) : this.api.post('examinations', this.form);
     obs.subscribe({ next: () => { this.snack.open('Saved!','',{duration:2000}); this.reset(); this.load(); }, error: () => this.snack.open('Error','',{duration:2000}) });
   }
+
   edit(e: any) { this.editId = e.id; this.form = { name: e.name, year: e.year }; }
+
   delete(id: any) { if (!confirm('Delete?')) return; this.api.delete(`examinations/${id}`).subscribe(() => { this.snack.open('Deleted','',{duration:2000}); this.load(); }); }
+
   reset() { this.editId = null; this.form = { name:'', year:'' }; }
 }

@@ -39,19 +39,53 @@ throw new Error('Method not implemented.');
     const obs = this.editGSId ? this.api.put(`grade-sections/${this.editGSId}`, this.gsForm) : this.api.post('grade-sections', this.gsForm);
     obs.subscribe({ next: () => { this.snack.open('Saved!','',{duration:2000}); this.resetGS(); this.load(); } });
   }
-  editGS(r: any) { this.editGSId = r.id; this.gsForm = { gradeId: r.gradeId, sectionId: r.sectionId }; }
-  deleteGS(id: any) { if (!confirm('Delete?')) return; this.api.delete(`grade-sections/${id}`).subscribe(() => this.load()); }
+
+  editGS(r: any)
+   { this.editGSId = r.id; this.gsForm = { gradeId: r.gradeId, sectionId: r.sectionId };}
+
+  // deleteGS(id: any) { if (!confirm('Delete?')) return; this.api.delete(`grade-sections/${id}`).subscribe(() => this.load()); }
+deleteGS(id: any) {
+  if (!confirm('Delete this grade-section?')) return;
+  this.doDeleteGS(id, false);
+}
+
+private doDeleteGS(id: any, force: boolean) {
+  const url = `grade-sections/${id}${force ? '?force=true' : ''}`;
+  this.api.delete(url).subscribe({
+    next: () => {
+      this.snack.open('Grade-section deleted', '', { duration: 2000 });
+      this.load();
+    },
+    error: (err) => {
+      const body = err?.error;
+      if (body?.requiresForce && !force) {
+        if (confirm(body.message + '\n\nDelete anyway?')) {
+          this.doDeleteGS(id, true);
+        }
+        return;
+      }
+      this.snack.open(body?.message || 'Could not delete grade-section', '', { duration: 4000 });
+    }
+  });
+}
+
   resetGS() { this.editGSId = null; this.gsForm = { gradeId: null, sectionId: null }; }
+
   saveGrade() {
     const obs = this.editGradeId ? this.api.put(`grades/${this.editGradeId}`, {name:this.gradeName}) : this.api.post('grades', {name:this.gradeName});
     obs.subscribe({ next: () => { this.snack.open('Saved!','',{duration:2000}); this.resetGrade(); this.load(); } });
   }
+
   deleteGrade(id: any) { if (!confirm('Delete?')) return; this.api.delete(`grades/${id}`).subscribe(() => this.load()); }
+
   resetGrade() { this.editGradeId = null; this.gradeName = ''; }
+
   saveSection() {
     const obs = this.editSectionId ? this.api.put(`sections/${this.editSectionId}`, {name:this.sectionName}) : this.api.post('sections', {name:this.sectionName});
     obs.subscribe({ next: () => { this.snack.open('Saved!','',{duration:2000}); this.resetSection(); this.load(); } });
   }
+
   deleteSection(id: any) { if (!confirm('Delete?')) return; this.api.delete(`sections/${id}`).subscribe(() => this.load()); }
+
   resetSection() { this.editSectionId = null; this.sectionName = ''; }
 }

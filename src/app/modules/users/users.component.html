@@ -1,4 +1,4 @@
-<div class="page-container">
+<!-- <div class="page-container">
   <h2 class="page-title">User Management</h2>
   <div class="layout-row">
     <mat-card class="form-card">
@@ -23,6 +23,86 @@
         <ng-container matColumnDef="type"><th mat-header-cell *matHeaderCellDef>Role</th>
           <td mat-cell *matCellDef="let r"><span class="badge" [class.badge-success]="r.type==='admin'" [class.badge-warning]="r.type==='staff'">{{r.type}}</span></td>
         </ng-container>
+        <ng-container matColumnDef="actions"><th mat-header-cell *matHeaderCellDef>Actions</th><td mat-cell *matCellDef="let r">
+          <button mat-icon-button color="primary" (click)="edit(r)"><mat-icon>edit</mat-icon></button>
+          <button mat-icon-button color="warn" (click)="delete(r.id)"><mat-icon>delete</mat-icon></button>
+        </td></ng-container>
+        <tr mat-header-row *matHeaderRowDef="cols"></tr>
+        <tr mat-row *matRowDef="let row; columns: cols;"></tr>
+      </table>
+    </mat-card>
+  </div>
+</div> -->
+
+
+
+<div class="page-container">
+  <h2 class="page-title">User Management</h2>
+  <div class="layout-row">
+    <mat-card class="form-card">
+      <h3>{{editId?'Edit User':'Add User'}}</h3>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Username</mat-label>
+        <input matInput [(ngModel)]="form.name" [disabled]="!!editId">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" [(ngModel)]="form.password" placeholder="{{editId?'Leave blank to keep':'Enter password'}}">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Role</mat-label>
+        <mat-select [(ngModel)]="form.type">
+          <mat-option value="admin">Admin</mat-option>
+          <mat-option value="staff">Staff</mat-option>
+          <mat-option value="teacher">Teacher</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- <mat-form-field appearance="outline" class="full-width" *ngIf="isTeacher()">
+        <mat-label>Assigned Program</mat-label>
+        <mat-select [(ngModel)]="form.facultyDetailId">
+          <mat-option [value]="null">— None —</mat-option>
+          <mat-option *ngFor="let fd of facultyDetails" [value]="fd.id">{{fd.name}}</mat-option>
+        </mat-select>
+      </mat-form-field> -->
+
+      <mat-form-field appearance="outline" class="full-width" *ngIf="isTeacher()">
+  <mat-label>Assigned Program</mat-label>
+  <mat-select [(ngModel)]="form.facultyDetailId">
+    <mat-option [value]="null">— None —</mat-option>
+    <mat-option *ngFor="let fd of facultyDetails" [value]="fd.id">{{fd.name}}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+      <div class="permissions-block" *ngIf="isTeacher()">
+        <div class="permissions-title">Permissions</div>
+        <mat-checkbox [(ngModel)]="form.canAttendance">Attendance</mat-checkbox>
+        <mat-checkbox [(ngModel)]="form.canAssignment">Assignments</mat-checkbox>
+        <mat-checkbox [(ngModel)]="form.canExam">Examinations</mat-checkbox>
+        <mat-checkbox [(ngModel)]="form.canResult">Results</mat-checkbox>
+        <mat-checkbox [(ngModel)]="form.canStudent">Students</mat-checkbox>
+      </div>
+
+      <div class="form-actions">
+        <button mat-raised-button color="primary" (click)="save()">{{editId?'Update':'Add User'}}</button>
+        <button mat-button (click)="reset()" *ngIf="editId">Cancel</button>
+      </div>
+    </mat-card>
+    <mat-card class="table-card flex-1">
+      <table mat-table [dataSource]="users" class="full-width">
+        <ng-container matColumnDef="id"><th mat-header-cell *matHeaderCellDef>#</th><td mat-cell *matCellDef="let r">{{r.id}}</td></ng-container>
+        <ng-container matColumnDef="name"><th mat-header-cell *matHeaderCellDef>Username</th><td mat-cell *matCellDef="let r">{{r.name}}</td></ng-container>
+        <ng-container matColumnDef="type"><th mat-header-cell *matHeaderCellDef>Role</th>
+          <td mat-cell *matCellDef="let r">
+            <span class="badge" [class.badge-success]="r.type==='admin'" [class.badge-warning]="r.type==='staff'" [class.badge-info]="r.type==='teacher'">{{r.type}}</span>
+          </td>
+        </ng-container>
+        <!-- <ng-container matColumnDef="program"><th mat-header-cell *matHeaderCellDef>Program</th>
+          <td mat-cell *matCellDef="let r">{{ r.type === 'teacher' ? programName(r.facultyDetailId) : '-' }}</td>
+        </ng-container> -->
+        <ng-container matColumnDef="program"><th mat-header-cell *matHeaderCellDef>Program</th>
+  <td mat-cell *matCellDef="let r">{{ r.type === 'teacher' ? programName(r.facultyDetailId) : '-' }}</td>
+</ng-container>
         <ng-container matColumnDef="actions"><th mat-header-cell *matHeaderCellDef>Actions</th><td mat-cell *matCellDef="let r">
           <button mat-icon-button color="primary" (click)="edit(r)"><mat-icon>edit</mat-icon></button>
           <button mat-icon-button color="warn" (click)="delete(r.id)"><mat-icon>delete</mat-icon></button>

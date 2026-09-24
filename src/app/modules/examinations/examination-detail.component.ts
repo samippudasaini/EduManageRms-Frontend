@@ -74,8 +74,8 @@ export class ExaminationDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.api.get<any[]>('faculty-details').subscribe(d => this.allPrograms = d);
-    this.load();
+    this.api.get<any[]>('program-details').subscribe(d => this.allPrograms = d);
+        this.load();
   }
 
   load() {
