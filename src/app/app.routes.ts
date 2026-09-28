@@ -28,7 +28,9 @@ export const routes: Routes = [
       { path: 'attendance', loadComponent: () => import('./modules/attendance/attendance.component').then(m => m.AttendanceComponent) },
       { path: 'attendance/monthly/:gsId', loadComponent: () => import('./modules/attendance/attendance-monthly.component').then(m => m.AttendanceMonthlyComponent) },
       { path: 'attendance/summary/:gsId', loadComponent: () => import('./modules/attendance/attendance-summary.component').then(m => m.AttendanceSummaryComponent) },
-      { path: 'attendance/conduct/:id', loadComponent: () => import('./modules/attendance/conduct-attendance.component').then(m => m.ConductAttendanceComponent) }, 
+      // { path: 'attendance/conduct/:id', loadComponent: () => import('./modules/attendance/conduct-attendance.component').then(m => m.ConductAttendanceComponent) }, 
+      { path: 'attendance/take/:gsId', loadComponent: () => import('./modules/attendance/conduct-attendance.component').then(m => m.ConductAttendanceComponent) },
+
       { path: 'assignments', loadComponent: () => import('./modules/assignments/assignments.component').then(m => m.AssignmentsComponent) },
       { path: 'assignments/:gsId', loadComponent: () => import('./modules/assignments/assignment-list.component').then(m => m.AssignmentListComponent) },
       { path: 'assignments/:gsId/:aId', loadComponent: () => import('./modules/assignments/assignment-classroom.component').then(m => m.AssignmentClassroomComponent) },

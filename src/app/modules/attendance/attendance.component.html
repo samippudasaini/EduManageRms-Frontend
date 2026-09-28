@@ -1,6 +1,6 @@
-<div class="page-container">
+<!-- <div class="page-container">
 
-  <!-- ====== PAGE HEADER ====== -->
+  ====== PAGE HEADER ======
   <div class="page-header">
     <div class="header-left">
       <h2 class="page-title">📋 Attendance Management</h2>
@@ -14,19 +14,19 @@
     </div>
   </div>
 
-  <!-- ====== LOADING ====== -->
+  ====== LOADING ======
   <div class="loading" *ngIf="loading">
     <mat-icon>hourglass_top</mat-icon>
     <p>Loading classes...</p>
   </div>
 
-  <!-- ====== CLASS CARDS GRID ====== -->
+  ====== CLASS CARDS GRID ======
   <div class="cards-grid" *ngIf="!loading && sections.length">
     
-    <!-- Card with Student Count Badge -->
+    Card with Student Count Badge
     <mat-card class="class-card" *ngFor="let gs of sections">
       
-      <!-- Card Header with Grade and Section -->
+      Card Header with Grade and Section
       <div class="card-header">
         <div class="card-title-group">
           <div class="card-icon-wrapper">
@@ -39,7 +39,7 @@
             </h3>
           </div>
         </div>
-        <!-- Student Count Badge -->
+        Student Count Badge
         <div class="student-count-badge">
           <mat-icon>people</mat-icon>
           <span>{{ gs.studentCount || 0 }}</span>
@@ -47,9 +47,9 @@
         </div>
       </div>
 
-      <!-- Card Body with Action Buttons -->
+      Card Body with Action Buttons
       <div class="card-body">
-        <!-- Daily Grid Button -->
+        Daily Grid Button
         <a class="action-btn daily-btn" [routerLink]="['/attendance/monthly', gs.id]">
           <div class="btn-icon daily-icon">
             <mat-icon>grid_on</mat-icon>
@@ -61,7 +61,7 @@
           <mat-icon class="btn-arrow">arrow_forward</mat-icon>
         </a>
 
-        <!-- Monthly Summary Button -->
+        Monthly Summary Button
         <a class="action-btn summary-btn" [routerLink]="['/attendance/summary', gs.id]">
           <div class="btn-icon summary-icon">
             <mat-icon>summarize</mat-icon>
@@ -77,11 +77,145 @@
     </mat-card>
   </div>
 
-  <!-- ====== EMPTY STATE ====== -->
+  ====== EMPTY STATE ======
   <div class="empty-state" *ngIf="!loading && !sections.length">
     <mat-icon>class</mat-icon>
     <p>No classes found</p>
     <span>Add grades and sections first to manage attendance</span>
+  </div>
+
+</div> -->
+
+
+
+
+
+<div class="page-container">
+
+  <!-- ====== PAGE HEADER ====== -->
+  <div class="page-header">
+    <div class="header-left">
+      <h2 class="page-title">📋 Attendance Management</h2>
+      <p class="page-sub">Search for a class to manage attendance</p>
+    </div>
+    <div class="header-right">
+      <div class="stats-badge">
+        <span class="stats-number">{{ filteredSections.length }}</span>
+        <span class="stats-label">{{ (selectedGrade || selectedSection) ? 'Matching Classes' : 'Total Classes' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SEARCH FILTER ====== -->
+  <mat-card class="filter-card">
+    <div class="filter-row">
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Grade</mat-label>
+        <mat-select [(ngModel)]="selectedGrade" (selectionChange)="onGradeChange()">
+          <mat-option [value]="null">All Grades</mat-option>
+          <mat-option *ngFor="let g of gradeOptions" [value]="g">{{ g }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Section</mat-label>
+        <mat-select [(ngModel)]="selectedSection" [disabled]="!selectedGrade">
+          <mat-option [value]="null">All Sections</mat-option>
+          <mat-option *ngFor="let s of sectionOptions" [value]="s">{{ s }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-stroked-button (click)="clearFilters()" *ngIf="selectedGrade || selectedSection">
+        <mat-icon>close</mat-icon> Clear
+      </button>
+    </div>
+    <p class="filter-hint" *ngIf="selectedGrade && !selectedSection">
+      Showing all sections in <strong>{{ selectedGrade }}</strong> — pick a section to narrow further, or leave as "All Sections".
+    </p>
+  </mat-card>
+
+  <!-- ====== LOADING ====== -->
+  <div class="loading" *ngIf="loading">
+    <mat-icon>hourglass_top</mat-icon>
+    <p>Loading classes...</p>
+  </div>
+
+  <!-- ====== CLASS CARDS GRID ====== -->
+  <div class="cards-grid" *ngIf="!loading && filteredSections.length">
+
+    <mat-card class="class-card" *ngFor="let gs of filteredSections">
+
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="card-icon-wrapper">
+            <mat-icon class="card-icon">class</mat-icon>
+          </div>
+          <div class="card-info">
+            <h3>
+              <span class="grade-name">{{ gs.gradeName || 'Grade' }}</span>
+              <span class="section-name" *ngIf="gs.sectionName">— {{ gs.sectionName }}</span>
+            </h3>
+          </div>
+        </div>
+        <div class="student-count-badge">
+          <mat-icon>people</mat-icon>
+          <span>{{ gs.studentCount || 0 }}</span>
+          <span class="count-label">students</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <!-- Take Attendance -->
+        <a class="action-btn take-btn" [routerLink]="['/attendance/take', gs.id]">
+          <div class="btn-icon take-icon">
+            <mat-icon>how_to_reg</mat-icon>
+          </div>
+          <div class="btn-content">
+            <span class="btn-title">Take Attendance</span>
+            <span class="btn-sub">Mark today or a past date</span>
+          </div>
+          <mat-icon class="btn-arrow">arrow_forward</mat-icon>
+        </a>
+
+        <!-- Daily Grid -->
+        <a class="action-btn daily-btn" [routerLink]="['/attendance/monthly', gs.id]">
+          <div class="btn-icon daily-icon">
+            <mat-icon>grid_on</mat-icon>
+          </div>
+          <div class="btn-content">
+            <span class="btn-title">Daily Grid</span>
+            <span class="btn-sub">Full month view, click any cell</span>
+          </div>
+          <mat-icon class="btn-arrow">arrow_forward</mat-icon>
+        </a>
+
+        <!-- Monthly Summary -->
+        <a class="action-btn summary-btn" [routerLink]="['/attendance/summary', gs.id]">
+          <div class="btn-icon summary-icon">
+            <mat-icon>summarize</mat-icon>
+          </div>
+          <div class="btn-content">
+            <span class="btn-title">Monthly Summary</span>
+            <span class="btn-sub">Year-round totals per student</span>
+          </div>
+          <mat-icon class="btn-arrow">arrow_forward</mat-icon>
+        </a>
+      </div>
+
+    </mat-card>
+  </div>
+
+  <!-- ====== EMPTY STATES ====== -->
+  <div class="empty-state" *ngIf="!loading && !sections.length">
+    <mat-icon>class</mat-icon>
+    <p>No classes found</p>
+    <span>Add grades and sections first to manage attendance</span>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && sections.length && !filteredSections.length">
+    <mat-icon>search_off</mat-icon>
+    <p>No classes match this filter</p>
+    <span>Try a different grade or section</span>
   </div>
 
 </div>

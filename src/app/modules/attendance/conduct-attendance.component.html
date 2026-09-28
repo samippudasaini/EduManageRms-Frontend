@@ -1,6 +1,6 @@
-<div class="page-container">
+<!-- <div class="page-container">
 
-  <!-- ====== PAGE HEADER ====== -->
+  ====== PAGE HEADER ======
   <div class="page-header">
     <div class="header-left">
       <a mat-button routerLink="/attendance" class="back-btn">
@@ -24,10 +24,10 @@
     </div>
   </div>
 
-  <!-- ====== MAIN CARD ====== -->
+  ====== MAIN CARD ======
   <mat-card class="main-card">
     
-    <!-- Toolbar -->
+    Toolbar
     <div class="att-toolbar">
       <div class="att-actions">
         <button mat-raised-button color="primary" (click)="markAll(true)" class="action-btn present-all">
@@ -47,21 +47,21 @@
       </div>
     </div>
 
-    <!-- Student List -->
+    Student List
     <div class="att-list">
       <div class="att-row" *ngFor="let a of attendance; let i=index" 
            [class.absent]="!a.status">
         
-        <!-- Serial Number -->
+        Serial Number
         <span class="student-num">{{ i + 1 }}</span>
         
-        <!-- Student Name with Avatar -->
+        Student Name with Avatar
         <div class="student-info">
           <span class="student-avatar">{{ a.studentName?.charAt(0) || 'S' }}</span>
           <span class="student-name">{{ a.studentName }}</span>
         </div>
         
-        <!-- Toggle Buttons -->
+        Toggle Buttons
         <div class="toggle-btns">
           <button mat-mini-fab 
                   [color]="a.status ? 'primary' : ''" 
@@ -81,14 +81,14 @@
           </button>
         </div>
         
-        <!-- Status Text -->
+        Status Text
         <span class="status-text" [class.present]="a.status" [class.absent-text]="!a.status">
           {{ a.status ? '✅ Present' : '❌ Absent' }}
         </span>
       </div>
     </div>
 
-    <!-- Save Button -->
+    Save Button
     <div class="att-footer">
       <button mat-raised-button color="primary" (click)="save()" class="save-btn">
         <mat-icon>save</mat-icon> Save Attendance
@@ -97,11 +97,123 @@
 
   </mat-card>
 
-  <!-- ====== EMPTY STATE ====== -->
+  ====== EMPTY STATE ======
   <div class="empty-state" *ngIf="!attendance.length">
     <mat-icon>people_outline</mat-icon>
     <p>No students found</p>
     <span>Add students to this class to conduct attendance</span>
+  </div>
+
+</div> -->
+
+
+
+
+
+
+<div class="page-container">
+
+  <!-- ====== PAGE HEADER ====== -->
+  <div class="page-header">
+    <div class="header-left">
+      <a mat-button routerLink="/attendance" class="back-btn">
+        <mat-icon>arrow_back</mat-icon> Back to Classes
+      </a>
+      <div class="title-row">
+        <h2 class="page-title">✅ Take Attendance</h2>
+        <p class="subtitle">
+          <span class="date-info">{{ gradeName }} <span *ngIf="sectionName">— {{ sectionName }}</span></span>
+          <span class="separator">•</span>
+          <span class="student-count">{{ students.length }} students</span>
+        </p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="stats-badge">
+        <span class="present-count">✅ {{ presentCount }}</span>
+        <span class="separator-dot">|</span>
+        <span class="absent-count">❌ {{ absentCount }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== LOADING ====== -->
+  <div class="loading" *ngIf="loading">
+    <mat-icon>hourglass_top</mat-icon>
+    <p>Loading students...</p>
+  </div>
+
+  <!-- ====== MAIN CARD ====== -->
+  <mat-card class="main-card" *ngIf="!loading">
+
+    <!-- Date picker -->
+    <div class="date-row">
+      <mat-form-field appearance="outline" class="date-field">
+        <mat-label>Attendance Date</mat-label>
+        <input matInput type="date" [(ngModel)]="selectedDate" (change)="onDateChange()">
+      </mat-form-field>
+      <p class="date-hint">
+        <mat-icon>info</mat-icon>
+        Saturdays are not selectable — school holiday.
+      </p>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="att-toolbar">
+      <div class="att-actions">
+        <button mat-raised-button color="primary" (click)="markAll(true)" class="action-btn present-all">
+          <mat-icon>check_circle</mat-icon> Mark All Present
+        </button>
+        <button mat-raised-button color="warn" (click)="markAll(false)" class="action-btn absent-all">
+          <mat-icon>cancel</mat-icon> Mark All Absent
+        </button>
+      </div>
+      <div class="att-count">
+        <span class="total-label">Total:</span>
+        <span class="total-count">{{ students.length }}</span>
+        <span class="present-label">Present:</span>
+        <span class="present-count">{{ presentCount }}</span>
+        <span class="absent-label">Absent:</span>
+        <span class="absent-count">{{ absentCount }}</span>
+      </div>
+    </div>
+
+    <!-- Student List — checkboxes, checked = present by default -->
+    <div class="att-list">
+      <div class="att-row" *ngFor="let s of students; let i = index" [class.absent]="!s.present">
+
+        <span class="student-num">{{ i + 1 }}</span>
+
+        <div class="student-info">
+          <span class="student-avatar">{{ s.studentName?.charAt(0) || 'S' }}</span>
+          <span class="student-name">{{ s.studentName }}</span>
+        </div>
+
+        <mat-checkbox [(ngModel)]="s.present" color="primary" class="present-checkbox">
+          {{ s.present ? 'Present' : 'Absent' }}
+        </mat-checkbox>
+
+        <span class="status-text" [class.present]="s.present" [class.absent-text]="!s.present">
+          {{ s.present ? '✅ Present' : '❌ Absent' }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Save Button -->
+    <div class="att-footer">
+      <button mat-raised-button color="primary" (click)="submit()" class="save-btn" [disabled]="saving">
+        <mat-icon>{{ saving ? 'hourglass_top' : 'save' }}</mat-icon>
+        {{ saving ? 'Saving...' : 'Submit Attendance' }}
+      </button>
+    </div>
+
+  </mat-card>
+
+  <!-- ====== EMPTY STATE ====== -->
+  <div class="empty-state" *ngIf="!loading && !students.length">
+    <mat-icon>people_outline</mat-icon>
+    <p>No students found</p>
+    <span>Add students to this class to take attendance</span>
   </div>
 
 </div>

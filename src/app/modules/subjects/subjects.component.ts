@@ -32,9 +32,36 @@ export class SubjectsComponent implements OnInit {
     obs.subscribe({ next: () => { this.snack.open('Saved!','',{duration:2000}); this.reset(); this.load(); }, error: () => this.snack.open('Error','',{duration:2000}) });
   }
   edit(r: any) { this.editId = r.id; this.form = { name:r.name, theory:r.theory, practical:r.practical, fullMarks:r.fullMarks, passMarks:r.passMarks, creditHour:r.creditHour }; }
+
+
+  // delete(id: any) {
+  //   if (!confirm('Delete subject?')) return;
+  //   this.api.delete(`subjects/${id}`).subscribe({ next: () => { this.snack.open('Deleted','',{duration:2000}); this.load(); }, error: () => this.snack.open('Error','',{duration:2000}) });
+  // }
+
   delete(id: any) {
-    if (!confirm('Delete subject?')) return;
-    this.api.delete(`subjects/${id}`).subscribe({ next: () => { this.snack.open('Deleted','',{duration:2000}); this.load(); }, error: () => this.snack.open('Error','',{duration:2000}) });
-  }
+  if (!confirm('Delete subject?')) return;
+  this.doDelete(id, false);
+}
+
+private doDelete(id: any, force: boolean) {
+  const url = `subjects/${id}${force ? '?force=true' : ''}`;
+  this.api.delete(url).subscribe({
+    next: () => { this.snack.open('Deleted', '', { duration: 2000 }); this.load(); },
+    error: (err) => {
+      const body = err?.error;
+      if (body?.requiresForce && !force) {
+        if (confirm(body.message + '\n\nDelete anyway?')) {
+          this.doDelete(id, true);
+        }
+        return;
+      }
+      this.snack.open(body?.message || 'Error', '', { duration: 4000 });
+    }
+  });
+}
+
+
+
   reset() { this.editId = null; this.form = { name:'', theory:0, practical:0, fullMarks:0, passMarks:0, creditHour:0 }; }
 }

@@ -409,3 +409,34 @@
     justify-content: center;
   }
 }
+
+
+/* ============================================================
+   SEARCH FILTER (grade / section)
+   ============================================================ */
+.filter-card {
+  padding: 16px 20px;
+  margin-bottom: 20px;
+
+  .filter-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    .filter-field {
+      min-width: 220px;
+    }
+  }
+
+  .filter-hint {
+    margin: 8px 0 0;
+    font-size: 13px;
+    color: #64748b;
+  }
+}
+
+.take-btn .take-icon {
+  background: #ecfdf5;
+  color: #059669;
+}

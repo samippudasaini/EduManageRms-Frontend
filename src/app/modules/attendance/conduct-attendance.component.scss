@@ -619,3 +619,41 @@
     print-color-adjust: exact;
   }
 }
+
+
+
+
+
+/* ============================================================
+   DATE PICKER ROW (Take Attendance)
+   ============================================================ */
+.date-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px 0;
+  flex-wrap: wrap;
+
+  .date-field {
+    min-width: 220px;
+  }
+
+  .date-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    font-size: 13px;
+    color: #64748b;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.present-checkbox {
+  margin: 0 12px;
+}
