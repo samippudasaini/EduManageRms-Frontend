@@ -19,15 +19,36 @@ import { ApiService } from '../../core/services/api.service';
   styleUrl: './student-profile.component.scss'
 })
 export class StudentProfileComponent implements OnInit {
-  profile: any = null; newRemark = '';
+  profile: any = null; 
+  newRemark = '';
+  savingRemark = false;
+
   constructor(private route: ActivatedRoute, private api: ApiService, private snack: MatSnackBar) {}
+
   ngOnInit() { this.load(); }
-  load() { this.api.get<any>(`student-profile/${this.route.snapshot.params['id']}`).subscribe(d => this.profile = d); }
+
+  load() {
+    this.api.get<any>(`student-profile/${this.route.snapshot.params['id']}`)
+      .subscribe(d => this.profile = d);
+  }
+
   addRemark() {
-    if (!this.newRemark.trim()) return;
-    this.api.post('remarks', { studentId: this.profile.id, description: this.newRemark }).subscribe({
-      next: () => { this.snack.open('Remark added','',{duration:2000}); this.newRemark=''; this.load(); },
-      error: () => this.snack.open('Error','',{duration:2000})
+    const text = this.newRemark.trim();
+    if (!text || this.savingRemark) return;
+
+    this.savingRemark = true;
+    this.api.post<any>('remarks', { studentId: this.profile.id, description: text }).subscribe({
+      next: (saved) => {
+        this.savingRemark = false;
+        this.snack.open('Remark added', '', { duration: 2000 });
+        this.newRemark = '';
+        // Show it immediately without waiting for a full reload
+        this.profile.remarks = [saved, ...(this.profile.remarks || [])];
+      },
+      error: (err) => {
+        this.savingRemark = false;
+        this.snack.open(err?.error?.message || 'Could not add remark', '', { duration: 3000 });
+      }
     });
   }
 }

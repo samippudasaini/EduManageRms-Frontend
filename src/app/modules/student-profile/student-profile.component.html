@@ -51,7 +51,11 @@
             <mat-label>Remark</mat-label>
             <textarea matInput [(ngModel)]="newRemark" rows="3" placeholder="Enter remark..."></textarea>
           </mat-form-field>
-          <button mat-raised-button color="primary" (click)="addRemark()">Add Remark</button>
+          <!-- <button mat-raised-button color="primary" (click)="addRemark()">Add Remark</button> -->
+           <button mat-raised-button color="primary" (click)="addRemark()"
+        [disabled]="savingRemark || !newRemark.trim()">
+      {{ savingRemark ? 'Saving...' : 'Add Remark' }}
+</button>
         </mat-card>
         <div *ngFor="let r of profile.remarks" class="remark-item">
           <p>{{r.description}}</p>
