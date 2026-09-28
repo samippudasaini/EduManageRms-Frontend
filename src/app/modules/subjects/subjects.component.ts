@@ -34,11 +34,6 @@ export class SubjectsComponent implements OnInit {
   edit(r: any) { this.editId = r.id; this.form = { name:r.name, theory:r.theory, practical:r.practical, fullMarks:r.fullMarks, passMarks:r.passMarks, creditHour:r.creditHour }; }
 
 
-  // delete(id: any) {
-  //   if (!confirm('Delete subject?')) return;
-  //   this.api.delete(`subjects/${id}`).subscribe({ next: () => { this.snack.open('Deleted','',{duration:2000}); this.load(); }, error: () => this.snack.open('Error','',{duration:2000}) });
-  // }
-
   delete(id: any) {
   if (!confirm('Delete subject?')) return;
   this.doDelete(id, false);
@@ -60,8 +55,6 @@ private doDelete(id: any, force: boolean) {
     }
   });
 }
-
-
 
   reset() { this.editId = null; this.form = { name:'', theory:0, practical:0, fullMarks:0, passMarks:0, creditHour:0 }; }
 }

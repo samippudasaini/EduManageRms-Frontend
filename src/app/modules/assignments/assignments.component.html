@@ -62,7 +62,8 @@
           <div class="card-meta">
             <span class="meta-item">
               <mat-icon>assignment</mat-icon>
-              {{ card.totalAssignments }} assignment{{ card.totalAssignments > 1 ? 's' : '' }}
+              <!-- {{ card.totalAssignments }} assignment{{ card.totalAssignments > 1 ? 's' : '' }} -->
+                {{ card.totalAssignments }} assignment{{ card.totalAssignments !== 1 ? 's' : '' }}
             </span>
             <span class="meta-item" *ngIf="card.pendingCount > 0">
               <mat-icon>schedule</mat-icon>
@@ -99,7 +100,7 @@
   <div class="empty-state" *ngIf="!loading && !cards.length">
     <mat-icon>assignment_late</mat-icon>
     <p>No classes found</p>
-    <span>Go to a class and create an assignment</span>
+    <span>Add grades and sections first, then you can create assignments</span>
   </div>
 
 </div>

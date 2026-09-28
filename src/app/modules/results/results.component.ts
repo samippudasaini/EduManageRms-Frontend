@@ -248,7 +248,4 @@ export class ResultsComponent implements OnInit {
   }
 }
 
-// function buildMarksheetHtml(marksheets: any[], profile: any): string {
-//   throw new Error('Function not implemented.');
-// }
 
