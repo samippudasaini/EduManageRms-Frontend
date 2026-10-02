@@ -1,11 +1,19 @@
-<!-- layout.component.html -->
-<mat-sidenav-container class="sidenav-container">
-  
-  <!-- ====== SIDEBAR ====== -->
-  <mat-sidenav #sidenav mode="side" opened class="sidenav">
+<mat-sidenav-container class="sidenav-container" [hasBackdrop]="isMobile">
+
+  <!-- ====== SIDEBAR ======
+       Desktop/large tablet: fixed, always open, pushes content (mode="side").
+       Phone/small tablet: overlay drawer with a backdrop, closed by default
+       (mode="over") — this is what actually fixes mobile, not CSS alone,
+       because mode="side" reserves its width in the layout even if hidden
+       with a transform. -->
+  <mat-sidenav #sidenav
+               [mode]="isMobile ? 'over' : 'side'"
+               [opened]="!isMobile"
+               class="sidenav"
+               (click)="$event.stopPropagation()">
     
     <!-- Logo Area -->
-    <a class="logo-area" routerLink="/dashboard">
+    <a class="logo-area" routerLink="/dashboard" (click)="closeOnMobileNav(sidenav)">
       <div class="logo-circle">
         <img [src]="logoSrc" alt="College logo" class="logo-img">
       </div>
@@ -29,8 +37,9 @@
       </div>
     </div>
 
-    <!-- Navigation -->
-    <mat-nav-list>
+    <!-- Navigation — tapping any link closes the drawer on mobile, since
+         a route change doesn't close an "over" mode sidenav by itself. -->
+    <mat-nav-list (click)="closeOnMobileNav(sidenav)">
       <!-- MAIN -->
       <div class="nav-section">MAIN</div>
       <a mat-list-item routerLink="/dashboard" routerLinkActive="active-link">
@@ -113,7 +122,7 @@
     </mat-nav-list>
 
 
-    <a mat-menu-item routerLink="/change-password">
+    <a mat-menu-item routerLink="/change-password" (click)="closeOnMobileNav(sidenav)">
       <mat-icon>lock</mat-icon>
       <span>Change Password</span>
     </a>
@@ -197,4 +206,3 @@
 
   </mat-sidenav-content>
 </mat-sidenav-container>
-

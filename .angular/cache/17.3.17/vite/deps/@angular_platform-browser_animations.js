@@ -2,7 +2,6 @@ import {
   BrowserModule,
   DomRendererFactory2
 } from "./chunk-FPUYUH6A.js";
-import "./chunk-TGVFEQZS.js";
 import {
   AUTO_STYLE,
   AnimationGroupPlayer,
@@ -12,6 +11,7 @@ import {
   style,
   ɵPRE_STYLE
 } from "./chunk-P4YJ4XOL.js";
+import "./chunk-TGVFEQZS.js";
 import {
   DOCUMENT
 } from "./chunk-FFY7VSBW.js";

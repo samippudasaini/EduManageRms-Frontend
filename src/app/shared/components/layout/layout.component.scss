@@ -517,3 +517,76 @@ mat-nav-list a {
     min-height: auto !important;
   }
 }
+
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  // mode="over" (set dynamically in layout.component.ts via BreakpointObserver)
+  // handles the slide-in/out animation itself — no manual transform needed
+  // here, and none should be added, or it will fight Material's own.
+  .sidenav {
+    width: 280px;
+    box-shadow: 4px 0 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .toolbar {
+    padding: 0 16px;
+    height: 64px;
+
+    .toolbar-title .title-sub {
+      display: none;
+    }
+
+    .user-btn .user-name-small {
+      display: none !important;
+    }
+
+    .toolbar-right {
+      gap: 4px;
+    }
+  }
+
+  .content-area {
+    padding: 16px;
+    min-height: calc(100vh - 64px);
+  }
+}
+
+@media (max-width: 480px) {
+  .toolbar {
+    padding: 0 12px;
+
+    .toolbar-title .title-main {
+      font-size: 16px;
+    }
+
+    .user-btn {
+      padding: 4px 8px 4px 4px !important;
+    }
+
+    .toolbar-right .toolbar-btn {
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  .content-area {
+    padding: 12px;
+  }
+}
+
+@media print {
+  .sidenav {
+    display: none !important;
+  }
+  .toolbar {
+    display: none !important;
+  }
+  .content-area {
+    padding: 0 !important;
+    min-height: auto !important;
+  }
+}

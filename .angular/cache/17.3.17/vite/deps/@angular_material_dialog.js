@@ -4,8 +4,8 @@ import {
   OverlayContainer,
   OverlayModule,
   OverlayRef
-} from "./chunk-T3YKQSWH.js";
-import "./chunk-KERHV3WC.js";
+} from "./chunk-TBLWYWOX.js";
+import "./chunk-M2VVAU4S.js";
 import {
   BasePortalOutlet,
   CdkPortalOutlet,
@@ -32,11 +32,13 @@ import {
   FocusTrapFactory,
   InteractivityChecker,
   MatCommonModule,
+  hasModifierKey
+} from "./chunk-JTR5L7CN.js";
+import {
   Platform,
   _getFocusedElementPierceShadowDom,
-  coerceNumberProperty,
-  hasModifierKey
-} from "./chunk-USYGRZ3V.js";
+  coerceNumberProperty
+} from "./chunk-XHCFBJJW.js";
 import {
   DOCUMENT,
   Location

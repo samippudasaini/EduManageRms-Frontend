@@ -1,7 +1,7 @@
 import {
   CdkScrollable,
   ViewportRuler
-} from "./chunk-KERHV3WC.js";
+} from "./chunk-M2VVAU4S.js";
 import {
   CdkPortal,
   CdkPortalOutlet,
@@ -25,11 +25,13 @@ import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
   MatCommonModule,
   MatRipple,
-  Platform,
   SPACE,
-  hasModifierKey,
+  hasModifierKey
+} from "./chunk-JTR5L7CN.js";
+import {
+  Platform,
   normalizePassiveListenerOptions
-} from "./chunk-USYGRZ3V.js";
+} from "./chunk-XHCFBJJW.js";
 import {
   DOCUMENT
 } from "./chunk-FFY7VSBW.js";

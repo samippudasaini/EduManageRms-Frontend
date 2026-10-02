@@ -3,7 +3,8 @@ import {
   AriaDescriber,
   InteractivityChecker,
   MatCommonModule
-} from "./chunk-USYGRZ3V.js";
+} from "./chunk-JTR5L7CN.js";
+import "./chunk-XHCFBJJW.js";
 import {
   DOCUMENT
 } from "./chunk-FFY7VSBW.js";

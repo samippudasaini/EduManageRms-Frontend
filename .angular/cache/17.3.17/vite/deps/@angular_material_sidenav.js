@@ -3,7 +3,7 @@ import {
   CdkScrollableModule,
   ScrollDispatcher,
   ViewportRuler
-} from "./chunk-KERHV3WC.js";
+} from "./chunk-M2VVAU4S.js";
 import "./chunk-TVMODPGE.js";
 import {
   animate,
@@ -19,11 +19,13 @@ import {
   FocusTrapFactory,
   InteractivityChecker,
   MatCommonModule,
+  hasModifierKey
+} from "./chunk-JTR5L7CN.js";
+import {
   Platform,
   coerceBooleanProperty,
-  coerceNumberProperty,
-  hasModifierKey
-} from "./chunk-USYGRZ3V.js";
+  coerceNumberProperty
+} from "./chunk-XHCFBJJW.js";
 import {
   DOCUMENT
 } from "./chunk-FFY7VSBW.js";

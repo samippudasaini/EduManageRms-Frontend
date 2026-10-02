@@ -2,10 +2,10 @@ import {
   Overlay,
   OverlayConfig,
   OverlayModule
-} from "./chunk-T3YKQSWH.js";
+} from "./chunk-TBLWYWOX.js";
 import {
   CdkScrollableModule
-} from "./chunk-KERHV3WC.js";
+} from "./chunk-M2VVAU4S.js";
 import {
   DomPortalOutlet,
   TemplatePortal
@@ -34,9 +34,11 @@ import {
   UP_ARROW,
   hasModifierKey,
   isFakeMousedownFromScreenReader,
-  isFakeTouchstartFromScreenReader,
+  isFakeTouchstartFromScreenReader
+} from "./chunk-JTR5L7CN.js";
+import {
   normalizePassiveListenerOptions
-} from "./chunk-USYGRZ3V.js";
+} from "./chunk-XHCFBJJW.js";
 import {
   CommonModule,
   DOCUMENT
